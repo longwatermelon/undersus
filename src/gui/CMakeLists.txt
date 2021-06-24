@@ -10,7 +10,7 @@ add_library(gui
     src/text.cpp
 )
 
-target_link_libraries(gui PRIVATE
+target_link_libraries(gui PUBLIC 
     SDL2::SDL2 SDL2::SDL2main
     SDL2::SDL2_image
     SDL2::SDL2_ttf
