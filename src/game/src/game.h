@@ -1,6 +1,7 @@
 #pragma once
 #include "text.h"
 #include "image.h"
+#include "menu.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -36,6 +37,7 @@ private:
 
     std::vector<std::unique_ptr<gui::Text>> m_text;
     std::vector<std::unique_ptr<gui::Image>> m_images;
+    std::unique_ptr<gui::Menu> m_menu;
 
     std::mutex m_mtx;
 };

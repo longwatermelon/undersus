@@ -12,6 +12,8 @@ add_library(gui
     src/common.cpp
     src/image.h
     src/image.cpp
+    src/menu.h
+    src/menu.cpp
 )
 
 target_link_libraries(gui PUBLIC 

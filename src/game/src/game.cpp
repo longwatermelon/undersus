@@ -1,4 +1,5 @@
 #include "game.h"
+#include "menu.h"
 #include <thread>
 #include <SDL_image.h>
 
@@ -73,6 +74,9 @@ void Game::mainloop()
                     --i;
                 }
             }
+            
+            if (m_menu.get())
+                m_menu->render();
         }        
         
 
@@ -81,13 +85,15 @@ void Game::mainloop()
 
     m_text.clear();
     m_images.clear();
+    m_menu.reset();
 }
 
 
 void Game::start_game()
 {
     sleep(1000);
-    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 5000));
+    m_menu = std::unique_ptr<gui::Menu>(new gui::Menu(m_rend, { 100, 100 }, { "text", "text 2" }, 100, m_font_path, 16));
+//    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 5000));
     sleep(5000);
 }
 
