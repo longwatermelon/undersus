@@ -2,6 +2,7 @@
 #include "text.h"
 #include "image.h"
 #include "menu.h"
+#include "player.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -48,4 +49,6 @@ private:
     std::mutex m_mtx;
 
     std::atomic<bool> m_z_down{ false };
+
+    std::unique_ptr<Player> m_player;
 };

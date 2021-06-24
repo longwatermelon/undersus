@@ -102,6 +102,9 @@ void Game::mainloop()
                 }
             }
 
+            if (m_player)
+                m_player->render();
+
             if (m_menu)
                 m_menu->render();
 
@@ -121,15 +124,20 @@ void Game::mainloop()
 void Game::start_game()
 {
     sleep(1000);
+
+    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000));
+    sleep(5000);
     
-    set_menu(new gui::Menu(m_rend, { 100, 100 }, { "text", "text 2" }, 100, m_font_path, 16));
+    set_menu(new gui::Menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16));
 
     wait_for_z();
     
-    std::cout << get_menu_choice() << "\n";
     delete_menu();
 
-    m_running = false;
+    {
+        std::lock_guard lock(m_mtx);
+        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 40, 20 }, m_resources_dir + "gfx/logo.png"));
+    }
 }
 
 

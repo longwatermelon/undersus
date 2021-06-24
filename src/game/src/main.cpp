@@ -5,11 +5,11 @@
 int main()
 {
     Game g("res");
-    std::thread thr_render(&Game::mainloop, &g);
-    
-    g.start_game();
+    std::thread thr_start(&Game::start_game, &g);
 
-    thr_render.join();
+    g.mainloop();
+
+    thr_start.join();
 
     return 0;
 }
