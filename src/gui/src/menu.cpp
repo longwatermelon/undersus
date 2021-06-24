@@ -16,6 +16,12 @@ gui::Menu::Menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::string
 }
 
 
+gui::Menu::~Menu()
+{
+    m_options.clear();
+}
+
+
 void gui::Menu::render()
 {
     for (auto& opt : m_options)

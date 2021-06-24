@@ -12,6 +12,7 @@ namespace gui
     {
     public:
         Menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::string>& options, int space_between_options, const std::string& font_path, int ptsize);
+        ~Menu();
 
         void render();
 

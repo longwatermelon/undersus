@@ -26,6 +26,8 @@ private:
     void add_text(gui::Text* text);
     void add_image(gui::Image* image);
 
+    void wait_for_z();
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
@@ -40,4 +42,6 @@ private:
     std::unique_ptr<gui::Menu> m_menu;
 
     std::mutex m_mtx;
+
+    std::atomic<bool> m_z_down{ false };
 };

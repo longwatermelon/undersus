@@ -1,6 +1,7 @@
 #include "game.h"
 #include "menu.h"
 #include <thread>
+#include <iostream>
 #include <SDL_image.h>
 
 
@@ -38,34 +39,46 @@ void Game::mainloop()
     
     while (m_running)
     {
-        while (SDL_PollEvent(&evt))
-        {
-            switch (evt.type)
-            {
-            case SDL_QUIT:
-                m_running = false;
-                break;
-            case SDL_KEYDOWN:
-            {
-                switch (evt.key.keysym.sym)
-                {
-                case SDLK_RIGHT:
-                    if (m_menu.get())
-                        m_menu->move_selected(1);
-                    break;
-                case SDLK_LEFT:
-                    if (m_menu.get())
-                        m_menu->move_selected(-1);
-                    break;
-                }
-            } break;
-            }
-        }
-
-        SDL_RenderClear(m_rend);
-        
         {
             std::lock_guard lock(m_mtx);
+
+            while (SDL_PollEvent(&evt))
+            {
+                switch (evt.type)
+                {
+                case SDL_QUIT:
+                    m_running = false;
+                    break;
+                case SDL_KEYDOWN:
+                {
+                    switch (evt.key.keysym.sym)
+                    {
+                    case SDLK_RIGHT:
+                        if (m_menu.get())
+                            m_menu->move_selected(1);
+                        break;
+                    case SDLK_LEFT:
+                        if (m_menu.get())
+                            m_menu->move_selected(-1);
+                        break;
+                    case SDLK_z:
+                        m_z_down = true;
+                        break;
+                    }
+                } break;
+                case SDL_KEYUP:
+                {
+                    switch (evt.key.keysym.sym)
+                    {
+                    case SDLK_z:
+                        m_z_down = false;
+                        break;
+                    }
+                } break;
+                }
+            }
+
+            SDL_RenderClear(m_rend);
 
             for (int i = 0; i < m_text.size(); ++i)
             {
@@ -88,27 +101,44 @@ void Game::mainloop()
                     --i;
                 }
             }
-            
+
             if (m_menu.get())
                 m_menu->render();
-        }        
-        
 
-        SDL_RenderPresent(m_rend);
+
+            SDL_RenderPresent(m_rend);
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     m_text.clear();
     m_images.clear();
-    m_menu.reset();
+
+    if (m_menu.get())
+        m_menu.reset(0);
 }
 
 
 void Game::start_game()
 {
     sleep(1000);
-    m_menu = std::unique_ptr<gui::Menu>(new gui::Menu(m_rend, { 100, 100 }, { "text", "text 2" }, 100, m_font_path, 16));
-//    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 5000));
-    sleep(5000);
+    
+    {
+        std::lock_guard lock(m_mtx);
+        m_menu = std::unique_ptr<gui::Menu>(new gui::Menu(m_rend, { 100, 100 }, { "text", "text 2" }, 100, m_font_path, 16));
+    }
+
+    wait_for_z();
+    
+    {
+        std::lock_guard lock(m_mtx);
+        std::cout << m_menu->selected_opt() << "\n";
+        m_menu.reset(0);
+    }
+     
+    //    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 5000));
+    m_running = false;
 }
 
 
@@ -143,5 +173,17 @@ void Game::add_image(gui::Image* image)
 
     std::lock_guard lock(m_mtx);
     m_images.emplace_back(image);
+}
+
+
+void Game::wait_for_z()
+{
+    while (m_running && !m_z_down)
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    
+    if (!m_running)
+        exit(0);
+
+    m_z_down = false;
 }
 
