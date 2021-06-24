@@ -1,5 +1,6 @@
 #pragma once
 #include "text.h"
+#include "image.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -24,4 +25,5 @@ private:
     bool m_running{ true };
 
     std::vector<std::unique_ptr<gui::Text>> m_text;
+    std::vector<std::unique_ptr<gui::Image>> m_images;
 };

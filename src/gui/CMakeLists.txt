@@ -10,6 +10,8 @@ add_library(gui
     src/text.cpp
     src/common.h
     src/common.cpp
+    src/image.h
+    src/image.cpp
 )
 
 target_link_libraries(gui PUBLIC 
