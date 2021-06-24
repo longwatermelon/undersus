@@ -26,6 +26,10 @@ private:
     void add_text(gui::Text* text);
     void add_image(gui::Image* image);
 
+    void set_menu(gui::Menu* menu);
+    void delete_menu();
+    std::string get_menu_choice();
+
     void wait_for_z();
 
 private:
