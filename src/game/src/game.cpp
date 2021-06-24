@@ -102,7 +102,7 @@ void Game::mainloop()
                 }
             }
 
-            if (m_menu.get())
+            if (m_menu)
                 m_menu->render();
 
 
@@ -136,7 +136,9 @@ void Game::start_game()
         std::cout << m_menu->selected_opt() << "\n";
         m_menu.reset(0);
     }
-     
+
+    sleep(1000);
+         
     //    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 5000));
     m_running = false;
 }
