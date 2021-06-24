@@ -35,7 +35,7 @@ void Game::mainloop()
     SDL_Event evt;
     
     m_text.emplace_back(new gui::Text(m_rend, { 100, 100 }, "text", m_font_path, 16, { 255, 255, 255 }, 1000));
-    m_images.emplace_back(new gui::Image(m_rend, { 100, 200 }, m_resources_dir + "gfx/image.png"));
+    m_images.emplace_back(new gui::Image(m_rend, { 100, 200 }, m_resources_dir + "gfx/image.png", 800));
 
     while (m_running)
     {
@@ -65,6 +65,12 @@ void Game::mainloop()
         for (int i = 0; i < m_images.size(); ++i)
         {
             m_images[i]->render();
+
+            if (m_images[i]->overtime())
+            {
+                m_images.erase(m_images.begin() + i);
+                --i;
+            }
         }
 
         SDL_RenderPresent(m_rend);
