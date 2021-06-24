@@ -8,6 +8,8 @@ find_package(sdl2-mixer CONFIG REQUIRED)
 add_library(gui
     src/text.h
     src/text.cpp
+    src/common.h
+    src/common.cpp
 )
 
 target_link_libraries(gui PUBLIC 

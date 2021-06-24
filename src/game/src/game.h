@@ -1,5 +1,8 @@
 #pragma once
+#include "text.h"
 #include <string>
+#include <memory>
+#include <vector>
 #include <SDL.h>
 
 
@@ -16,6 +19,9 @@ private:
     SDL_Renderer* m_rend;
 
     std::string m_resources_dir;
+    std::string m_font_path;
 
     bool m_running{ true };
+
+    std::vector<std::unique_ptr<gui::Text>> m_text;
 };
