@@ -31,7 +31,7 @@ void Game::mainloop()
 {
     SDL_Event evt;
     
-    m_text.emplace_back(new gui::Text(m_rend, { 100, 100 }, "text", m_font_path, 16, { 255, 255, 255 }));
+    m_text.emplace_back(new gui::Text(m_rend, { 100, 100 }, "text", m_font_path, 16, { 255, 255, 255 }, 1000));
 
     while (m_running)
     {
@@ -47,9 +47,15 @@ void Game::mainloop()
 
         SDL_RenderClear(m_rend);
         
-        for (auto& text : m_text)
+        for (int i = 0; i < m_text.size(); ++i)
         {
-            text->render();
+            m_text[i]->render();
+
+            if (m_text[i]->overtime())
+            {
+                m_text.erase(m_text.begin() + i);
+                --i;
+            }
         }
 
         SDL_RenderPresent(m_rend);
