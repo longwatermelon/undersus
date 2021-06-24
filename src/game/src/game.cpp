@@ -105,7 +105,6 @@ void Game::mainloop()
             if (m_menu)
                 m_menu->render();
 
-
             SDL_RenderPresent(m_rend);
         }
 
@@ -115,8 +114,7 @@ void Game::mainloop()
     m_text.clear();
     m_images.clear();
 
-    if (m_menu.get())
-        m_menu.reset(0);
+    delete_menu();
 }
 
 
@@ -124,22 +122,13 @@ void Game::start_game()
 {
     sleep(1000);
     
-    {
-        std::lock_guard lock(m_mtx);
-        m_menu = std::unique_ptr<gui::Menu>(new gui::Menu(m_rend, { 100, 100 }, { "text", "text 2" }, 100, m_font_path, 16));
-    }
+    set_menu(new gui::Menu(m_rend, { 100, 100 }, { "text", "text 2" }, 100, m_font_path, 16));
 
     wait_for_z();
     
-    {
-        std::lock_guard lock(m_mtx);
-        std::cout << m_menu->selected_opt() << "\n";
-        m_menu.reset(0);
-    }
+    std::cout << get_menu_choice() << "\n";
+    delete_menu();
 
-    sleep(1000);
-         
-    //    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 5000));
     m_running = false;
 }
 
@@ -187,5 +176,26 @@ void Game::wait_for_z()
         exit(0);
 
     m_z_down = false;
+}
+
+
+void Game::set_menu(gui::Menu* menu)
+{
+    std::lock_guard lock(m_mtx);
+    m_menu = std::unique_ptr<gui::Menu>(menu);
+}
+
+
+void Game::delete_menu()
+{
+    std::lock_guard lock(m_mtx);
+    m_menu.reset(0);
+}
+
+
+std::string Game::get_menu_choice()
+{
+    std::lock_guard lock(m_mtx);
+    return m_menu->selected_opt();
 }
 
