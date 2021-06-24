@@ -1,11 +1,15 @@
 #include "game.h"
-#include <iostream>
+#include <thread>
 
 
 int main()
 {
     Game g("res");
-    g.mainloop();
+    std::thread thr_render(&Game::mainloop, &g);
+    
+    g.start_game();
+
+    thr_render.join();
 
     return 0;
 }

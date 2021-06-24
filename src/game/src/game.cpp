@@ -1,4 +1,5 @@
 #include "game.h"
+#include <thread>
 #include <SDL_image.h>
 
 
@@ -34,9 +35,6 @@ void Game::mainloop()
 {
     SDL_Event evt;
     
-    m_text.emplace_back(new gui::Text(m_rend, { 100, 100 }, "text", m_font_path, 16, { 255, 255, 255 }, 1000));
-    m_images.emplace_back(new gui::Image(m_rend, { 100, 200 }, m_resources_dir + "gfx/image.png", 800));
-
     while (m_running)
     {
         while (SDL_PollEvent(&evt))
@@ -51,31 +49,79 @@ void Game::mainloop()
 
         SDL_RenderClear(m_rend);
         
-        for (int i = 0; i < m_text.size(); ++i)
         {
-            m_text[i]->render();
+            std::lock_guard lock(m_mtx);
 
-            if (m_text[i]->overtime())
+            for (int i = 0; i < m_text.size(); ++i)
             {
-                m_text.erase(m_text.begin() + i);
-                --i;
+                m_text[i]->render();
+
+                if (m_text[i]->overtime())
+                {
+                    m_text.erase(m_text.begin() + i);
+                    --i;
+                }
             }
-        }
 
-        for (int i = 0; i < m_images.size(); ++i)
-        {
-            m_images[i]->render();
-
-            if (m_images[i]->overtime())
+            for (int i = 0; i < m_images.size(); ++i)
             {
-                m_images.erase(m_images.begin() + i);
-                --i;
+                m_images[i]->render();
+
+                if (m_images[i]->overtime())
+                {
+                    m_images.erase(m_images.begin() + i);
+                    --i;
+                }
             }
-        }
+        }        
+        
 
         SDL_RenderPresent(m_rend);
     }
 
     m_text.clear();
+    m_images.clear();
+}
+
+
+void Game::start_game()
+{
+    sleep(1000);
+    add_image(new gui::Image(m_rend, { 100, 100 }, m_resources_dir + "gfx/image.png", 2000));
+    sleep(2000);
+}
+
+
+void Game::sleep(int ms)
+{
+    if (!m_running)
+        exit(0);
+
+    auto start = std::chrono::system_clock::now();
+
+    while (m_running && std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - start).count() <= ms)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    }
+}
+
+
+void Game::add_text(gui::Text* text)
+{
+    if (!m_running)
+        return;
+
+    std::lock_guard lock(m_mtx);
+    m_text.emplace_back(text);
+}
+
+
+void Game::add_image(gui::Image* image)
+{
+    if (!m_running)
+        return;
+
+    std::lock_guard lock(m_mtx);
+    m_images.emplace_back(image);
 }
 

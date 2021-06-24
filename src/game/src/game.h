@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <atomic>
+#include <mutex>
 #include <SDL.h>
 
 
@@ -15,6 +17,14 @@ public:
 
     void mainloop();
 
+    void start_game();
+
+private:
+    void sleep(int ms);
+    
+    void add_text(gui::Text* text);
+    void add_image(gui::Image* image);
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
@@ -22,8 +32,10 @@ private:
     std::string m_resources_dir;
     std::string m_font_path;
 
-    bool m_running{ true };
+    std::atomic<bool> m_running{ true };
 
     std::vector<std::unique_ptr<gui::Text>> m_text;
     std::vector<std::unique_ptr<gui::Image>> m_images;
+
+    std::mutex m_mtx;
 };
