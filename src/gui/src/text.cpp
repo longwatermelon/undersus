@@ -2,7 +2,7 @@
 
 
 gui::Text::Text(SDL_Renderer* rend, SDL_Point pos, const std::string& text, const std::string& font_path, int ptsize, SDL_Color color, int delete_after_ms)
-    : m_rend(rend), m_rect{ pos.x, pos.y }, m_text(text), m_delete_after_ms(delete_after_ms)
+    : m_rend(rend), m_rect{ pos.x, pos.y }, m_text(text), m_delete_after_ms(delete_after_ms), m_color(color), m_ptsize(ptsize)
 {
     m_font = TTF_OpenFont(font_path.c_str(), ptsize);
     m_tex = common::render_text(m_rend, { m_font, ptsize }, text, color);
@@ -28,5 +28,12 @@ void gui::Text::render()
     {
         m_overtime = true;
     }
+}
+
+
+void gui::Text::change_color(SDL_Color color)
+{
+    m_color = color;
+    m_tex = common::render_text(m_rend, { m_font, m_ptsize }, m_text, m_color);
 }
 

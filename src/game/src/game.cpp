@@ -45,6 +45,20 @@ void Game::mainloop()
             case SDL_QUIT:
                 m_running = false;
                 break;
+            case SDL_KEYDOWN:
+            {
+                switch (evt.key.keysym.sym)
+                {
+                case SDLK_RIGHT:
+                    if (m_menu.get())
+                        m_menu->move_selected(1);
+                    break;
+                case SDLK_LEFT:
+                    if (m_menu.get())
+                        m_menu->move_selected(-1);
+                    break;
+                }
+            } break;
             }
         }
 

@@ -15,10 +15,16 @@ namespace gui
 
         void render();
 
+        void move_selected(int x);
+
+        std::string selected_opt() { return m_options[m_selected_index]->text(); }
+
     private:
         SDL_Point m_pos;
 
         std::vector<std::unique_ptr<Text>> m_options;
         int m_space_between_options;
+
+        int m_selected_index{ 0 };
     };
 }
