@@ -87,8 +87,8 @@ void Game::mainloop()
 void Game::start_game()
 {
     sleep(1000);
-    add_image(new gui::Image(m_rend, { 100, 100 }, m_resources_dir + "gfx/image.png", 2000));
-    sleep(2000);
+    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 5000));
+    sleep(5000);
 }
 
 
