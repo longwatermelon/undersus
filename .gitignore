@@ -1,2 +1,4 @@
 build/
 compile_commands.json
+.DS_STORE
+res/.DS_STORE
