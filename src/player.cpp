@@ -8,13 +8,27 @@
 Player::Player(SDL_Renderer* rend, SDL_Rect rect, const std::string& sprite_path)
     : m_rect(rect), m_rend(rend)
 {
-    m_tex = IMG_LoadTexture(rend, sprite_path.c_str());
+    m_animation_frames = {
+        IMG_LoadTexture(rend, (sprite_path + "/player_1.png").c_str()),
+        IMG_LoadTexture(rend, (sprite_path + "/player_2.png").c_str())
+    };
+
+    m_last_frame_change = std::chrono::system_clock::now();
+}
+
+
+Player::~Player()
+{
+    for (auto& tex : m_animation_frames)
+    {
+        SDL_DestroyTexture(tex);
+    }
 }
 
 
 void Player::render()
 {
-    SDL_RenderCopy(m_rend, m_tex, 0, &m_rect);
+    SDL_RenderCopy(m_rend, m_animation_frames[m_current_frame], 0, &m_rect);
 }
 
 
@@ -67,6 +81,19 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
                 m_rect.y += m_velocity.y;
             }
         }
+    }
+}
+
+
+void Player::animate()
+{
+    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_last_frame_change).count() >= 250)
+    {
+        m_last_frame_change = std::chrono::system_clock::now();
+        ++m_current_frame;
+
+        if (m_current_frame >= m_animation_frames.size())
+            m_current_frame = 0;
     }
 }
 
