@@ -10,13 +10,17 @@ public:
     Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas, SDL_Point left_start_pos, SDL_Point right_start_pos);
 
     void render();
-    void move(int x, int y) { m_render_pos.x += x; m_render_pos.y += y; }
+    void move(int x, int y);
+
+    bool moveable(int x, int y);
 
     std::string layout() { return m_layout; }
     int characters_per_line() { return m_characters_per_row; }
 
     SDL_Point left_start_pos() { return m_left_start_pos; }
     SDL_Point right_start_pos() { return m_right_start_pos; }
+
+    SDL_Point render_pos() { return m_render_pos; }
 
 private:
     std::string m_layout;

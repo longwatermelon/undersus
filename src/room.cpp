@@ -33,3 +33,23 @@ void Room::render()
     }
 }
 
+
+void Room::move(int x, int y)
+{
+    m_render_pos.x += x;
+    m_render_pos.y += y;
+}
+
+
+bool Room::moveable(int x, int y)
+{
+    int pixel_width = m_characters_per_row * 32;
+   
+    if ((x < 0 && pixel_width + m_render_pos.x > 800) || (x > 0 && m_render_pos.x < 0))
+    {
+        return true; 
+    }
+
+    return false;
+}
+
