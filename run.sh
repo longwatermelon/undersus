@@ -1,1 +1,1 @@
-build/src/game/undersus
+build/undersus

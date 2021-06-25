@@ -1,7 +1,7 @@
 #pragma once
-#include "text.h"
-#include "image.h"
-#include "menu.h"
+#include "graphics/text.h"
+#include "graphics/image.h"
+#include "graphics/menu.h"
 #include "player.h"
 #include "room.h"
 #include <string>
