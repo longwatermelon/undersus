@@ -285,13 +285,19 @@ void Game::open_map(const std::string& map_name)
     std::stringstream ss;
     std::string buf;
 
-    SDL_Point pos;
+    SDL_Point lpos, rpos;
 
     std::getline(ifs, buf);
-    pos.x = std::stoi(buf) * 32;
+    lpos.x = std::stoi(buf) * 32;
 
     std::getline(ifs, buf);
-    pos.y = std::stoi(buf) * 32;
+    lpos.y = std::stoi(buf) * 32;
+
+    std::getline(ifs, buf);
+    rpos.x = std::stoi(buf) * 32;
+
+    std::getline(ifs, buf);
+    rpos.y = std::stoi(buf) * 32;
     
     while (std::getline(ifs, buf)) ss << buf;
 
@@ -299,7 +305,7 @@ void Game::open_map(const std::string& map_name)
     
     {
         std::lock_guard lock(m_mtx);
-        m_rooms.emplace_back(new Room(m_rend, ss.str(), 25, m_texture_map, m_atlas, pos));
+        m_rooms.emplace_back(new Room(m_rend, ss.str(), 25, m_texture_map, m_atlas, lpos, rpos));
     } 
 }
 
@@ -307,13 +313,13 @@ void Game::open_map(const std::string& map_name)
 void Game::next_room()
 {
     ++m_current_room_index;
-    m_player->move_to(m_rooms[m_current_room_index]->start_pos().x, m_rooms[m_current_room_index]->start_pos().y);
+    m_player->move_to(m_rooms[m_current_room_index]->left_start_pos().x, m_rooms[m_current_room_index]->left_start_pos().y);
 }
 
 
 void Game::prev_room()
 {
     --m_current_room_index;
-    m_player->move_to(m_rooms[m_current_room_index]->start_pos().x, m_rooms[m_current_room_index]->start_pos().y);
+    m_player->move_to(m_rooms[m_current_room_index]->right_start_pos().x, m_rooms[m_current_room_index]->right_start_pos().y);
 }
 
