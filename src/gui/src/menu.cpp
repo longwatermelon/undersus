@@ -34,6 +34,8 @@ void gui::Menu::render()
 void gui::Menu::move_selected(int x)
 {
     m_options[m_selected_index]->change_color({ 255, 255, 255 });
+
+    // limit m_selected_index to between 0 and the maximum possible index
     m_selected_index = std::min(std::max(m_selected_index + x, 0), (int)m_options.size() - 1);
     m_options[m_selected_index]->change_color({ 255, 255, 0 });
 }

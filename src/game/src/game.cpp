@@ -56,10 +56,28 @@ void Game::mainloop()
                     case SDLK_RIGHT:
                         if (m_menu.get())
                             m_menu->move_selected(1);
+
+                        if (m_player)
+                            m_player->set_x_vel(m_player_speed);
+
                         break;
                     case SDLK_LEFT:
                         if (m_menu.get())
                             m_menu->move_selected(-1);
+
+                        if (m_player)
+                            m_player->set_x_vel(-m_player_speed);
+
+                        break;
+                    case SDLK_UP:
+                        if (m_player)
+                            m_player->set_y_vel(-m_player_speed);
+
+                        break;
+                    case SDLK_DOWN:
+                        if (m_player)
+                            m_player->set_y_vel(m_player_speed);
+
                         break;
                     case SDLK_z:
                         m_z_down = true;
@@ -70,6 +88,18 @@ void Game::mainloop()
                 {
                     switch (evt.key.keysym.sym)
                     {
+                    case SDLK_RIGHT:
+                    case SDLK_LEFT:
+                        if (m_player)
+                            m_player->set_x_vel(0);
+
+                        break;
+                    case SDLK_UP:
+                    case SDLK_DOWN:
+                        if (m_player)
+                            m_player->set_y_vel(0);
+
+                        break;
                     case SDLK_z:
                         m_z_down = false;
                         break;
@@ -103,7 +133,10 @@ void Game::mainloop()
             }
 
             if (m_player)
+            {
+                m_player->move();
                 m_player->render();
+            }
 
             if (m_menu)
                 m_menu->render();
@@ -136,7 +169,7 @@ void Game::start_game()
 
     {
         std::lock_guard lock(m_mtx);
-        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 40, 20 }, m_resources_dir + "gfx/logo.png"));
+        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 16, 16 }, m_resources_dir + "gfx/player.png"));
     }
 }
 

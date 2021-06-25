@@ -15,3 +15,10 @@ void Player::render()
     SDL_RenderCopy(m_rend, m_tex, 0, &m_rect);
 }
 
+
+void Player::move()
+{
+    m_rect.x += m_velocity.x;
+    m_rect.y += m_velocity.y;
+}
+

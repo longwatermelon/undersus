@@ -17,20 +17,29 @@ public:
     Game(const std::string& resources_path);
     ~Game();
 
+    // Event handling and rendering
     void mainloop();
 
+    // See function body
     void start_game();
 
 private:
+    // std::this_thread::sleep_for except it kills the thread when m_running is set to false
     void sleep(int ms);
-    
+   
+    // Lock the mutex and then emplace_back text into m_text 
     void add_text(gui::Text* text);
+    // Lock the mutex and then emplace_back image into m_images
     void add_image(gui::Image* image);
-
+    
+    // Lock the mutex and then set m_menu to menu
     void set_menu(gui::Menu* menu);
+    // Lock mutex and delete menu
     void delete_menu();
+    // Lock mutex and get the selected menu choice
     std::string get_menu_choice();
-
+    
+    // Wait for key z to be pressed
     void wait_for_z();
 
 private:
@@ -51,4 +60,7 @@ private:
     std::atomic<bool> m_z_down{ false };
 
     std::unique_ptr<Player> m_player;
+
+    /* constants */
+    const int m_player_speed{ 3 };
 };
