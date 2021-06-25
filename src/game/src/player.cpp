@@ -1,5 +1,6 @@
 #include "player.h"
 #include <iostream>
+#include <algorithm>
 #include <SDL_image.h>
 
 
@@ -16,9 +17,21 @@ void Player::render()
 }
 
 
-void Player::move()
+void Player::move(const std::string& layout, int characters_per_line, const std::vector<char>& solid_characters)
 {
-    m_rect.x += m_velocity.x;
-    m_rect.y += m_velocity.y;
+    int xo = (m_velocity.x > 0 ? m_rect.w : 0);
+    int yo = (m_velocity.y > 0 ? m_rect.h : 0);
+
+    int current_y = (int)(m_rect.y / (800 / characters_per_line));
+    int current_x = (int)(m_rect.x / (800 / characters_per_line));
+
+    int new_y = (int)((m_rect.y + m_velocity.y + yo) / (800 / characters_per_line));
+    int new_x = (int)((m_rect.x + m_velocity.x + xo) / (800 / characters_per_line));
+
+    if (std::find(solid_characters.begin(), solid_characters.end(), layout[current_y * characters_per_line + new_x]) == solid_characters.end())
+        m_rect.x += m_velocity.x;
+    
+    if (std::find(solid_characters.begin(), solid_characters.end(), layout[new_y * characters_per_line + current_x]) == solid_characters.end())
+        m_rect.y += m_velocity.y;
 }
 

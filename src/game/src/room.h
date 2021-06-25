@@ -11,6 +11,9 @@ public:
 
     void render();
 
+    std::string layout() { return m_layout; }
+    int characters_per_line() { return m_characters_per_row; }
+
 private:
     std::string m_layout;
     int m_characters_per_row;

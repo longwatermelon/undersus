@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include <SDL.h>
 
 
@@ -10,7 +11,7 @@ public:
 
     void render();
 
-    void move();
+    void move(const std::string& layout, int characters_per_line, const std::vector<char>& solid_characters);
 
     void set_x_vel(int x) { m_velocity.x = x; }
     void set_y_vel(int y) { m_velocity.y = y; }

@@ -26,6 +26,7 @@ Game::Game(const std::string& resources_path)
 
     m_texture_map['#'] = { 0, 0 };
     m_texture_map['.'] = { 32, 0 };
+    m_solid_characters = { '#' };
 }
 
 
@@ -146,7 +147,7 @@ void Game::mainloop()
 
             if (m_player)
             {
-                m_player->move();
+                m_player->move(m_current_room->layout(), m_current_room->characters_per_line(), m_solid_characters);
                 m_player->render();
             }
 
