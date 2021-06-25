@@ -26,7 +26,7 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
     int xo = (m_velocity.x > 0 ? m_rect.w : 0);
     int yo = (m_velocity.y > 0 ? m_rect.h : 0);
 
-    int tile_size = 800 / characters_per_line;
+    int tile_size = 32;
 
     int current_y = (int)(m_rect.y / tile_size);
     int current_x = (int)(m_rect.x / tile_size);

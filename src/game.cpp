@@ -189,11 +189,11 @@ cleanup:
 
 void Game::start_game()
 {
-    sleep(1000);
+  //  sleep(1000);
     
-    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000);
+//    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000);
 
-    sleep(5000);
+ //   sleep(5000);
     
     set_menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16);
 
@@ -304,14 +304,22 @@ void Game::open_map(const std::string& map_name)
 
     std::getline(ifs, buf);
     rpos.y = std::stoi(buf) * 32;
+
+    int map_width = 0;
     
-    while (std::getline(ifs, buf)) ss << buf;
+    while (std::getline(ifs, buf))
+    {
+        ss << buf;
+
+        if (map_width == 0)
+            map_width = buf.size();
+    }
 
     ifs.close();
     
     {
         std::lock_guard lock(m_mtx);
-        m_rooms.emplace_back(new Room(m_rend, ss.str(), 25, m_texture_map, m_atlas, lpos, rpos));
+        m_rooms.emplace_back(new Room(m_rend, ss.str(), map_width, m_texture_map, m_atlas, lpos, rpos));
     } 
 }
 
