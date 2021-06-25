@@ -22,6 +22,7 @@ void audio::play_sound(const std::string& path)
 
 void audio::stop_music()
 {
+    Mix_HaltChannel(-1);
     Mix_FreeChunk(music);
     music = 0;
 }
