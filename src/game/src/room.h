@@ -7,12 +7,13 @@
 class Room
 {
 public:
-    Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas);
+    Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas, SDL_Point start_pos);
 
     void render();
 
     std::string layout() { return m_layout; }
     int characters_per_line() { return m_characters_per_row; }
+    SDL_Point start_pos() { return m_start_pos; }
 
 private:
     std::string m_layout;
@@ -22,4 +23,6 @@ private:
     SDL_Texture* m_texture_atlas;
 
     SDL_Renderer* m_rend;
+
+    SDL_Point m_start_pos;
 };
