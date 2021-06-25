@@ -1,19 +1,22 @@
 #include "game.h"
 #include "menu.h"
 #include "room.h"
+#include "audio/audio.h"
 #include <thread>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 
 
 Game::Game(const std::string& resources_path)
     : m_resources_dir(resources_path + '/')
 {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     TTF_Init();
     IMG_Init(IMG_INIT_PNG);
+    Mix_Init(MIX_INIT_MP3);
 
     m_window = SDL_CreateWindow("Undersus", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 800, SDL_WINDOW_SHOWN);
     m_rend = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -40,6 +43,7 @@ Game::~Game()
     SDL_Quit();
     TTF_Quit();
     IMG_Quit();
+    Mix_Quit();
 }
 
 
@@ -209,6 +213,8 @@ void Game::start_game()
         std::lock_guard lock(m_mtx);
         next_room();
     }
+
+    audio::play_sound(m_resources_dir + "sfx/among_us_drip.wav");
 }
 
 

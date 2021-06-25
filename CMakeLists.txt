@@ -29,6 +29,8 @@ add_executable(undersus
     src/graphics/menu.cpp
     src/graphics/text.h
     src/graphics/text.cpp
+    src/audio/audio.h
+    src/audio/audio.cpp
 )
 
 target_link_libraries(undersus PRIVATE
