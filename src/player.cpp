@@ -50,10 +50,6 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
             {
                 m_rect.x += m_velocity.x;
             }
-            else // inside of a solid block
-            {
-                m_rect.x += (new_x * tile_size + (xo == 0 ? tile_size : 0 )) - (px + xo);
-            }
         }
         
     }
@@ -70,12 +66,7 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
             {
                 m_rect.y += m_velocity.y;
             }
-            else // inside of a solid block
-            {
-                m_rect.y += (new_y * tile_size + (yo == 0 ? tile_size : 0)) - (m_rect.y + yo);
-            }
         }
-        
     }
 }
 

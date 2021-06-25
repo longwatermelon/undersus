@@ -327,13 +327,17 @@ void Game::open_map(const std::string& map_name)
 void Game::next_room()
 {
     ++m_current_room_index;
-    m_player->move_to(m_rooms[m_current_room_index]->left_start_pos().x, m_rooms[m_current_room_index]->left_start_pos().y);
+
+    Room* room = m_rooms[m_current_room_index].get();
+    m_player->move_to(room->left_start_pos().x + room->render_pos().x, room->left_start_pos().y + room->render_pos().y);
 }
 
 
 void Game::prev_room()
 {
     --m_current_room_index;
-    m_player->move_to(m_rooms[m_current_room_index]->right_start_pos().x, m_rooms[m_current_room_index]->right_start_pos().y);
+
+    Room* room = m_rooms[m_current_room_index].get();
+    m_player->move_to(room->right_start_pos().x + room->render_pos().x, room->right_start_pos().y + room->render_pos().y);
 }
 
