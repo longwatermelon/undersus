@@ -31,22 +31,29 @@ void Player::move(const std::string& layout, int characters_per_line, const std:
     int new_y = (int)((m_rect.y + m_velocity.y + yo) / tile_size);
     int new_x = (int)((m_rect.x + m_velocity.x + xo) / tile_size);
 
-    if (!gui::common::exists(layout[current_y * characters_per_line + new_x], solid_characters))
+    if (!gui::common::exists(layout[(current_y + 1) * characters_per_line + new_x], solid_characters))
     {
-        m_rect.x += m_velocity.x;
-    }
-    else // inside of a solid block
-    {
-        m_rect.x += (new_x * tile_size + (xo == 0 ? tile_size : 0 )) - (m_rect.x + xo);
+        if (!gui::common::exists(layout[current_y * characters_per_line + new_x], solid_characters))
+        {
+            m_rect.x += m_velocity.x;
+        }
+        else // inside of a solid block
+        {
+            m_rect.x += (new_x * tile_size + (xo == 0 ? tile_size : 0 )) - (m_rect.x + xo);
+        }
     }
     
-    if (!gui::common::exists(layout[new_y * characters_per_line + current_x], solid_characters))
+    
+    if (!gui::common::exists(layout[new_y * characters_per_line + (current_x + 1)], solid_characters))
     {
-        m_rect.y += m_velocity.y;
-    }
-    else // inside of a solid block
-    {
-        m_rect.y += (new_y * tile_size + (yo == 0 ? tile_size : 0)) - (m_rect.y + yo);
+        if (!gui::common::exists(layout[new_y * characters_per_line + current_x], solid_characters))
+        {
+            m_rect.y += m_velocity.y;
+        }
+        else // inside of a solid block
+        {
+            m_rect.y += (new_y * tile_size + (yo == 0 ? tile_size : 0)) - (m_rect.y + yo);
+        }
     }
 }
 
