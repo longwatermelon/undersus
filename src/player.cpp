@@ -8,27 +8,31 @@
 Player::Player(SDL_Renderer* rend, SDL_Rect rect, const std::string& sprite_path)
     : m_rect(rect), m_rend(rend)
 {
-    m_animation_frames = {
-        IMG_LoadTexture(rend, (sprite_path + "/player_1.png").c_str()),
-        IMG_LoadTexture(rend, (sprite_path + "/player_2.png").c_str())
-    };
-
+    m_atlas = IMG_LoadTexture(rend, sprite_path.c_str());
     m_last_frame_change = std::chrono::system_clock::now();
+
+    m_animation_frames["walk_1"] = { 64, 0 };
+    m_animation_frames["walk_2"] = { 0, 0 };
+    m_animation_frames["walk_3"] = { 32, 0 };
 }
 
 
 Player::~Player()
 {
-    for (auto& tex : m_animation_frames)
-    {
-        SDL_DestroyTexture(tex);
-    }
+    SDL_DestroyTexture(m_atlas);
 }
 
 
 void Player::render()
 {
-    SDL_RenderCopy(m_rend, m_animation_frames[m_current_frame], 0, &m_rect);
+    SDL_Rect rect = {
+        m_current_frame_pos.x,
+        m_current_frame_pos.y,
+        32,
+        32
+    };
+
+    SDL_RenderCopy(m_rend, m_atlas, &rect, &m_rect);
 }
 
 
@@ -90,10 +94,14 @@ void Player::animate()
     if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_last_frame_change).count() >= 250)
     {
         m_last_frame_change = std::chrono::system_clock::now();
-        ++m_current_frame;
 
-        if (m_current_frame >= m_animation_frames.size())
-            m_current_frame = 0;
+        ++m_current_frame_num;
+        m_current_frame_pos = m_animation_frames["walk_" + std::to_string(m_current_frame_num)];
+
+        if (m_current_frame_num >= 4)
+        {
+            m_current_frame_num = 0;
+        }
     }
 }
 

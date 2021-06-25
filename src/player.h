@@ -32,8 +32,10 @@ private:
 
     SDL_Point m_velocity{ 0, 0 };
 
-    std::vector<SDL_Texture*> m_animation_frames;
-    int m_current_frame{ 0 };
+    SDL_Texture* m_atlas{ 0 };
+    std::map<std::string, SDL_Point> m_animation_frames;
+    SDL_Point m_current_frame_pos{ 0, 0 };
+    int m_current_frame_num{ 0 };
 
     std::chrono::system_clock::time_point m_last_frame_change;
 };

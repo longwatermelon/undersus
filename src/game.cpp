@@ -206,7 +206,7 @@ void Game::start_game()
     
     {
         std::lock_guard lock(m_mtx);
-        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 32, 32 }, m_resources_dir + "gfx/sprites/player"));
+        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 32, 32 }, m_resources_dir + "gfx/sprites/player.png"));
     }
 
     open_map("start");
