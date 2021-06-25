@@ -182,7 +182,7 @@ void Game::start_game()
 
     sleep(5000);
     
-    set_menu(new gui::Menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16));
+    set_menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16);
 
     wait_for_z();
     
@@ -211,13 +211,13 @@ void Game::sleep(int ms)
 }
 
 
-void Game::add_text(gui::Text* text)
+void Game::add_text(SDL_Renderer* rend, SDL_Point pos, const std::string& text, const std::string& font_path, int ptsize, SDL_Color color, int delete_after_ms)
 {
     if (!m_running)
         return;
 
     std::lock_guard lock(m_mtx);
-    m_text.emplace_back(text);
+    m_text.emplace_back(new gui::Text(rend, pos, text, font_path, ptsize, color, delete_after_ms));
 }
 
 
@@ -243,10 +243,10 @@ void Game::wait_for_z()
 }
 
 
-void Game::set_menu(gui::Menu* menu)
+void Game::set_menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::string>& options, int space_between_options, const std::string& font_path, int ptsize)
 {
     std::lock_guard lock(m_mtx);
-    m_menu = std::unique_ptr<gui::Menu>(menu);
+    m_menu = std::unique_ptr<gui::Menu>(new gui::Menu(rend, pos, options, space_between_options, font_path, ptsize));
 }
 
 

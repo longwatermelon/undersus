@@ -29,12 +29,12 @@ private:
     void sleep(int ms);
    
     // Lock the mutex and then emplace_back text into m_text 
-    void add_text(gui::Text* text);
+    void add_text(SDL_Renderer* rend, SDL_Point pos, const std::string& text, const std::string& font_path, int ptsize, SDL_Color color, int delete_after_ms);
     // Lock the mutex and then emplace_back image into m_images
     void add_image(SDL_Renderer* rend, SDL_Point pos, const std::string& image_path, int delete_after_ms);
     
     // Lock the mutex and then set m_menu to menu
-    void set_menu(gui::Menu* menu);
+    void set_menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::string>& options, int space_between_options, const std::string& font_path, int ptsize);
     // Lock mutex and delete menu
     void delete_menu();
     // Lock mutex and get the selected menu choice
