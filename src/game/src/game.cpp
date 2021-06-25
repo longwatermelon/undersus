@@ -45,6 +45,8 @@ Game::~Game()
 
 void Game::mainloop()
 {
+    std::thread thr_start(&Game::start_game, this);
+
     SDL_Event evt;
     
     while (m_running)
@@ -58,6 +60,7 @@ void Game::mainloop()
                 {
                 case SDL_QUIT:
                     m_running = false;
+                    goto cleanup;
                     break;
                 case SDL_KEYDOWN:
                 {
@@ -160,6 +163,10 @@ void Game::mainloop()
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
+cleanup: 
+    if (thr_start.joinable())
+        thr_start.join();
+
     m_text.clear();
     m_images.clear();
 
@@ -170,8 +177,12 @@ void Game::mainloop()
 void Game::start_game()
 {
     sleep(1000);
+    
+    {
+        std::lock_guard lock(m_mtx);
+        add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/atlas.png", 4000));
+    }
 
-    add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000));
     sleep(5000);
     
     set_menu(new gui::Menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16));
@@ -192,7 +203,7 @@ void Game::start_game()
 void Game::sleep(int ms)
 {
     if (!m_running)
-        exit(0);
+        return; 
 
     auto start = std::chrono::system_clock::now();
 
@@ -218,7 +229,6 @@ void Game::add_image(gui::Image* image)
     if (!m_running)
         return;
 
-    std::lock_guard lock(m_mtx);
     m_images.emplace_back(image);
 }
 
@@ -229,7 +239,7 @@ void Game::wait_for_z()
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     
     if (!m_running)
-        exit(0);
+        return; 
 
     m_z_down = false;
 }
