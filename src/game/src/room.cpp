@@ -7,7 +7,8 @@ Room::Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row
 
 void Room::render()
 {
-    int current_y = 0;
+    // initially set to -32 because 0 % characters_per_row is 0, adding 32 to current_y
+    int current_y = -32;
 
     for (int i = 0; i < m_layout.size(); ++i)
     {

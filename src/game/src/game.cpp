@@ -3,6 +3,8 @@
 #include "room.h"
 #include <thread>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <SDL_image.h>
 
 
@@ -21,6 +23,9 @@ Game::Game(const std::string& resources_path)
 
     m_font_path = m_resources_dir + "gfx/font.ttf";
     m_atlas = IMG_LoadTexture(m_rend, (m_resources_dir + "gfx/atlas.png").c_str());
+
+    m_texture_map['#'] = { 0, 0 };
+    m_texture_map['.'] = { 32, 0 };
 }
 
 
@@ -173,19 +178,13 @@ void Game::start_game()
     wait_for_z();
     
     delete_menu();
-
+    
     {
         std::lock_guard lock(m_mtx);
         m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 32, 32 }, m_resources_dir + "gfx/player.png"));
-
-        std::string layout;
-        layout += "#####";
-        layout += "#...#";
-        layout += "#...#";
-        layout += "#####";
-
-        m_current_room = std::unique_ptr<Room>(new Room(m_rend, layout, 5, { { '#', { 0, 0 } }, { '.', { 32, 0 } } }, m_atlas));
     }
+        
+    open_map("start");
 }
 
 
@@ -253,5 +252,22 @@ std::string Game::get_menu_choice()
 {
     std::lock_guard lock(m_mtx);
     return m_menu->selected_opt();
+}
+
+
+void Game::open_map(const std::string& map_name)
+{
+    std::ifstream ifs(m_resources_dir + "maps/" + map_name + ".txt");
+    std::stringstream ss;
+    std::string buf;
+    
+    while (std::getline(ifs, buf)) ss << buf;
+
+    ifs.close();
+    
+    {
+        std::lock_guard lock(m_mtx);
+        m_current_room = std::unique_ptr<Room>(new Room(m_rend, ss.str(), 25, m_texture_map, m_atlas));
+    } 
 }
 

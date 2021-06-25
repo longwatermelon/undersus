@@ -43,6 +43,8 @@ private:
     // Wait for key z to be pressed
     void wait_for_z();
 
+    void open_map(const std::string& map_name);
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
@@ -63,6 +65,7 @@ private:
     std::unique_ptr<Player> m_player;
     std::unique_ptr<Room> m_current_room;
     SDL_Texture* m_atlas;
+    std::map<char, SDL_Point> m_texture_map;
 
     /* constants */
     const int m_player_speed{ 3 };
