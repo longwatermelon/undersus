@@ -11,15 +11,15 @@ Player::Player(SDL_Renderer* rend, SDL_Rect rect, const std::string& sprite_path
     m_atlas = IMG_LoadTexture(rend, sprite_path.c_str());
     m_last_frame_change = std::chrono::system_clock::now();
 
-    m_animation_frames["rwalk_1"] = { 64, 0 };
-    m_animation_frames["rwalk_2"] = { 0, 0 };
-    m_animation_frames["rwalk_3"] = { 32, 0 };
-    m_animation_frames["rwalk_4"] = { 0, 0 };
+    m_animation_frames["rwalk_0"] = { 64, 0 };
+    m_animation_frames["rwalk_1"] = { 0, 0 };
+    m_animation_frames["rwalk_2"] = { 32, 0 };
+    m_animation_frames["rwalk_3"] = { 0, 0 };
 
-    m_animation_frames["lwalk_1"] = { 32, 32 };
-    m_animation_frames["lwalk_2"] = { 64, 32 };
-    m_animation_frames["lwalk_3"] = { 0, 32 };
-    m_animation_frames["lwalk_4"] = { 64, 32 };
+    m_animation_frames["lwalk_0"] = { 32, 32 };
+    m_animation_frames["lwalk_1"] = { 64, 32 };
+    m_animation_frames["lwalk_2"] = { 0, 32 };
+    m_animation_frames["lwalk_3"] = { 64, 32 };
 }
 
 
@@ -110,9 +110,9 @@ void Player::animate()
 
         if (m_velocity.x != 0 || m_velocity.y != 0) // moving
         {
-            if (m_current_frame_num > 4)
+            if (m_current_frame_num >= 4)
             {
-                m_current_frame_num = 1;
+                m_current_frame_num = 0;
             }
 
             m_current_frame_pos = m_animation_frames[std::string(m_direction == 1 ? "r" : "l") + "walk_" + std::to_string(m_current_frame_num)];
@@ -120,8 +120,8 @@ void Player::animate()
         }
         else // idle
         {
-            m_current_frame_num = 1;
-            m_current_frame_pos = m_animation_frames[std::string(m_direction == 1 ? "r" : "l") + "walk_2"];
+            m_current_frame_num = 0;
+            m_current_frame_pos = m_animation_frames[std::string(m_direction == 1 ? "r" : "l") + "walk_1"];
         }
     }
 }
