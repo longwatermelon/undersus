@@ -16,6 +16,10 @@ public:
     void set_x_vel(int x) { m_velocity.x = x; }
     void set_y_vel(int y) { m_velocity.y = y; }
 
+    SDL_Rect rect() { return m_rect; }
+
+    void move_to(int x, int y) { m_rect = { x, y, m_rect.w, m_rect.h }; }
+
 private:
     SDL_Rect m_rect;
     SDL_Texture* m_tex{ 0 };

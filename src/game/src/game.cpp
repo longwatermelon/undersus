@@ -123,8 +123,8 @@ void Game::mainloop()
 
             SDL_RenderClear(m_rend);
 
-            if (m_current_room)
-                m_current_room->render();
+            if (m_current_room_index != -1 && m_current_room_index < m_rooms.size())
+                m_rooms[m_current_room_index]->render();
 
             for (int i = 0; i < m_text.size(); ++i)
             {
@@ -150,7 +150,14 @@ void Game::mainloop()
 
             if (m_player)
             {
-                m_player->move(m_current_room->layout(), m_current_room->characters_per_line(), m_solid_characters);
+                m_player->move(m_rooms[m_current_room_index]->layout(), m_rooms[m_current_room_index]->characters_per_line(), m_solid_characters);
+                
+                if (m_player->rect().x + m_player->rect().w >= 790)
+                    next_room();
+
+                if (m_player->rect().x <= 10)
+                    prev_room();
+
                 m_player->render();
             }
 
@@ -192,8 +199,14 @@ void Game::start_game()
         std::lock_guard lock(m_mtx);
         m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 32, 32 }, m_resources_dir + "gfx/player.png"));
     }
-        
+
     open_map("start");
+    open_map("start_2");
+
+    {
+        std::lock_guard lock(m_mtx);
+        m_current_room_index = 0;
+    }
 }
 
 
@@ -237,7 +250,7 @@ void Game::wait_for_z()
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     
     if (!m_running)
-        return; 
+        return;
 
     m_z_down = false;
 }
@@ -276,7 +289,21 @@ void Game::open_map(const std::string& map_name)
     
     {
         std::lock_guard lock(m_mtx);
-        m_current_room = std::unique_ptr<Room>(new Room(m_rend, ss.str(), 25, m_texture_map, m_atlas));
+        m_rooms.emplace_back(new Room(m_rend, ss.str(), 25, m_texture_map, m_atlas));
     } 
+}
+
+
+void Game::next_room()
+{
+    ++m_current_room_index;
+    m_player->move_to(100, 100);
+}
+
+
+void Game::prev_room()
+{
+    --m_current_room_index;
+    m_player->move_to(600, 600);
 }
 

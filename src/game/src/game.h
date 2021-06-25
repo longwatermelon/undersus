@@ -45,6 +45,9 @@ private:
     
     void open_map(const std::string& map_name);
 
+    void next_room();
+    void prev_room();
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
@@ -63,7 +66,10 @@ private:
     std::atomic<bool> m_z_down{ false };
 
     std::unique_ptr<Player> m_player;
-    std::unique_ptr<Room> m_current_room;
+
+    std::vector<std::unique_ptr<Room>> m_rooms;
+    int m_current_room_index{ -1 };
+
     SDL_Texture* m_atlas;
     std::map<char, SDL_Point> m_texture_map;
     std::vector<char> m_solid_characters;
