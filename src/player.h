@@ -37,5 +37,7 @@ private:
     SDL_Point m_current_frame_pos{ 0, 0 };
     int m_current_frame_num{ 0 };
 
+    int m_direction{ 1 };
+
     std::chrono::system_clock::time_point m_last_frame_change;
 };

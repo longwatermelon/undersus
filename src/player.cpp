@@ -11,9 +11,15 @@ Player::Player(SDL_Renderer* rend, SDL_Rect rect, const std::string& sprite_path
     m_atlas = IMG_LoadTexture(rend, sprite_path.c_str());
     m_last_frame_change = std::chrono::system_clock::now();
 
-    m_animation_frames["walk_1"] = { 64, 0 };
-    m_animation_frames["walk_2"] = { 0, 0 };
-    m_animation_frames["walk_3"] = { 32, 0 };
+    m_animation_frames["rwalk_1"] = { 64, 0 };
+    m_animation_frames["rwalk_2"] = { 0, 0 };
+    m_animation_frames["rwalk_3"] = { 32, 0 };
+    m_animation_frames["rwalk_4"] = { 0, 0 };
+
+    m_animation_frames["lwalk_1"] = { 32, 32 };
+    m_animation_frames["lwalk_2"] = { 64, 32 };
+    m_animation_frames["lwalk_3"] = { 0, 32 };
+    m_animation_frames["lwalk_4"] = { 64, 32 };
 }
 
 
@@ -38,6 +44,13 @@ void Player::render()
 
 void Player::move(Room* room, const std::vector<char>& solid_characters)
 {
+    // avoid using ternary operator because when player isnt moving direction shouldnt be changed
+    if (m_velocity.x > 0)
+        m_direction = 1;
+
+    if (m_velocity.x < 0)
+        m_direction = -1;
+
     int characters_per_line = room->characters_per_line();
     std::string layout = room->layout();
 
@@ -91,16 +104,24 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
 
 void Player::animate()
 {
-    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_last_frame_change).count() >= 250)
+    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_last_frame_change).count() >= 110)
     {
         m_last_frame_change = std::chrono::system_clock::now();
 
-        ++m_current_frame_num;
-        m_current_frame_pos = m_animation_frames["walk_" + std::to_string(m_current_frame_num)];
-
-        if (m_current_frame_num >= 4)
+        if (m_velocity.x != 0 || m_velocity.y != 0) // moving
         {
-            m_current_frame_num = 0;
+            if (m_current_frame_num > 4)
+            {
+                m_current_frame_num = 1;
+            }
+
+            m_current_frame_pos = m_animation_frames[std::string(m_direction == 1 ? "r" : "l") + "walk_" + std::to_string(m_current_frame_num)];
+            ++m_current_frame_num;
+        }
+        else // idle
+        {
+            m_current_frame_num = 1;
+            m_current_frame_pos = m_animation_frames[std::string(m_direction == 1 ? "r" : "l") + "walk_2"];
         }
     }
 }
