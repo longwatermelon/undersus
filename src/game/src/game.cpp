@@ -178,10 +178,7 @@ void Game::start_game()
 {
     sleep(1000);
     
-    {
-        std::lock_guard lock(m_mtx);
-        add_image(new gui::Image(m_rend, { 0, 0 }, m_resources_dir + "gfx/atlas.png", 4000));
-    }
+    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/atlas.png", 4000);
 
     sleep(5000);
     
@@ -224,12 +221,13 @@ void Game::add_text(gui::Text* text)
 }
 
 
-void Game::add_image(gui::Image* image)
+void Game::add_image(SDL_Renderer* rend, SDL_Point pos, const std::string& image_path, int delete_after_ms)
 {
     if (!m_running)
         return;
 
-    m_images.emplace_back(image);
+    std::lock_guard lock(m_mtx);
+    m_images.emplace_back(new gui::Image(rend, pos, image_path, delete_after_ms));
 }
 
 

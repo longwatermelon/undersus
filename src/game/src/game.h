@@ -31,7 +31,7 @@ private:
     // Lock the mutex and then emplace_back text into m_text 
     void add_text(gui::Text* text);
     // Lock the mutex and then emplace_back image into m_images
-    void add_image(gui::Image* image);
+    void add_image(SDL_Renderer* rend, SDL_Point pos, const std::string& image_path, int delete_after_ms);
     
     // Lock the mutex and then set m_menu to menu
     void set_menu(gui::Menu* menu);
@@ -42,7 +42,7 @@ private:
     
     // Wait for key z to be pressed
     void wait_for_z();
-
+    
     void open_map(const std::string& map_name);
 
 private:
