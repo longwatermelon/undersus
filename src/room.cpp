@@ -1,4 +1,5 @@
 #include "room.h"
+#include <iostream>
 
 
 Room::Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas, SDL_Point left_start_pos, SDL_Point right_start_pos)
@@ -48,6 +49,13 @@ bool Room::moveable(int x, int y)
     if ((x < 0 && pixel_width + m_render_pos.x > 800) || (x > 0 && m_render_pos.x < 0))
     {
         return true; 
+    }
+
+    int pixel_height = (m_layout.size() / m_characters_per_row) * 32;
+    
+    if ((y < 0 && pixel_height + m_render_pos.y > 800) || (y > 0 && m_render_pos.y < 0))
+    {
+        return true;
     }
 
     return false;

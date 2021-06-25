@@ -58,17 +58,24 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
         
     }
     
-    
     if (!gui::common::exists(layout[new_y * characters_per_line + (current_x + 1)], solid_characters))
     {
-        if (!gui::common::exists(layout[new_y * characters_per_line + current_x], solid_characters))
+        if (((m_rect.y >= 600 && m_velocity.y > 0) || (m_rect.y <= 200 && m_velocity.y < 0)) && room->moveable(0, -m_velocity.y))
         {
-            m_rect.y += m_velocity.y;
+            room->move(0, -m_velocity.y);
         }
-        else // inside of a solid block
+        else
         {
-            m_rect.y += (new_y * tile_size + (yo == 0 ? tile_size : 0)) - (m_rect.y + yo);
+            if (!gui::common::exists(layout[new_y * characters_per_line + current_x], solid_characters))
+            {
+                m_rect.y += m_velocity.y;
+            }
+            else // inside of a solid block
+            {
+                m_rect.y += (new_y * tile_size + (yo == 0 ? tile_size : 0)) - (m_rect.y + yo);
+            }
         }
+        
     }
 }
 
