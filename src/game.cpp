@@ -154,7 +154,7 @@ void Game::mainloop()
 
             if (m_player)
             {
-                m_player->move(m_rooms[m_current_room_index]->layout(), m_rooms[m_current_room_index]->characters_per_line(), m_solid_characters);
+                m_player->move(m_rooms[m_current_room_index].get(), m_solid_characters);
                 
                 if (m_player->rect().x + m_player->rect().w >= 790)
                     next_room();

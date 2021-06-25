@@ -7,17 +7,16 @@ Room::Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row
 
 void Room::render()
 {
-    // initially set to -32 because 0 % characters_per_row is 0, adding 32 to current_y
-    int current_y = -32;
+    int current_y = m_render_pos.y;
 
     for (int i = 0; i < m_layout.size(); ++i)
     {
-        if (i % m_characters_per_row == 0)
+        if (i % m_characters_per_row == 0 && i != 0)
             current_y += 32;
 
         SDL_Rect dst = {
             // take remainder of i / m_characters_per_row instead of using i because x should not be affected by the y position of the texture
-            (i % m_characters_per_row) * 32,
+            m_render_pos.x + (i % m_characters_per_row) * 32,
             current_y,
             32,
             32
