@@ -189,11 +189,11 @@ cleanup:
 
 void Game::start_game()
 {
-  //  sleep(1000);
+    sleep(1000);
     
-//    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000);
+    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000);
 
- //   sleep(5000);
+    sleep(5000);
     
     set_menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16);
 
