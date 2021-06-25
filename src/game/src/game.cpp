@@ -1,5 +1,6 @@
 #include "game.h"
 #include "menu.h"
+#include "room.h"
 #include <thread>
 #include <iostream>
 #include <SDL_image.h>
@@ -19,11 +20,14 @@ Game::Game(const std::string& resources_path)
     SDL_RenderPresent(m_rend);
 
     m_font_path = m_resources_dir + "gfx/font.ttf";
+    m_atlas = IMG_LoadTexture(m_rend, (m_resources_dir + "gfx/atlas.png").c_str());
 }
 
 
 Game::~Game()
 {
+    SDL_DestroyTexture(m_atlas);
+
     SDL_DestroyRenderer(m_rend);
     SDL_DestroyWindow(m_window);
 
@@ -110,6 +114,9 @@ void Game::mainloop()
 
             SDL_RenderClear(m_rend);
 
+            if (m_current_room)
+                m_current_room->render();
+
             for (int i = 0; i < m_text.size(); ++i)
             {
                 m_text[i]->render();
@@ -170,6 +177,14 @@ void Game::start_game()
     {
         std::lock_guard lock(m_mtx);
         m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 32, 32 }, m_resources_dir + "gfx/player.png"));
+
+        std::string layout;
+        layout += "#####";
+        layout += "#...#";
+        layout += "#...#";
+        layout += "#####";
+
+        m_current_room = std::unique_ptr<Room>(new Room(m_rend, layout, 5, { { '#', { 0, 0 } }, { '.', { 32, 0 } } }, m_atlas));
     }
 }
 

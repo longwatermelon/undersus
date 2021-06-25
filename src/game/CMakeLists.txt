@@ -6,6 +6,8 @@ add_executable(undersus
     src/game.cpp
     src/player.h
     src/player.cpp
+    src/room.h
+    src/room.cpp
 )
 
 target_link_libraries(undersus PRIVATE gui)

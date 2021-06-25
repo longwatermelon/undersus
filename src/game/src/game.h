@@ -3,6 +3,7 @@
 #include "image.h"
 #include "menu.h"
 #include "player.h"
+#include "room.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -60,6 +61,8 @@ private:
     std::atomic<bool> m_z_down{ false };
 
     std::unique_ptr<Player> m_player;
+    std::unique_ptr<Room> m_current_room;
+    SDL_Texture* m_atlas;
 
     /* constants */
     const int m_player_speed{ 3 };
