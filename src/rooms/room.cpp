@@ -48,6 +48,11 @@ void Room::move(int x, int y)
 {
     m_render_pos.x += x;
     m_render_pos.y += y;
+
+    for (auto& entity : m_entities)
+    {
+        entity->move(x, y);
+    }
 }
 
 
@@ -68,5 +73,14 @@ bool Room::moveable(int x, int y)
     }
 
     return false;
+}
+
+
+void Room::add_entities(std::vector<Entity*>& entities)
+{
+    for (auto& entity : entities)
+    {
+        m_entities.emplace_back(std::move(entity));
+    }
 }
 

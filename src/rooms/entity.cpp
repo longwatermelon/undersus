@@ -11,3 +11,10 @@ void Entity::render()
     SDL_RenderCopy(m_rend, m_atlas, &m_atlas_rect, &m_rect);
 }
 
+
+void Entity::move(int x, int y)
+{
+    m_rect.x += x;
+    m_rect.y += y;
+}
+

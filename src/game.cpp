@@ -207,6 +207,10 @@ void Game::start_game()
     wait_for_z();
     
     delete_menu();
+
+    m_room_entities["start_1"] = {
+        new Entity(m_rend, { 17 * 32, 7 * 32 }, m_atlas, { 0, 32 })
+    };
     
     {
         std::lock_guard lock(m_mtx);
@@ -331,6 +335,12 @@ void Game::open_map(const std::string& map_name)
     {
         std::lock_guard lock(m_mtx);
         m_rooms.emplace_back(new Room(m_rend, ss.str(), map_width, m_texture_map, m_atlas, lpos, rpos));
+        std::string room_filename = fs::path(map_name).stem().string();
+
+        if (m_room_entities.find(room_filename) != m_room_entities.end())
+        {
+            m_rooms[m_rooms.size() - 1]->add_entities(m_room_entities[room_filename]);
+        }
     } 
 }
 

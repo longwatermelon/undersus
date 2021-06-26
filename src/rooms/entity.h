@@ -9,6 +9,8 @@ public:
 
     void render();
 
+    void move(int x, int y);
+
 private:
     SDL_Rect m_rect;
     SDL_Rect m_atlas_rect;

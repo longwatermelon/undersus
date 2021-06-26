@@ -17,6 +17,8 @@ public:
 
     bool moveable(int x, int y);
 
+    void add_entities(std::vector<Entity*>& entities);
+
     std::string layout() { return m_layout; }
     int characters_per_line() { return m_characters_per_row; }
 

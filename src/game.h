@@ -75,6 +75,8 @@ private:
     std::map<char, SDL_Point> m_texture_map;
     std::vector<char> m_solid_characters;
 
+    std::map<std::string, std::vector<Entity*>> m_room_entities;
+
     /* constants */
     const int m_player_speed{ 2 };
 };
