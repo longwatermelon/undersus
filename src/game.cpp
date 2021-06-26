@@ -6,8 +6,12 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
+#include <set>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+
+namespace fs = std::filesystem;
 
 
 Game::Game(const std::string& resources_path)
@@ -209,8 +213,7 @@ void Game::start_game()
         m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 32, 32 }, m_resources_dir + "gfx/sprites/player.png"));
     }
 
-    open_map("start");
-    open_map("start_2");
+    load_maps("start");
 
     {
         std::lock_guard lock(m_mtx);
@@ -290,7 +293,7 @@ std::string Game::get_menu_choice()
 
 void Game::open_map(const std::string& map_name)
 {
-    std::ifstream ifs(m_resources_dir + "maps/" + map_name + ".txt");
+    std::ifstream ifs(map_name);
     std::stringstream ss;
     std::string buf;
 
@@ -342,5 +345,23 @@ void Game::prev_room()
 
     Room* room = m_rooms[m_current_room_index].get();
     m_player->move_to(room->right_start_pos().x + room->render_pos().x, room->right_start_pos().y + room->render_pos().y);
+}
+
+
+
+void Game::load_maps(const std::string& directory_name)
+{
+    std::set<std::string> files;
+
+    for (auto& entry : fs::directory_iterator(m_resources_dir + "maps/" + directory_name))
+    {
+        // insert into set for predictable map ordering since set sorts alphabetically
+        files.insert(entry.path().string());
+    }
+
+    for (auto& file : files)
+    {
+        open_map(file);
+    }
 }
 

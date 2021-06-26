@@ -44,6 +44,7 @@ private:
     void wait_for_z();
     
     void open_map(const std::string& map_name);
+    void load_maps(const std::string& directory_name);
 
     void next_room();
     void prev_room();
