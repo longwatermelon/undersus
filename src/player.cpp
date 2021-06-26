@@ -1,4 +1,5 @@
 #include "player.h"
+#include "common.h"
 #include "graphics/common.h"
 #include <iostream>
 #include <algorithm>
@@ -34,8 +35,8 @@ void Player::render()
     SDL_Rect rect = {
         m_current_frame_pos.x,
         m_current_frame_pos.y,
-        32,
-        32
+        BLOCK_SIZE,
+        BLOCK_SIZE 
     };
 
     SDL_RenderCopy(m_rend, m_atlas, &rect, &m_rect);
@@ -60,11 +61,11 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
     int px = m_rect.x - room->render_pos().x;
     int py = m_rect.y - room->render_pos().y;
 
-    int current_y = (int)(py / 32);
-    int current_x = (int)(px / 32);
+    int current_y = (int)(py / BLOCK_SIZE);
+    int current_x = (int)(px / BLOCK_SIZE);
 
-    int new_y = (int)((py + m_velocity.y + yo) / 32);
-    int new_x = (int)((px + m_velocity.x + xo) / 32);
+    int new_y = (int)((py + m_velocity.y + yo) / BLOCK_SIZE);
+    int new_x = (int)((px + m_velocity.x + xo) / BLOCK_SIZE);
 
     if (!gui::common::exists(layout[(current_y + 1) * characters_per_line + new_x], solid_characters))
     {
@@ -130,8 +131,8 @@ char Player::current_character(Room* room)
     int px = m_rect.x - room->render_pos().x;
     int py = m_rect.y - room->render_pos().y;
 
-    int current_y = (int)(py / 32);
-    int current_x = (int)(px / 32);
+    int current_y = (int)(py / BLOCK_SIZE);
+    int current_x = (int)(px / BLOCK_SIZE);
 
     return room->layout()[current_y * room->characters_per_line() + current_x];
 }

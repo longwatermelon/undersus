@@ -21,6 +21,7 @@ add_executable(undersus
     src/player.cpp
     src/room.h
     src/room.cpp
+    src/common.h
     src/graphics/common.h
     src/graphics/common.cpp
     src/graphics/image.h

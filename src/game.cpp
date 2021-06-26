@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "room.h"
 #include "audio/audio.h"
+#include "common.h"
 #include <thread>
 #include <iostream>
 #include <fstream>
@@ -22,7 +23,7 @@ Game::Game(const std::string& resources_path)
     IMG_Init(IMG_INIT_PNG);
     Mix_Init(MIX_INIT_MP3);
 
-    m_window = SDL_CreateWindow("Undersus", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 800, SDL_WINDOW_SHOWN);
+    m_window = SDL_CreateWindow("Undersus", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_SIZE.x, SCREEN_SIZE.y, SDL_WINDOW_SHOWN);
     m_rend = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_RenderClear(m_rend);
@@ -210,7 +211,7 @@ void Game::start_game()
     
     {
         std::lock_guard lock(m_mtx);
-        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200, 32, 32 }, m_resources_dir + "gfx/sprites/player.png"));
+        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png"));
     }
 
     load_maps("start");
@@ -300,16 +301,16 @@ void Game::open_map(const std::string& map_name)
     SDL_Point lpos, rpos;
 
     std::getline(ifs, buf);
-    lpos.x = std::stoi(buf) * 32;
+    lpos.x = std::stoi(buf) * BLOCK_SIZE;
 
     std::getline(ifs, buf);
-    lpos.y = std::stoi(buf) * 32;
+    lpos.y = std::stoi(buf) * BLOCK_SIZE;
 
     std::getline(ifs, buf);
-    rpos.x = std::stoi(buf) * 32;
+    rpos.x = std::stoi(buf) * BLOCK_SIZE;
 
     std::getline(ifs, buf);
-    rpos.y = std::stoi(buf) * 32;
+    rpos.y = std::stoi(buf) * BLOCK_SIZE;
 
     int map_width = 0;
     
