@@ -15,6 +15,9 @@ void Room::render()
         if (i % m_characters_per_row == 0 && i != 0)
             current_y += 32;
 
+        if (m_textures.find(m_layout[i]) == m_textures.end())
+            continue;
+
         SDL_Rect dst = {
             // take remainder of i / m_characters_per_row instead of using i because x should not be affected by the y position of the texture
             m_render_pos.x + (i % m_characters_per_row) * 32,

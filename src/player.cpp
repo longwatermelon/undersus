@@ -124,3 +124,15 @@ void Player::animate()
     }
 }
 
+
+char Player::current_character(Room* room)
+{
+    int px = m_rect.x - room->render_pos().x;
+    int py = m_rect.y - room->render_pos().y;
+
+    int current_y = (int)(py / 32);
+    int current_x = (int)(px / 32);
+
+    return room->layout()[current_y * room->characters_per_line() + current_x];
+}
+

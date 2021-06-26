@@ -18,6 +18,8 @@ public:
 
     void animate();
 
+    char current_character(Room* room);
+
     void set_x_vel(int x) { m_velocity.x = x; }
     void set_y_vel(int y) { m_velocity.y = y; }
 

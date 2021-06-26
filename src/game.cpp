@@ -160,10 +160,10 @@ void Game::mainloop()
             {
                 m_player->move(m_rooms[m_current_room_index].get(), m_solid_characters);
                 
-                if (m_player->rect().x + m_player->rect().w >= 790)
+                if (m_player->current_character(m_rooms[m_current_room_index].get()) == 'N')
                     next_room();
 
-                if (m_player->rect().x <= 10)
+                if (m_player->current_character(m_rooms[m_current_room_index].get()) == 'P')
                     prev_room();
 
                 m_player->render();
