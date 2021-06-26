@@ -12,6 +12,13 @@
 #include <SDL.h>
 
 
+enum class Mode
+{
+    CUTSCENE,
+    NORMAL
+};
+
+
 class Game
 {
 public:
@@ -49,6 +56,8 @@ private:
     void next_room();
     void prev_room();
 
+    bool within_range(SDL_Point p1, SDL_Point p2);
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
@@ -76,6 +85,8 @@ private:
     std::vector<char> m_solid_characters;
 
     std::map<std::string, std::vector<Entity*>> m_room_entities;
+
+    Mode m_mode{ Mode::CUTSCENE };
 
     /* constants */
     const int m_player_speed{ 2 };

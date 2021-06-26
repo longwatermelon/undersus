@@ -102,6 +102,22 @@ void Game::mainloop()
                         break;
                     case SDLK_z:
                         m_z_down = true;
+
+                        if (m_mode == Mode::NORMAL)
+                        {
+                            SDL_Point p1 = { m_player->rect().x + BLOCK_SIZE / 2, m_player->rect().y + BLOCK_SIZE / 2 };
+
+                            for (auto& ent : m_rooms[m_current_room_index]->entities())
+                            {
+                                SDL_Point p2 = { ent->rect().x + BLOCK_SIZE / 2, ent->rect().y + BLOCK_SIZE / 2 };
+                                
+                                if (within_range(p1, p2))
+                                {
+                                    std::cout << "interact\n";
+                                }
+                            }
+                        }
+
                         break;
                     }
                 } break;
@@ -225,6 +241,8 @@ void Game::start_game()
     }
 
     audio::play_sound(m_resources_dir + "sfx/among_us_lofi.wav");
+
+    m_mode = Mode::NORMAL;
 }
 
 
@@ -378,5 +396,11 @@ void Game::load_maps(const std::string& directory_name)
     {
         open_map(file);
     }
+}
+
+
+bool Game::within_range(SDL_Point p1, SDL_Point p2)
+{
+    return std::abs(p2.x - p1.x) < BLOCK_SIZE && std::abs(p2.y - p1.y) < BLOCK_SIZE;
 }
 

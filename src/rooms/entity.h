@@ -11,6 +11,8 @@ public:
 
     void move(int x, int y);
 
+    SDL_Rect rect() { return m_rect; }
+
 private:
     SDL_Rect m_rect;
     SDL_Rect m_atlas_rect;

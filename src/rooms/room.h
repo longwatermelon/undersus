@@ -27,6 +27,8 @@ public:
 
     SDL_Point render_pos() { return m_render_pos; }
 
+    std::vector<std::unique_ptr<Entity>>& entities() { return m_entities; }
+
 private:
     std::string m_layout;
     int m_characters_per_row;
