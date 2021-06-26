@@ -1,8 +1,7 @@
 #include "game.h"
 #include "menu.h"
-#include "room.h"
 #include "audio/audio.h"
-#include "common.h"
+#include "rooms/common.h"
 #include <thread>
 #include <iostream>
 #include <fstream>
@@ -298,9 +297,24 @@ void Game::open_map(const std::string& map_name)
     std::stringstream ss;
     std::string buf;
 
+    
+    int map_width = 0;
+    
+    while (std::getline(ifs, buf))
+    {
+        if (map_width == 0)
+            map_width = buf.size();
+        else
+            // each row in the map should have a constant width
+            if (buf.size() != map_width)
+                break;
+
+        ss << buf;
+    }
+
     SDL_Point lpos, rpos;
 
-    std::getline(ifs, buf);
+    // no std::getline here because buf is already set as the line after the bottom of the map
     lpos.x = std::stoi(buf) * BLOCK_SIZE;
 
     std::getline(ifs, buf);
@@ -311,16 +325,6 @@ void Game::open_map(const std::string& map_name)
 
     std::getline(ifs, buf);
     rpos.y = std::stoi(buf) * BLOCK_SIZE;
-
-    int map_width = 0;
-    
-    while (std::getline(ifs, buf))
-    {
-        ss << buf;
-
-        if (map_width == 0)
-            map_width = buf.size();
-    }
 
     ifs.close();
     

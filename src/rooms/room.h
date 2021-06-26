@@ -1,6 +1,9 @@
 #pragma once
+#include "entity.h"
 #include <string>
 #include <map>
+#include <memory>
+#include <vector>
 #include <SDL.h>
 
 
@@ -35,4 +38,7 @@ private:
     SDL_Point m_right_start_pos;
 
     SDL_Point m_render_pos{ 0, 0 };
+
+    std::vector<std::unique_ptr<Entity>> m_entities;
 };
+

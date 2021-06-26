@@ -36,6 +36,11 @@ void Room::render()
 
         SDL_RenderCopy(m_rend, m_texture_atlas, &src, &dst);
     }
+
+    for (auto& entity : m_entities)
+    {
+        entity->render();
+    }
 }
 
 

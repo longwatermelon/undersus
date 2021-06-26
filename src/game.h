@@ -3,7 +3,7 @@
 #include "graphics/image.h"
 #include "graphics/menu.h"
 #include "player.h"
-#include "room.h"
+#include "rooms/room.h"
 #include <string>
 #include <memory>
 #include <vector>

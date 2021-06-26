@@ -1,5 +1,5 @@
 #include "player.h"
-#include "common.h"
+#include "rooms/common.h"
 #include "graphics/common.h"
 #include <iostream>
 #include <algorithm>

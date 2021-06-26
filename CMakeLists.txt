@@ -19,9 +19,11 @@ add_executable(undersus
     src/game.cpp
     src/player.h
     src/player.cpp
-    src/room.h
-    src/room.cpp
-    src/common.h
+    src/rooms/room.h
+    src/rooms/room.cpp
+    src/rooms/common.h
+    src/rooms/entity.h
+    src/rooms/entity.cpp
     src/graphics/common.h
     src/graphics/common.cpp
     src/graphics/image.h
