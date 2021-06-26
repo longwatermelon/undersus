@@ -57,16 +57,14 @@ void Player::move(Room* room, const std::vector<char>& solid_characters)
     int xo = (m_velocity.x > 0 ? m_rect.w : 0);
     int yo = (m_velocity.y > 0 ? m_rect.h : 0);
 
-    int tile_size = 32;
-
     int px = m_rect.x - room->render_pos().x;
     int py = m_rect.y - room->render_pos().y;
 
-    int current_y = (int)(py / tile_size);
-    int current_x = (int)(px / tile_size);
+    int current_y = (int)(py / 32);
+    int current_x = (int)(px / 32);
 
-    int new_y = (int)((py + m_velocity.y + yo) / tile_size);
-    int new_x = (int)((px + m_velocity.x + xo) / tile_size);
+    int new_y = (int)((py + m_velocity.y + yo) / 32);
+    int new_x = (int)((px + m_velocity.x + xo) / 32);
 
     if (!gui::common::exists(layout[(current_y + 1) * characters_per_line + new_x], solid_characters))
     {
