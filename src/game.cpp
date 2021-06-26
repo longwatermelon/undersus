@@ -31,8 +31,8 @@ Game::Game(const std::string& resources_path)
     m_font_path = m_resources_dir + "gfx/font.ttf";
     m_atlas = IMG_LoadTexture(m_rend, (m_resources_dir + "gfx/atlas.png").c_str());
 
-    m_texture_map['#'] = { 0, 0 };
-    m_texture_map['.'] = { 32, 0 };
+    m_texture_map['#'] = { 32, 0 };
+    m_texture_map['.'] = { 64, 0 };
     m_solid_characters = { '#' };
 }
 
