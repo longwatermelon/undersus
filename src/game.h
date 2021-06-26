@@ -76,5 +76,5 @@ private:
     std::vector<char> m_solid_characters;
 
     /* constants */
-    const int m_player_speed{ 3 };
+    const int m_player_speed{ 2 };
 };

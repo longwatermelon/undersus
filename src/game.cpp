@@ -220,7 +220,7 @@ void Game::start_game()
         next_room();
     }
 
-    audio::play_sound(m_resources_dir + "sfx/among_us_drip.wav");
+    audio::play_sound(m_resources_dir + "sfx/among_us_lofi.wav");
 }
 
 
