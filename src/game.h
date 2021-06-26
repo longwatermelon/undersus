@@ -2,6 +2,7 @@
 #include "graphics/text.h"
 #include "graphics/image.h"
 #include "graphics/menu.h"
+#include "graphics/textbox.h"
 #include "player.h"
 #include "rooms/room.h"
 #include <string>
@@ -70,6 +71,7 @@ private:
     std::vector<std::unique_ptr<gui::Text>> m_text;
     std::vector<std::unique_ptr<gui::Image>> m_images;
     std::unique_ptr<gui::Menu> m_menu;
+    std::unique_ptr<gui::Textbox> m_dialogue_box;
 
     std::mutex m_mtx;
 

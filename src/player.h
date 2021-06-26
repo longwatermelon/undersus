@@ -22,6 +22,8 @@ public:
 
     void set_x_vel(int x) { m_velocity.x = x; }
     void set_y_vel(int y) { m_velocity.y = y; }
+    
+    void set_moveable(bool b) { m_moveable = b; }
 
     SDL_Rect rect() { return m_rect; }
 
@@ -42,4 +44,6 @@ private:
     int m_direction{ 1 };
 
     std::chrono::system_clock::time_point m_last_frame_change;
+
+    bool m_moveable{ true };
 };

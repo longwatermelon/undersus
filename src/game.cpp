@@ -75,7 +75,7 @@ void Game::mainloop()
                     switch (evt.key.keysym.sym)
                     {
                     case SDLK_RIGHT:
-                        if (m_menu.get())
+                        if (m_menu)
                             m_menu->move_selected(1);
 
                         if (m_player)
@@ -83,7 +83,7 @@ void Game::mainloop()
 
                         break;
                     case SDLK_LEFT:
-                        if (m_menu.get())
+                        if (m_menu)
                             m_menu->move_selected(-1);
 
                         if (m_player)
@@ -113,7 +113,16 @@ void Game::mainloop()
                                 
                                 if (within_range(p1, p2))
                                 {
-                                    std::cout << "interact\n";
+                                    if (!m_dialogue_box)
+                                    {
+                                        m_player->set_moveable(false);
+                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, "sample text sample text sample text sample text", m_font_path, 16));
+                                    }
+                                    else
+                                    {
+                                        m_player->set_moveable(true);
+                                        m_dialogue_box.reset(0);
+                                    }
                                 }
                             }
                         }
@@ -185,6 +194,9 @@ void Game::mainloop()
                 m_player->render();
                 m_player->animate();
             }
+
+            if (m_dialogue_box)
+                m_dialogue_box->render();
 
             if (m_menu)
                 m_menu->render();

@@ -45,6 +45,9 @@ void Player::render()
 
 void Player::move(Room* room, const std::vector<char>& solid_characters)
 {
+    if (!m_moveable)
+        return;
+
     // avoid using ternary operator because when player isnt moving direction shouldnt be changed
     if (m_velocity.x > 0)
         m_direction = 1;
@@ -107,7 +110,7 @@ void Player::animate()
     {
         m_last_frame_change = std::chrono::system_clock::now();
 
-        if (m_velocity.x != 0 || m_velocity.y != 0) // moving
+        if ((m_velocity.x != 0 || m_velocity.y != 0) && m_moveable) // moving
         {
             if (m_current_frame_num >= 4)
             {

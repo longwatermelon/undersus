@@ -19,11 +19,13 @@ add_executable(undersus
     src/game.cpp
     src/player.h
     src/player.cpp
+
     src/rooms/room.h
     src/rooms/room.cpp
     src/rooms/common.h
     src/rooms/entity.h
     src/rooms/entity.cpp
+
     src/graphics/common.h
     src/graphics/common.cpp
     src/graphics/image.h
@@ -32,6 +34,9 @@ add_executable(undersus
     src/graphics/menu.cpp
     src/graphics/text.h
     src/graphics/text.cpp
+    src/graphics/textbox.h
+    src/graphics/textbox.cpp
+
     src/audio/audio.h
     src/audio/audio.cpp
 )
