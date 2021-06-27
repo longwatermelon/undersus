@@ -81,6 +81,11 @@ void Game::mainloop()
                         if (m_player)
                             m_player->set_x_vel(m_player_speed);
 
+                        if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->move_selected(1);
+                        }
+
                         break;
                     case SDLK_LEFT:
                         if (m_menu)
@@ -88,6 +93,11 @@ void Game::mainloop()
 
                         if (m_player)
                             m_player->set_x_vel(-m_player_speed);
+
+                        if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->move_selected(-1);
+                        }
 
                         break;
                     case SDLK_UP:
@@ -136,6 +146,10 @@ void Game::mainloop()
                                 }
                             }
                         }
+                        else if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->hit_selected_button();
+                        }
 
                         break;
                     case SDLK_x:
@@ -145,7 +159,7 @@ void Game::mainloop()
 
                             if (ent)
                             {
-                                m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent));
+                                m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas));
                                 m_player->set_moveable(false);
                                 
                                 if (m_dialogue_box)
@@ -276,11 +290,11 @@ cleanup:
 
 void Game::start_game()
 {
-    sleep(1000);
+//    sleep(1000);
     
-    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000);
+//    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000);
 
-    sleep(5000);
+  //  sleep(5000);
     
     set_menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16);
 

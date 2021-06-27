@@ -1,9 +1,10 @@
 #include "battle.h"
 #include "audio/src/audio.h"
+#include <iostream>
 
 
-Battle::Battle(SDL_Renderer* rend, Entity* ent)
-    : m_rend(rend), m_entity(ent)
+Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas)
+    : m_rend(rend), m_entity(ent), m_atlas(atlas)
 {
     audio::play_music(m_entity->theme());
 }
@@ -21,5 +22,47 @@ void Battle::render()
     SDL_RenderFillRect(m_rend, &rect);
 
     m_entity->render();
+
+    SDL_Rect src = { 32, 32, 32, 32 };
+    SDL_Rect dst = { 100, 600, 64, 64 };
+
+    if (m_current_selected_button == 0)
+    {
+        src.x -= 32;
+        src.y += 32;
+    }
+
+    SDL_RenderCopy(m_rend, m_atlas, &src, &dst);
+
+    src = { 64, 32, 32, 32 };
+    dst = { 500, 600, 64, 64 };
+
+    if (m_current_selected_button == 1)
+    {
+        src.x -= 32;
+        src.y += 32;
+    }
+
+    SDL_RenderCopy(m_rend, m_atlas, &src, &dst);
+}
+
+
+void Battle::move_selected(int x)
+{
+    m_current_selected_button = std::min(std::max(m_current_selected_button + x, 0), 1);
+}
+
+
+void Battle::hit_selected_button()
+{
+    switch (m_current_selected_button)
+    {
+    case 0:
+        std::cout << "fight\n";
+        break;
+    case 1:
+        std::cout << "spare\n";
+        break;
+    }
 }
 
