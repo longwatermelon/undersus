@@ -62,6 +62,9 @@ private:
     bool within_range(SDL_Point p1, SDL_Point p2);
     Entity* nearest_entity_in_range();
 
+    void start_battle(Entity* ent);
+    void end_battle();
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;

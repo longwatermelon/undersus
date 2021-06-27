@@ -8,7 +8,8 @@ Entity::Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point 
 
 void Entity::render()
 {
-    SDL_RenderCopy(m_rend, m_atlas, &m_atlas_rect, &m_rect);
+    if (m_alive)
+        SDL_RenderCopy(m_rend, m_atlas, &m_atlas_rect, &m_rect);
 }
 
 

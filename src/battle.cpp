@@ -3,8 +3,8 @@
 #include <iostream>
 
 
-Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas)
-    : m_rend(rend), m_entity(ent), m_atlas(atlas)
+Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir)
+    : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir)
 {
     audio::play_music(m_entity->theme());
 }
@@ -59,6 +59,9 @@ void Battle::hit_selected_button()
     {
     case 0:
         std::cout << "fight\n";
+        audio::play_sound(m_resources_dir + "sfx/kill.wav");
+        m_entity->die();
+        m_finished = true;
         break;
     case 1:
         std::cout << "spare\n";

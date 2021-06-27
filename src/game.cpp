@@ -115,34 +115,26 @@ void Game::mainloop()
 
                         if (m_mode == Mode::NORMAL)
                         {
-                            SDL_Point p1 = { m_player->rect().x + BLOCK_SIZE / 2, m_player->rect().y + BLOCK_SIZE / 2 };
-
-                            for (auto& ent : m_rooms[m_current_room_index]->entities())
-                            {
-                                SDL_Point p2 = { ent->rect().x + BLOCK_SIZE / 2, ent->rect().y + BLOCK_SIZE / 2 };
+                            Entity* ent = nearest_entity_in_range();
                                 
-                                if (within_range(p1, p2))
-                                {
-                                    if (!m_dialogue_box)
-                                    {
-                                        m_player->set_moveable(false);
-                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[0], m_font_path, 16));
-                                    }
-                                    else
-                                    {
-                                        ++m_dialogue_list_index;
+                            if (!m_dialogue_box)
+                            {
+                                m_player->set_moveable(false);
+                                m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[0], m_font_path, 16));
+                            }
+                            else
+                            {
+                                ++m_dialogue_list_index;
 
-                                        if (m_dialogue_list_index >= ent->dialogue().size())
-                                        {
-                                            m_player->set_moveable(true);
-                                            m_dialogue_box.reset(0);
-                                            m_dialogue_list_index = 0;
-                                        }
-                                        else
-                                        {
-                                            m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
-                                        }
-                                    }
+                                if (m_dialogue_list_index >= ent->dialogue().size())
+                                {
+                                    m_player->set_moveable(true);
+                                    m_dialogue_box.reset(0);
+                                    m_dialogue_list_index = 0;
+                                }
+                                else
+                                {
+                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
                                 }
                             }
                         }
@@ -158,22 +150,11 @@ void Game::mainloop()
                             Entity* ent = nearest_entity_in_range();
 
                             if (ent)
-                            {
-                                m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas));
-                                m_player->set_moveable(false);
-                                
-                                if (m_dialogue_box)
-                                    m_dialogue_box.reset(0);
-
-                                m_mode = Mode::BATTLE;
-                            }
+                                start_battle(ent);
                         }
                         else
                         {
-                            m_current_battle.reset(0);
-                            m_player->set_moveable(true);
-                            audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
-                            m_mode = Mode::NORMAL;
+                            end_battle();
                         }
                         break;
                     }
@@ -252,7 +233,14 @@ void Game::mainloop()
                 m_menu->render();
 
             if (m_current_battle)
+            {
                 m_current_battle->render();
+                
+                if (m_current_battle->finished())
+                {
+                    end_battle();
+                }
+            }
 
             SDL_RenderPresent(m_rend);
         }
@@ -497,12 +485,33 @@ Entity* Game::nearest_entity_in_range()
     {
         SDL_Point p2 = { ent->rect().x + BLOCK_SIZE / 2, ent->rect().y + BLOCK_SIZE / 2 };
 
-        if (within_range(p1, p2))
+        if (within_range(p1, p2) && ent->alive())
         {
             return ent.get();
         }
     }
 
     return 0;
+}
+
+
+void Game::start_battle(Entity* ent)
+{
+    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas, m_resources_dir));
+    m_player->set_moveable(false);
+    
+    if (m_dialogue_box)
+        m_dialogue_box.reset(0);
+
+    m_mode = Mode::BATTLE;
+}
+
+
+void Game::end_battle()
+{
+    m_current_battle.reset(0);
+    m_player->set_moveable(true);
+    audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
+    m_mode = Mode::NORMAL;
 }
 

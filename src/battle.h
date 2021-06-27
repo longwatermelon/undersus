@@ -7,13 +7,15 @@
 class Battle
 {
 public:
-    Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas);
+    Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir);
     ~Battle();
 
     void render();
 
     void move_selected(int x);
     void hit_selected_button();
+
+    bool finished() { return m_finished; }
 
 private:
     SDL_Renderer* m_rend;
@@ -22,5 +24,9 @@ private:
     SDL_Texture* m_atlas;
 
     int m_current_selected_button{ 0 };
+
+    bool m_finished{ false };
+
+    std::string m_resources_dir;
 };
 

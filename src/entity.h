@@ -14,9 +14,13 @@ public:
 
     void move(int x, int y);
 
+
+    void die() { m_alive = false; }
+
     SDL_Rect rect() { return m_rect; }
     std::vector<std::string> dialogue() { return m_dialogue; }
     std::string theme() { return m_theme_path; }
+    bool alive() { return m_alive; }
 
 private:
     SDL_Rect m_rect;
@@ -29,5 +33,7 @@ private:
     std::vector<std::string> m_battle_dialogue;
 
     std::string m_theme_path;
+
+    bool m_alive{ true };
 };
 
