@@ -18,13 +18,22 @@ Battle::~Battle()
 
 void Battle::render()
 {
+    SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
+
     SDL_Rect rect = { 0, 0, 800, 800 };
     SDL_RenderFillRect(m_rend, &rect);
 
+    SDL_SetRenderDrawColor(m_rend, 255, 255, 255, 255);
+    SDL_RenderFillRect(m_rend, &m_box);
+
+    SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
+    rect = { m_box.x + 5, m_box.y + 5, m_box.w - 10, m_box.h - 10 };
+    SDL_RenderFillRect(m_rend, &rect);
+    
     m_entity->render();
 
     SDL_Rect src = { 32, 32, 32, 32 };
-    SDL_Rect dst = { 100, 600, 64, 64 };
+    SDL_Rect dst = { 180, 700, 64, 64 };
 
     if (m_current_selected_button == 0 && m_turn == Turn::PLAYER)
     {
@@ -35,7 +44,7 @@ void Battle::render()
     SDL_RenderCopy(m_rend, m_atlas, &src, &dst);
 
     src = { 64, 32, 32, 32 };
-    dst = { 500, 600, 64, 64 };
+    dst = { 560, 700, 64, 64 };
 
     if (m_current_selected_button == 1 && m_turn == Turn::PLAYER)
     {

@@ -34,5 +34,7 @@ private:
         PLAYER,
         ENEMY
     } m_turn{ Turn::PLAYER }; 
+
+    SDL_Rect m_box{ 200, 200, 400, 400 };
 };
 
