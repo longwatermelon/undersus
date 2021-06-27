@@ -20,6 +20,8 @@ gui::Textbox::~Textbox()
     {
         SDL_DestroyTexture(tex);
     }
+
+    TTF_CloseFont(m_font.font);
 }
 
 
