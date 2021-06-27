@@ -116,27 +116,31 @@ void Game::mainloop()
                         if (m_mode == Mode::NORMAL)
                         {
                             Entity* ent = nearest_entity_in_range();
-                                
-                            if (!m_dialogue_box)
+                            
+                            if (ent)
                             {
-                                m_player->set_moveable(false);
-                                m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[0], m_font_path, 16));
-                            }
-                            else
-                            {
-                                ++m_dialogue_list_index;
-
-                                if (m_dialogue_list_index >= ent->dialogue().size())
+                                if (!m_dialogue_box)
                                 {
-                                    m_player->set_moveable(true);
-                                    m_dialogue_box.reset(0);
-                                    m_dialogue_list_index = 0;
+                                    m_player->set_moveable(false);
+                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[0], m_font_path, 16));
                                 }
                                 else
                                 {
-                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
+                                    ++m_dialogue_list_index;
+
+                                    if (m_dialogue_list_index >= ent->dialogue().size())
+                                    {
+                                        m_player->set_moveable(true);
+                                        m_dialogue_box.reset(0);
+                                        m_dialogue_list_index = 0;
+                                    }
+                                    else
+                                    {
+                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
+                                    }
                                 }
                             }
+                            
                         }
                         else if (m_mode == Mode::BATTLE)
                         {
@@ -293,8 +297,8 @@ void Game::start_game()
     std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "I have Brain Damage", ";ALSKDFMA;LDFKMAJL;A;LALFA;LKFJAKLFM LEELLLLLLLLLLLLLLLLLLLL LELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" }, default_theme),
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "OmoO I am So Aesthetic" }, default_theme)
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "Holy sh*t I'm gonna piss myself" }, default_theme),
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "Ew get away from me" }, default_theme)
     };
 
     m_room_entities["start_2"] = {

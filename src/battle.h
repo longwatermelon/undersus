@@ -28,5 +28,11 @@ private:
     bool m_finished{ false };
 
     std::string m_resources_dir;
+
+    enum class Turn
+    {
+        PLAYER,
+        ENEMY
+    } m_turn{ Turn::PLAYER }; 
 };
 
