@@ -116,7 +116,7 @@ void Game::mainloop()
                                     if (!m_dialogue_box)
                                     {
                                         m_player->set_moveable(false);
-                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, "sample text sample text sample text sample text", m_font_path, 16));
+                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, "123456 1234j455 third fourth fifth sixth seventh eighth ninth tenth eleventhhhhhhhhhhh twelvth thirteenth fourteenth END", m_font_path, 16));
                                     }
                                     else
                                     {

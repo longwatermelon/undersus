@@ -1,4 +1,5 @@
 #include "textbox.h"
+#include <iostream>
 
 
 gui::Textbox::Textbox(SDL_Renderer* rend, const std::string& text, const std::string& font_path, int ptsize)
@@ -7,6 +8,9 @@ gui::Textbox::Textbox(SDL_Renderer* rend, const std::string& text, const std::st
     m_font = { TTF_OpenFont(font_path.c_str(), ptsize), ptsize };
     m_rect = { 25, 20, 0, 0 };
     m_last_added_char_time = std::chrono::system_clock::now();
+    add_char();
+
+    TTF_SizeText(m_font.font, " ", &m_char_dim.x, &m_char_dim.y);
 }
 
 
@@ -31,22 +35,69 @@ void gui::Textbox::render()
     SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
     SDL_RenderFillRect(m_rend, &m_background_rect);
 
-    if (m_tex)
-        SDL_RenderCopy(m_rend, m_tex, 0, &m_rect);
+    for (int i = 0; i < m_textures.size(); ++i)
+    {
+        if (!m_textures[i])
+            continue;
+
+        tmp = m_rect;
+        tmp.y = 20 + i * m_char_dim.y;
+        TTF_SizeText(m_font.font, m_displayed_text[i].c_str(), &tmp.w, &tmp.h);
+
+        SDL_RenderCopy(m_rend, m_textures[i], 0, &tmp);
+    }
 }
 
 
 void gui::Textbox::add_char()
 {
-    if (m_displayed_text.size() == m_text.size())
+    int total_length = 0;
+
+    for (auto& str : m_displayed_text)
+    {
+        total_length += str.size();
+    }
+
+    if (total_length >= m_text.size())
         return;
 
-    m_displayed_text += m_text[m_displayed_text.size()];
+    std::string current_string = m_displayed_text[m_displayed_text.size() - 1];
 
-    if (m_tex)
-        SDL_DestroyTexture(m_tex);
+    int width;
+    TTF_SizeText(m_font.font, (m_displayed_text[m_displayed_text.size() - 1] + next_word()).c_str(), &width, 0);
 
-    m_tex = common::render_text(m_rend, m_font, m_displayed_text, { 255, 255, 255 });
-    TTF_SizeText(m_font.font, m_displayed_text.c_str(), &m_rect.w, &m_rect.h);
+    if (width >= m_background_rect.w && current_string[current_string.size() - 1] == ' ')
+    {
+        m_displayed_text.emplace_back("");
+        m_textures.emplace_back(nullptr);
+    }
+
+    m_displayed_text[m_displayed_text.size() - 1] += m_text[total_length];
+
+    // reference to pointer since tex will change when assigned to a new value
+    SDL_Texture*& tex = m_textures[m_textures.size() - 1];
+
+    if (tex)
+        SDL_DestroyTexture(tex);
+
+    tex = common::render_text(m_rend, m_font, m_displayed_text[m_displayed_text.size() - 1], { 255, 255, 255 });
+    TTF_SizeText(m_font.font, m_displayed_text[m_displayed_text.size() - 1].c_str(), &m_rect.w, &m_rect.h);
+}
+
+
+std::string gui::Textbox::next_word()
+{
+    int index = m_displayed_text[m_displayed_text.size() - 1].size();
+
+    while (index < m_text.size() && m_text[index++] != ' ');
+
+    std::string word;
+
+    while (index < m_text.size() && m_text[index] != ' ')
+    {
+        word += m_text[index++];
+    }
+
+    return word;
 }
 
