@@ -250,6 +250,10 @@ void Game::start_game()
         new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { "I have Brain Damage", ";ALSKDFMA;LDFKMAJL;A;LALFA;LKFJAKLFM LEELLLLLLLLLLLLLLLLLLLL LELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" }),
         new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { "OmoO I am So Aesthetic" })
     };
+
+    m_room_entities["start_2"] = {
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { "Your such a sussy baka :flushed:" })
+    };
     
     {
         std::lock_guard lock(m_mtx);
