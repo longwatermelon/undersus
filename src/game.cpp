@@ -102,7 +102,6 @@ void Game::mainloop()
                         break;
                     case SDLK_z:
                         m_z_down = true;
-                        audio::play_sound(m_resources_dir + "sfx/kill.wav");
 
                         if (m_mode == Mode::NORMAL)
                         {
@@ -138,6 +137,26 @@ void Game::mainloop()
                             }
                         }
 
+                        break;
+                    case SDLK_x:
+                        if (!m_current_battle)
+                        {
+                            Entity* ent = nearest_entity_in_range();
+
+                            if (ent)
+                            {
+                                m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent));
+                                m_player->set_moveable(false);
+                                
+                                if (m_dialogue_box)
+                                    m_dialogue_box.reset(0);
+                            }
+                        }
+                        else
+                        {
+                            m_current_battle.reset(0);
+                            m_player->set_moveable(true);
+                        }
                         break;
                     }
                 } break;
@@ -213,6 +232,9 @@ void Game::mainloop()
 
             if (m_menu)
                 m_menu->render();
+
+            if (m_current_battle)
+                m_current_battle->render();
 
             SDL_RenderPresent(m_rend);
         }
@@ -434,5 +456,22 @@ void Game::load_maps(const std::string& directory_name)
 bool Game::within_range(SDL_Point p1, SDL_Point p2)
 {
     return std::abs(p2.x - p1.x) < BLOCK_SIZE && std::abs(p2.y - p1.y) < BLOCK_SIZE;
+}
+
+
+Entity* Game::nearest_entity_in_range()
+{
+    SDL_Point p1 = { m_player->rect().x + BLOCK_SIZE / 2, m_player->rect().y + BLOCK_SIZE / 2 };
+    for (auto& ent : m_rooms[m_current_room_index]->entities())
+    {
+        SDL_Point p2 = { ent->rect().x + BLOCK_SIZE / 2, ent->rect().y + BLOCK_SIZE / 2 };
+
+        if (within_range(p1, p2))
+        {
+            return ent.get();
+        }
+    }
+
+    return 0;
 }
 

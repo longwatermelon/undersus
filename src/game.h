@@ -5,6 +5,7 @@
 #include "graphics/src/textbox.h"
 #include "player.h"
 #include "room.h"
+#include "battle.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -16,7 +17,8 @@
 enum class Mode
 {
     CUTSCENE,
-    NORMAL
+    NORMAL,
+    BATTLE
 };
 
 
@@ -58,6 +60,7 @@ private:
     void prev_room();
 
     bool within_range(SDL_Point p1, SDL_Point p2);
+    Entity* nearest_entity_in_range();
 
 private:
     SDL_Window* m_window;
@@ -74,6 +77,8 @@ private:
 
     std::unique_ptr<gui::Textbox> m_dialogue_box;
     int m_dialogue_list_index{ 0 };
+
+    std::unique_ptr<Battle> m_current_battle;
 
     std::mutex m_mtx;
 

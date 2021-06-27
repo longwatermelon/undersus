@@ -22,6 +22,8 @@ add_executable(undersus
     src/common.h
     src/entity.h
     src/entity.cpp
+    src/battle.h
+    src/battle.cpp
 )
 
 target_link_libraries(undersus PRIVATE graphics audio)

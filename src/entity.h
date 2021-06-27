@@ -24,5 +24,6 @@ private:
     SDL_Renderer* m_rend;
 
     std::vector<std::string> m_dialogue;
+    std::vector<std::string> m_battle_dialogue;
 };
 
