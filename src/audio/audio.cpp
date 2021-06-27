@@ -9,7 +9,7 @@ void audio::play_sound(const std::string& path)
         std::cout << Mix_GetError() << "\n";
     }
 
-    Mix_Chunk* music = Mix_LoadWAV(path.c_str());
+    music = Mix_LoadWAV(path.c_str());
 
     if (!music)
         std::cout << Mix_GetError() << "\n";

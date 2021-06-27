@@ -229,6 +229,8 @@ cleanup:
     m_rooms.clear();
 
     m_player.reset();
+
+    audio::stop_music();
 }
 
 
