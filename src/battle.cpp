@@ -57,14 +57,12 @@ void Battle::hit_selected_button()
 {
     switch (m_current_selected_button)
     {
-    case 0:
-        std::cout << "fight\n";
+    case 0: // fight
         audio::play_sound(m_resources_dir + "sfx/kill.wav");
         m_entity->die();
         m_finished = true;
         break;
-    case 1:
-        std::cout << "spare\n";
+    case 1: // spare
         break;
     }
 }

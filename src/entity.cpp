@@ -2,14 +2,16 @@
 #include "common.h"
 
 
-Entity::Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point atlas_pos, const std::vector<std::string>& dialogue, const std::string& theme_path)
-    : m_rend(rend), m_rect{ pos.x, pos.y, BLOCK_SIZE, BLOCK_SIZE }, m_atlas(atlas), m_atlas_rect{ atlas_pos.x, atlas_pos.y, BLOCK_SIZE, BLOCK_SIZE }, m_dialogue(dialogue), m_theme_path(theme_path) {}
+Entity::Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point alive_spr, SDL_Point dead_spr, const std::vector<std::string>& dialogue, const std::string& theme_path)
+    : m_rend(rend), m_rect{ pos.x, pos.y, BLOCK_SIZE, BLOCK_SIZE }, m_atlas(atlas), m_sprite{ alive_spr.x, alive_spr.y, BLOCK_SIZE, BLOCK_SIZE }, m_dead_sprite{ dead_spr.x, dead_spr.y, BLOCK_SIZE, BLOCK_SIZE }, m_dialogue(dialogue), m_theme_path(theme_path) {}
 
 
 void Entity::render()
 {
     if (m_alive)
-        SDL_RenderCopy(m_rend, m_atlas, &m_atlas_rect, &m_rect);
+        SDL_RenderCopy(m_rend, m_atlas, &m_sprite, &m_rect);
+    else
+        SDL_RenderCopy(m_rend, m_atlas, &m_dead_sprite, &m_rect);
 }
 
 

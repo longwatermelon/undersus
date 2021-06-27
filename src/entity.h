@@ -8,7 +8,7 @@
 class Entity
 {
 public:
-    Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point atlas_pos, const std::vector<std::string>& dialogue, const std::string& theme_path);
+    Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point alive_spr, SDL_Point dead_spr, const std::vector<std::string>& dialogue, const std::string& theme_path);
 
     void render();
 
@@ -24,7 +24,8 @@ public:
 
 private:
     SDL_Rect m_rect;
-    SDL_Rect m_atlas_rect;
+    SDL_Rect m_sprite;
+    SDL_Rect m_dead_sprite;
     SDL_Texture* m_atlas;
 
     SDL_Renderer* m_rend;

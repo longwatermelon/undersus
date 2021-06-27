@@ -293,12 +293,12 @@ void Game::start_game()
     std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { "I have Brain Damage", ";ALSKDFMA;LDFKMAJL;A;LALFA;LKFJAKLFM LEELLLLLLLLLLLLLLLLLLLL LELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" }, default_theme),
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { "OmoO I am So Aesthetic" }, default_theme)
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "I have Brain Damage", ";ALSKDFMA;LDFKMAJL;A;LALFA;LKFJAKLFM LEELLLLLLLLLLLLLLLLLLLL LELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" }, default_theme),
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "OmoO I am So Aesthetic" }, default_theme)
     };
 
     m_room_entities["start_2"] = {
-        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { "Your such a sussy baka :flushed:" }, default_theme)
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "Your such a sussy baka :flushed:" }, default_theme)
     };
     
     {
