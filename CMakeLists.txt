@@ -8,10 +8,8 @@ if (MSVC)
     set_property(TARGET undersus PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
 
-find_package(SDL2 CONFIG REQUIRED)
-find_package(sdl2-image CONFIG REQUIRED)
-find_package(sdl2-ttf CONFIG REQUIRED)
-find_package(sdl2-mixer CONFIG REQUIRED)
+add_subdirectory(src/graphics)
+add_subdirectory(src/audio)
 
 add_executable(undersus
     src/main.cpp
@@ -19,32 +17,12 @@ add_executable(undersus
     src/game.cpp
     src/player.h
     src/player.cpp
-
-    src/rooms/room.h
-    src/rooms/room.cpp
-    src/rooms/common.h
-    src/rooms/entity.h
-    src/rooms/entity.cpp
-
-    src/graphics/common.h
-    src/graphics/common.cpp
-    src/graphics/image.h
-    src/graphics/image.cpp
-    src/graphics/menu.h
-    src/graphics/menu.cpp
-    src/graphics/text.h
-    src/graphics/text.cpp
-    src/graphics/textbox.h
-    src/graphics/textbox.cpp
-
-    src/audio/audio.h
-    src/audio/audio.cpp
+    src/room.h
+    src/room.cpp
+    src/common.h
+    src/entity.h
+    src/entity.cpp
 )
 
-target_link_libraries(undersus PRIVATE
-    SDL2::SDL2 SDL2::SDL2main
-    SDL2::SDL2_image
-    SDL2::SDL2_ttf
-    SDL2::SDL2_mixer
-)
+target_link_libraries(undersus PRIVATE graphics audio)
 

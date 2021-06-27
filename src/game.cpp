@@ -1,7 +1,7 @@
+#include "audio/src/audio.h"
 #include "game.h"
 #include "menu.h"
-#include "audio/audio.h"
-#include "rooms/common.h"
+#include "common.h"
 #include <thread>
 #include <iostream>
 #include <fstream>
@@ -22,7 +22,7 @@ Game::Game(const std::string& resources_path)
     IMG_Init(IMG_INIT_PNG);
     Mix_Init(MIX_INIT_MP3);
 
-    m_window = SDL_CreateWindow("Undersus", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_SIZE.x, SCREEN_SIZE.y, SDL_WINDOW_SHOWN);
+    m_window = SDL_CreateWindow("Undersus", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 800, SDL_WINDOW_SHOWN);
     m_rend = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_RenderClear(m_rend);

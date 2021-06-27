@@ -1,10 +1,10 @@
 #pragma once
-#include "graphics/text.h"
-#include "graphics/image.h"
-#include "graphics/menu.h"
-#include "graphics/textbox.h"
+#include "graphics/src/text.h"
+#include "graphics/src/image.h"
+#include "graphics/src/menu.h"
+#include "graphics/src/textbox.h"
 #include "player.h"
-#include "rooms/room.h"
+#include "room.h"
 #include <string>
 #include <memory>
 #include <vector>

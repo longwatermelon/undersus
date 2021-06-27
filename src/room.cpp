@@ -60,14 +60,14 @@ bool Room::moveable(int x, int y)
 {
     int pixel_width = m_characters_per_row * BLOCK_SIZE;
    
-    if ((x < 0 && pixel_width + m_render_pos.x > SCREEN_SIZE.x) || (x > 0 && m_render_pos.x < 0))
+    if ((x < 0 && pixel_width + m_render_pos.x > 800) || (x > 0 && m_render_pos.x < 0))
     {
         return true; 
     }
 
     int pixel_height = (m_layout.size() / m_characters_per_row) * BLOCK_SIZE;
     
-    if ((y < 0 && pixel_height + m_render_pos.y > SCREEN_SIZE.y) || (y > 0 && m_render_pos.y < 0))
+    if ((y < 0 && pixel_height + m_render_pos.y > 800) || (y > 0 && m_render_pos.y < 0))
     {
         return true;
     }
