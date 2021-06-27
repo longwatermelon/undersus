@@ -87,7 +87,7 @@ void gui::Textbox::add_char()
 
 std::string gui::Textbox::next_word()
 {
-    int index = m_displayed_text[m_displayed_text.size() - 1].size();
+    int index = m_displayed_text[m_displayed_text.size() - 1].size() - 1;
 
     while (index < m_text.size() && m_text[index++] != ' ');
 
