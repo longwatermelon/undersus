@@ -247,7 +247,8 @@ void Game::start_game()
     delete_menu();
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { "Lelaroos", "I am cringe", "LASKDFM;LASDFJALKFJASLDL;;LAL;ASKJ;LAJFDALK LMFAOOOOOOOOOOO LELLLLL LELLERS LELAROOS LLMMLMFLMLMLM", "I am quirky and aesthetic UwU Jajajajjaers lelelelellelellelelers lelelelelleellel ellelelelelelel" })
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { "I have Brain Damage", ";ALSKDFMA;LDFKMAJL;A;LALFA;LKFJAKLFM LEELLLLLLLLLLLLLLLLLLLL LELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" }),
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { "OmoO I am So Aesthetic" })
     };
     
     {
