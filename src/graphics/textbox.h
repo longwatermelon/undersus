@@ -11,6 +11,7 @@ namespace gui
     {
     public:
         Textbox(SDL_Renderer* rend, const std::string& text, const std::string& font_path, int ptsize);
+        ~Textbox();
 
         void render();
 

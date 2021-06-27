@@ -14,6 +14,15 @@ gui::Textbox::Textbox(SDL_Renderer* rend, const std::string& text, const std::st
 }
 
 
+gui::Textbox::~Textbox()
+{
+    for (auto& tex : m_textures)
+    {
+        SDL_DestroyTexture(tex);
+    }
+}
+
+
 void gui::Textbox::render()
 {
     if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_last_added_char_time).count() >= 25)

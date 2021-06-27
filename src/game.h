@@ -71,7 +71,9 @@ private:
     std::vector<std::unique_ptr<gui::Text>> m_text;
     std::vector<std::unique_ptr<gui::Image>> m_images;
     std::unique_ptr<gui::Menu> m_menu;
+
     std::unique_ptr<gui::Textbox> m_dialogue_box;
+    int m_dialogue_list_index{ 0 };
 
     std::mutex m_mtx;
 

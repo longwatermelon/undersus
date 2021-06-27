@@ -116,12 +116,22 @@ void Game::mainloop()
                                     if (!m_dialogue_box)
                                     {
                                         m_player->set_moveable(false);
-                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, "123456 1234j455 third fourth fifth sixth seventh eighth ninth tenth eleventhhhhhhhhhhh twelvth thirteenth fourteenth END", m_font_path, 16));
+                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[0], m_font_path, 16));
                                     }
                                     else
                                     {
-                                        m_player->set_moveable(true);
-                                        m_dialogue_box.reset(0);
+                                        ++m_dialogue_list_index;
+
+                                        if (m_dialogue_list_index >= ent->dialogue().size())
+                                        {
+                                            m_player->set_moveable(true);
+                                            m_dialogue_box.reset(0);
+                                            m_dialogue_list_index = 0;
+                                        }
+                                        else
+                                        {
+                                            m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
+                                        }
                                     }
                                 }
                             }
@@ -237,7 +247,7 @@ void Game::start_game()
     delete_menu();
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 17 * 32, 7 * 32 }, m_atlas, { 0, 32 })
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { "Lelaroos", "I am cringe", "LASKDFM;LASDFJALKFJASLDL;;LAL;ASKJ;LAJFDALK LMFAOOOOOOOOOOO LELLLLL LELLERS LELAROOS LLMMLMFLMLMLM", "I am quirky and aesthetic UwU Jajajajjaers lelelelellelellelelers lelelelelleellel ellelelelelelel" })
     };
     
     {
