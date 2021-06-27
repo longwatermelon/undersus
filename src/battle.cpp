@@ -1,8 +1,18 @@
 #include "battle.h"
+#include "audio/src/audio.h"
 
 
 Battle::Battle(SDL_Renderer* rend, Entity* ent)
-    : m_rend(rend), m_entity(ent) {}
+    : m_rend(rend), m_entity(ent)
+{
+    audio::play_music(m_entity->theme());
+}
+
+
+Battle::~Battle()
+{
+    audio::stop_music();
+}
 
 
 void Battle::render()

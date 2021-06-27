@@ -6,6 +6,7 @@ class Battle
 {
 public:
     Battle(SDL_Renderer* rend, Entity* ent);
+    ~Battle();
 
     void render();
 

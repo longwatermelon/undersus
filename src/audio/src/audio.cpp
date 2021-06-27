@@ -4,6 +4,8 @@
 
 void audio::play_music(const std::string& path)
 {
+    audio::stop_music();
+
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
     {
         std::cout << Mix_GetError() << "\n";
@@ -22,8 +24,11 @@ void audio::play_music(const std::string& path)
 
 void audio::stop_music()
 {
-    Mix_FreeMusic(music);
-    music = 0;
+    if (music)
+    {
+        Mix_FreeMusic(music);
+        music = 0;
+    }
 }
 
 

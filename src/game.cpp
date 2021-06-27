@@ -150,12 +150,16 @@ void Game::mainloop()
                                 
                                 if (m_dialogue_box)
                                     m_dialogue_box.reset(0);
+
+                                m_mode = Mode::BATTLE;
                             }
                         }
                         else
                         {
                             m_current_battle.reset(0);
                             m_player->set_moveable(true);
+                            audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
+                            m_mode = Mode::NORMAL;
                         }
                         break;
                     }
@@ -253,7 +257,18 @@ cleanup:
 
     m_rooms.clear();
 
-    m_player.reset();
+    m_player.reset(0);
+
+    // manual reset because by the time the smart pointers go out of scope SDL_Quit() IMG_Quit() TTF_Quit() and Mix_Quit() have already been called
+    
+    if (m_current_battle)
+        m_current_battle.reset(0);
+
+    if (m_dialogue_box)
+        m_dialogue_box.reset(0);
+
+    if (m_menu)
+        m_menu.reset(0);
 
     audio::stop_music();
 }
@@ -273,13 +288,15 @@ void Game::start_game()
     
     delete_menu();
 
+    std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
+
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { "I have Brain Damage", ";ALSKDFMA;LDFKMAJL;A;LALFA;LKFJAKLFM LEELLLLLLLLLLLLLLLLLLLL LELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" }),
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { "OmoO I am So Aesthetic" })
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { "I have Brain Damage", ";ALSKDFMA;LDFKMAJL;A;LALFA;LKFJAKLFM LEELLLLLLLLLLLLLLLLLLLL LELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL" }, default_theme),
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { "OmoO I am So Aesthetic" }, default_theme)
     };
 
     m_room_entities["start_2"] = {
-        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { "Your such a sussy baka :flushed:" })
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { "Your such a sussy baka :flushed:" }, default_theme)
     };
     
     {
