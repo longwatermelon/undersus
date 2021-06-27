@@ -102,6 +102,7 @@ void Game::mainloop()
                         break;
                     case SDLK_z:
                         m_z_down = true;
+                        audio::play_sound(m_resources_dir + "sfx/kill.wav");
 
                         if (m_mode == Mode::NORMAL)
                         {
@@ -163,6 +164,8 @@ void Game::mainloop()
                 } break;
                 }
             }
+
+            audio::cleanup_sound_when_done();
 
             SDL_RenderClear(m_rend);
 
@@ -269,7 +272,7 @@ void Game::start_game()
         next_room();
     }
 
-    audio::play_sound(m_resources_dir + "sfx/among_us_lofi.wav");
+    audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
 
     m_mode = Mode::NORMAL;
 }
