@@ -9,21 +9,20 @@ void audio::play_sound(const std::string& path)
         std::cout << Mix_GetError() << "\n";
     }
 
-    music = Mix_LoadWAV(path.c_str());
+    music = Mix_LoadMUS(path.c_str());
 
     if (!music)
         std::cout << Mix_GetError() << "\n";
     else
     {
-        Mix_PlayChannel(-1, music, -1);
+        Mix_PlayMusic(music, -1);
     }
 }
 
 
 void audio::stop_music()
 {
-    Mix_HaltChannel(-1);
-    Mix_FreeChunk(music);
+    Mix_FreeMusic(music);
     music = 0;
 }
 
