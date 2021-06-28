@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline, SDL_Color bg_color)
+gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline, SDL_Color bg_color, SDL_Color font_color)
     : m_rend(rend), m_text(text), m_background_rect(rect), m_draw_outline(draw_outline), m_bg_color(bg_color)
 {
     m_font = { TTF_OpenFont(font_path.c_str(), ptsize), ptsize };
@@ -55,7 +55,7 @@ void gui::Textbox::render()
             continue;
 
         tmp = m_rect;
-        tmp.y = 20 + i * m_char_dim.y;
+        tmp.y = m_rect.y + i * m_char_dim.y;
         TTF_SizeText(m_font.font, m_displayed_text[i].c_str(), &tmp.w, &tmp.h);
 
         SDL_RenderCopy(m_rend, m_textures[i], 0, &tmp);
@@ -94,7 +94,7 @@ void gui::Textbox::add_char()
     if (tex)
         SDL_DestroyTexture(tex);
 
-    tex = common::render_text(m_rend, m_font, m_displayed_text[m_displayed_text.size() - 1], { 255, 255, 255 });
+    tex = common::render_text(m_rend, m_font, m_displayed_text[m_displayed_text.size() - 1], m_font_color);
     TTF_SizeText(m_font.font, m_displayed_text[m_displayed_text.size() - 1].c_str(), &m_rect.w, &m_rect.h);
 }
 

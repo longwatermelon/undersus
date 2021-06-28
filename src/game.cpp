@@ -135,7 +135,7 @@ void Game::mainloop()
                                 if (!m_dialogue_box)
                                 {
                                     m_player->set_moveable(false);
-                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16, true, { 0, 0, 0 }));
+                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16, true, { 0, 0, 0 }, { 255, 255, 255 }));
                                 }
                                 else
                                 {
@@ -149,7 +149,7 @@ void Game::mainloop()
                                     }
                                     else
                                     {
-                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16, true, { 0, 0, 0 }));
+                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16, true, { 0, 0, 0 }, { 255, 255, 255 }));
                                     }
                                 }
                             }
@@ -157,6 +157,7 @@ void Game::mainloop()
                         }
                         else if (m_mode == Mode::BATTLE)
                         {
+                            m_current_battle->z_down();
                             m_current_battle->hit_selected_button();
                         }
 
@@ -208,6 +209,12 @@ void Game::mainloop()
                         break;
                     case SDLK_z:
                         m_z_down = false;
+
+                        if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->z_up();
+                        }
+
                         break;
                     }
                 } break;

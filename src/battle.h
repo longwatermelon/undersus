@@ -1,5 +1,6 @@
 #pragma once
 #include "graphics/src/image.h"
+#include "graphics/src/textbox.h"
 #include "entity.h"
 #include "common.h"
 #include <memory>
@@ -41,6 +42,9 @@ public:
     bool finished() { return m_finished; }
     bool player_dead() { return m_player_dead; }
 
+    void z_down() { m_z_down = true; }
+    void z_up() { m_z_down = false; }
+
 private:
     SDL_Renderer* m_rend;
     Entity* m_entity;
@@ -70,5 +74,9 @@ private:
     int m_current_attack_index{ 0 };
 
     bool m_player_dead{ false };
+    bool m_attacking{ false };
+    bool m_z_down{ false };
+
+    std::unique_ptr<gui::Textbox> m_current_textbox;
 };
 

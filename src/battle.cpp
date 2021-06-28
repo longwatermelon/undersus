@@ -1,6 +1,7 @@
 #include "battle.h"
 #include "audio/src/audio.h"
 #include "game.h"
+#include "graphics/src/textbox.h"
 #include <iostream>
 
 
@@ -59,12 +60,28 @@ void Battle::render()
 
     SDL_RenderCopy(m_rend, m_atlas, &m_player.src, &m_player.dst);
 
+    if (m_current_textbox)
+        m_current_textbox->render();
+
+    if (m_z_down)
+    {
+        if (m_current_textbox)
+            m_current_textbox.reset(0);
+
+        m_z_down = false;
+    }
+
     for (auto& p : m_projectiles)
     {
         SDL_RenderCopy(m_rend, m_atlas, &p.sprite.src, &p.sprite.dst);
     }
 
-    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() > m_entity->attacks()[m_current_attack_index].second)
+    if (m_turn == Turn::ENEMY && !m_current_textbox && !m_attacking && !m_finished)
+    {
+        start_attacks();
+    }
+
+    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() > m_entity->attacks()[m_current_attack_index].second && !m_current_textbox)
     {
         m_turn = Turn::PLAYER;
         m_projectiles.clear();
@@ -127,7 +144,8 @@ void Battle::hit_selected_button()
 
         if (!m_finished)
         {
-            start_attacks();
+            m_z_down = false;
+            m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 100, 100, 300, 60 }, "sample text lel xd eggs dee lellers lellers lawlers", m_resources_dir + "gfx/font.ttf", 16, false, { 255, 255, 255 }, { 0, 0, 0 }));
         }
     }
 }
@@ -141,6 +159,8 @@ void Battle::add_projectile(Projectile p)
 
 void Battle::start_attacks()
 {
+    m_attacking = true;
+    m_attack_start = std::chrono::system_clock::now();
     m_current_attack_index = randint(0, m_entity->attacks().size() - 1);
     m_entity->attacks()[m_current_attack_index].first();
     m_attack_start = std::chrono::system_clock::now();
