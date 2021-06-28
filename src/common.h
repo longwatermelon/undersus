@@ -18,3 +18,14 @@ inline int randint(int min, int max)
 
     return uni(rng);
 }
+
+struct TextureDeleter
+{
+    void operator()(SDL_Texture* tex)
+    {
+        if (tex)
+            SDL_DestroyTexture(tex);
+
+        tex = 0;
+    }
+};

@@ -6,15 +6,13 @@
 #include "player.h"
 #include "room.h"
 #include "battle.h"
+#include "common.h"
 #include <string>
 #include <memory>
 #include <vector>
 #include <atomic>
 #include <mutex>
 #include <SDL.h>
-
-
-
 
 
 class Game
@@ -28,6 +26,10 @@ public:
 
     // See function body
     void start_game();
+
+    void setup_game();
+
+    bool ready_to_restart() { return m_ready_to_restart; }
 
 private:
     // std::this_thread::sleep_for except it kills the thread when m_running is set to false
@@ -95,7 +97,7 @@ private:
     std::vector<std::unique_ptr<Room>> m_rooms;
     int m_current_room_index{ -1 };
 
-    SDL_Texture* m_atlas;
+    std::unique_ptr<SDL_Texture, TextureDeleter> m_atlas;
     std::map<char, SDL_Point> m_texture_map;
     std::vector<char> m_solid_characters;
 
@@ -107,6 +109,8 @@ private:
         NORMAL,
         BATTLE
     } m_mode{ Mode::CUTSCENE };
+
+    bool m_ready_to_restart{ false };
 
     /* constants */
     const int m_player_speed{ 2 };

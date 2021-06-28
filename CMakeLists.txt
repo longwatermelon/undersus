@@ -8,6 +8,7 @@ if (MSVC)
     set_property(TARGET undersus PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
 
+
 add_subdirectory(src/graphics)
 add_subdirectory(src/audio)
 

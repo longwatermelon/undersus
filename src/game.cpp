@@ -17,11 +17,6 @@ namespace fs = std::filesystem;
 Game::Game(const std::string& resources_path)
     : m_resources_dir(resources_path + '/')
 {
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-    TTF_Init();
-    IMG_Init(IMG_INIT_PNG);
-    Mix_Init(MIX_INIT_MP3);
-
     m_window = SDL_CreateWindow("Undersus", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 800, SDL_WINDOW_SHOWN);
     m_rend = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
@@ -29,7 +24,7 @@ Game::Game(const std::string& resources_path)
     SDL_RenderPresent(m_rend);
 
     m_font_path = m_resources_dir + "gfx/font.ttf";
-    m_atlas = IMG_LoadTexture(m_rend, (m_resources_dir + "gfx/atlas.png").c_str());
+    m_atlas = std::unique_ptr<SDL_Texture, TextureDeleter>(IMG_LoadTexture(m_rend, (m_resources_dir + "gfx/atlas.png").c_str()));
 
     m_texture_map['#'] = { 32, 0 };
     m_texture_map['.'] = { 64, 0 };
@@ -39,22 +34,16 @@ Game::Game(const std::string& resources_path)
 
 Game::~Game()
 {
-    SDL_DestroyTexture(m_atlas);
+    std::cout << "destructor\n";
+    m_atlas.reset(0); 
 
     SDL_DestroyRenderer(m_rend);
     SDL_DestroyWindow(m_window);
-
-    SDL_Quit();
-    TTF_Quit();
-    IMG_Quit();
-    Mix_Quit();
 }
 
 
 void Game::mainloop()
 {
-    std::thread thr_start(&Game::start_game, this);
-
     SDL_Event evt;
     
     while (m_running)
@@ -297,9 +286,6 @@ void Game::mainloop()
     }
 
 cleanup: 
-    if (thr_start.joinable())
-        thr_start.join();
-
     m_text.clear();
     m_images.clear();
 
@@ -338,41 +324,7 @@ void Game::start_game()
     
     delete_menu();
 
-    std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
-    std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
-        { [&]() {
-            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 360, 32, 32 } }, { 2, 0 } });
-            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 450, 32, 32 } }, { 3, 0 } });
-        }, 3000 },
-        { [&]() {
-            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 360, 32, 32 } }, { 4, 0 } });
-        }, 3000 }
-    };
-
-    m_room_entities["start_1"] = {
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Holy sh*t I'm gonna piss myself", "jajajjajajjaajajajajers get it because its pee so its funny lelelellers lawlers xD leggs dee" }, { "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks),
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Ew get away from me" }, { "sample battle dialogue", "I sh*t my pants last night" }, default_attacks) 
-    };
-
-    m_room_entities["start_2"] = {
-        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Your such a sussy baka :flushed:" }, { "sample battle dialogue" }, default_attacks)
-    };
-    
-    {
-        std::lock_guard lock(m_mtx);
-        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png"));
-    }
-
-    load_maps("start");
-
-    {
-        std::lock_guard lock(m_mtx);
-        next_room();
-    }
-
-    audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
-
-    m_mode = Mode::NORMAL;
+    setup_game();
 }
 
 
@@ -496,7 +448,7 @@ void Game::open_map(const std::string& map_name)
     
     {
         std::lock_guard lock(m_mtx);
-        m_rooms.emplace_back(new Room(m_rend, ss.str(), map_width, m_texture_map, m_atlas, lpos, rpos));
+        m_rooms.emplace_back(new Room(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos));
         std::string room_filename = fs::path(map_name).stem().string();
 
         if (m_room_entities.find(room_filename) != m_room_entities.end())
@@ -568,7 +520,7 @@ Entity* Game::nearest_entity_in_range()
 
 void Game::start_battle(Entity* ent)
 {
-    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas, m_resources_dir));
+    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas.get(), m_resources_dir));
     m_player->set_moveable(false);
    
     if (m_dialogue_box)
@@ -610,5 +562,68 @@ void Game::game_over_sequence()
     }
 
     sleep(6000);
+
+    {
+        std::lock_guard lock(m_mtx);
+        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 300, 386, 300, 200 }, "Press z to try again...", m_font_path, 16, false, { 0, 0, 0 }, { 255, 255, 255 }));
+    }
+
+    wait_for_z();
+
+#if 0
+    pop_rect();
+
+    {
+        std::lock_guard lock(m_mtx);
+        m_dialogue_box.reset(0);
+        m_player->set_moveable(true);
+        audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
+    }
+
+    m_mode = Mode::NORMAL;
+#endif
+
+    m_running = false;
+    m_ready_to_restart = true;
+}
+
+
+void Game::setup_game()
+{
+    std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
+    std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
+        { [&]() {
+            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 360, 32, 32 } }, { 2, 0 } });
+            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 450, 32, 32 } }, { 3, 0 } });
+        }, 3000 },
+        { [&]() {
+            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 360, 32, 32 } }, { 4, 0 } });
+        }, 3000 }
+    };
+
+    m_room_entities["start_1"] = {
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Holy sh*t I'm gonna piss myself", "jajajjajajjaajajajajers get it because its pee so its funny lelelellers lawlers xD leggs dee" }, { "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks),
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Ew get away from me" }, { "sample battle dialogue", "I sh*t my pants last night" }, default_attacks) 
+    };
+
+    m_room_entities["start_2"] = {
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Your such a sussy baka :flushed:" }, { "sample battle dialogue" }, default_attacks)
+    };
+    
+    {
+        std::lock_guard lock(m_mtx);
+        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png"));
+    }
+
+    load_maps("start");
+
+    {
+        std::lock_guard lock(m_mtx);
+        next_room();
+    }
+
+    audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
+
+    m_mode = Mode::NORMAL;
 }
 
