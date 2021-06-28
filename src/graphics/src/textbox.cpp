@@ -3,7 +3,7 @@
 
 
 gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline, SDL_Color bg_color, SDL_Color font_color)
-    : m_rend(rend), m_text(text), m_background_rect(rect), m_draw_outline(draw_outline), m_bg_color(bg_color)
+    : m_rend(rend), m_text(text), m_background_rect(rect), m_draw_outline(draw_outline), m_bg_color(bg_color), m_font_color(font_color)
 {
     m_font = { TTF_OpenFont(font_path.c_str(), ptsize), ptsize };
     m_rect = { rect.x + 5, rect.y, 0, 0 };

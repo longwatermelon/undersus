@@ -342,12 +342,12 @@ void Game::start_game()
     };
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Holy sh*t I'm gonna piss myself" }, { "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks),
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Ew get away from me" }, { "sample battle dialogue", "I sh*t my pants last night" }, default_attacks) 
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Holy sh*t I'm gonna piss myself", "jajajjajajjaajajajajers get it because its pee so its funny lelelellers lawlers xD leggs dee" }, { "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks),
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Ew get away from me" }, { "sample battle dialogue", "I sh*t my pants last night" }, default_attacks) 
     };
 
     m_room_entities["start_2"] = {
-        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Your such a sussy baka :flushed:" }, { "sample battle dialogue" }, default_attacks)
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Your such a sussy baka :flushed:" }, { "sample battle dialogue" }, default_attacks)
     };
     
     {

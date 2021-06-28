@@ -11,6 +11,9 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
     audio::play_music(m_entity->theme());
     m_player.src = { 0, 96, 32, 32 };
     m_player.dst = { 384, 384, 32, 32 };
+
+    m_entity_spr.src = ent->battle_sprite();
+    m_entity_spr.dst = { 368, 100, 64, 64 };
 }
 
 
@@ -33,8 +36,8 @@ void Battle::render()
     SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
     rect = { m_box.x + 5, m_box.y + 5, m_box.w - 10, m_box.h - 10 };
     SDL_RenderFillRect(m_rend, &rect);
-    
-    m_entity->render();
+
+    SDL_RenderCopy(m_rend, m_atlas, &m_entity_spr.src, &m_entity_spr.dst);
 
     SDL_Rect src = { 32, 32, 32, 32 };
     SDL_Rect dst = { 180, 700, 64, 64 };
@@ -148,7 +151,7 @@ void Battle::hit_selected_button()
             m_z_down = false;
             int index = randint(0, m_entity->battle_dialogue().size() - 1);
 
-            m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 100, 100, 300, 60 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, { 255, 255, 255 }, { 0, 0, 0 }));
+            m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, { 255, 255, 255 }, { 0, 0, 0 }));
         }
     }
 }

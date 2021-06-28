@@ -78,5 +78,7 @@ private:
     bool m_z_down{ false };
 
     std::unique_ptr<gui::Textbox> m_current_textbox;
+
+    Sprite m_entity_spr;
 };
 
