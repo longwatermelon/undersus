@@ -28,3 +28,10 @@ void gui::Image::render()
     }
 }
 
+
+void gui::Image::move(int x, int y)
+{
+    m_rect.x += x;
+    m_rect.y += y;
+}
+

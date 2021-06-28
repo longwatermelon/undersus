@@ -36,5 +36,8 @@ private:
     } m_turn{ Turn::PLAYER }; 
 
     SDL_Rect m_box{ 200, 200, 400, 400 };
+
+    SDL_Rect m_player_src;
+    SDL_Rect m_player_dst;
 };
 

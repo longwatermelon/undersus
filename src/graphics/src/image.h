@@ -14,7 +14,10 @@ namespace gui
 
         void render();
 
+        void move(int x, int y);
+
         bool overtime() { return m_overtime; }
+        SDL_Rect rect() { return m_rect; }
 
     private:
         SDL_Rect m_rect;

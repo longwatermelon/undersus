@@ -149,17 +149,21 @@ void Game::mainloop()
 
                         break;
                     case SDLK_x:
-                        if (!m_current_battle)
+                        if (m_mode != Mode::CUTSCENE)
                         {
-                            Entity* ent = nearest_entity_in_range();
+                            if (!m_current_battle)
+                            {
+                                Entity* ent = nearest_entity_in_range();
 
-                            if (ent)
-                                start_battle(ent);
+                                if (ent)
+                                    start_battle(ent);
+                            }
+                            else
+                            {
+                                end_battle();
+                            }
                         }
-                        else
-                        {
-                            end_battle();
-                        }
+                        
                         break;
                     }
                 } break;
