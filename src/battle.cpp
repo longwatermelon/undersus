@@ -83,6 +83,7 @@ void Battle::render()
 
     if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() > m_entity->attacks()[m_current_attack_index].second && !m_current_textbox)
     {
+        m_attacking = false;
         m_turn = Turn::PLAYER;
         m_projectiles.clear();
     }
@@ -145,7 +146,9 @@ void Battle::hit_selected_button()
         if (!m_finished)
         {
             m_z_down = false;
-            m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 100, 100, 300, 60 }, "sample text lel xd eggs dee lellers lellers lawlers", m_resources_dir + "gfx/font.ttf", 16, false, { 255, 255, 255 }, { 0, 0, 0 }));
+            int index = randint(0, m_entity->battle_dialogue().size() - 1);
+
+            m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 100, 100, 300, 60 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, { 255, 255, 255 }, { 0, 0, 0 }));
         }
     }
 }
