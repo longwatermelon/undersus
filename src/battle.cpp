@@ -14,6 +14,12 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
 
     m_entity_spr.src = ent->battle_sprite();
     m_entity_spr.dst = { 368, 100, 64, 64 };
+
+    m_turn = Turn::ENEMY;
+    m_z_down = false;
+    int index = randint(0, m_entity->battle_dialogue().size() - 1);
+
+    m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, { 255, 255, 255 }, { 0, 0, 0 }));
 }
 
 
@@ -150,6 +156,9 @@ void Battle::hit_selected_button()
 
         if (!m_finished)
         {
+            m_player.dst.x = 384;
+            m_player.dst.y = 384;
+
             m_z_down = false;
             int index = randint(0, m_entity->battle_dialogue().size() - 1);
 
