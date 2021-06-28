@@ -20,6 +20,7 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
     int index = randint(0, m_entity->battle_dialogue().size() - 1);
 
     m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, { 255, 255, 255 }, { 0, 0, 0 }));
+    m_choice_text = std::unique_ptr<gui::Text>(new gui::Text(m_rend, { 360, 700 }, "FIGHT", m_resources_dir + "gfx/font.ttf", 16, { 255, 255, 255 }, -1));
 }
 
 
@@ -72,6 +73,9 @@ void Battle::render()
 
     if (m_current_textbox)
         m_current_textbox->render();
+
+    if (m_choice_text && m_turn == Turn::PLAYER)
+        m_choice_text->render();
 
     if (m_z_down)
     {
@@ -135,6 +139,15 @@ void Battle::move_selected(int x)
 {
     if (m_turn == Turn::PLAYER)
         m_current_selected_button = std::min(std::max(m_current_selected_button + x, 0), 1);
+
+    if (m_current_selected_button == 0)
+    {
+        m_choice_text = std::unique_ptr<gui::Text>(new gui::Text(m_rend, { 360, 700 }, "FIGHT", m_resources_dir + "gfx/font.ttf", 16, { 255, 255, 255 }, -1));
+    }
+    else
+    {
+        m_choice_text = std::unique_ptr<gui::Text>(new gui::Text(m_rend, { 360, 700 }, "SPARE", m_resources_dir + "gfx/font.ttf", 16, { 255, 255, 255 }, -1));
+    }
 }
 
 

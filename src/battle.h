@@ -1,6 +1,7 @@
 #pragma once
 #include "graphics/src/image.h"
 #include "graphics/src/textbox.h"
+#include "graphics/src/text.h"
 #include "entity.h"
 #include "common.h"
 #include <memory>
@@ -80,5 +81,7 @@ private:
     std::unique_ptr<gui::Textbox> m_current_textbox;
 
     Sprite m_entity_spr;
+
+    std::unique_ptr<gui::Text> m_choice_text;
 };
 
