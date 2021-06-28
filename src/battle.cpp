@@ -63,6 +63,12 @@ void Battle::render()
     {
         SDL_RenderCopy(m_rend, m_atlas, &p.sprite.src, &p.sprite.dst);
     }
+
+    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() > m_entity->attacks()[0].second)
+    {
+        m_turn = Turn::PLAYER;
+        m_projectiles.clear();
+    }
 }
 
 
@@ -134,7 +140,8 @@ void Battle::add_projectile(Projectile p)
 
 void Battle::start_attacks()
 {
-    m_entity->attacks()[0]();
+    m_entity->attacks()[0].first();
+    m_attack_start = std::chrono::system_clock::now();
 }
 
 

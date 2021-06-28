@@ -325,10 +325,10 @@ void Game::start_game()
     delete_menu();
 
     std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
-    std::vector<std::function<void(void)>> default_attacks = {
-        [&]() {
+    std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
+        { [&]() {
             m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 360, 32, 32 } }, { 2, 0 } });
-        }
+        }, 1000 }
     };
 
     m_room_entities["start_1"] = {

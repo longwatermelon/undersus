@@ -9,7 +9,7 @@
 class Entity
 {
 public:
-    Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point alive_spr, SDL_Point dead_spr, const std::string& theme_path, const std::vector<std::string>& dialogue, const std::vector<std::function<void(void)>>& attacks);
+    Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point alive_spr, SDL_Point dead_spr, const std::string& theme_path, const std::vector<std::string>& dialogue, const std::vector<std::pair<std::function<void(void)>, int>>& attacks);
 
     void render();
 
@@ -22,7 +22,7 @@ public:
     std::vector<std::string> dialogue() { return m_dialogue; }
     std::string theme() { return m_theme_path; }
     bool alive() { return m_alive; }
-    std::vector<std::function<void(void)>>& attacks() { return m_attacks; }
+    std::vector<std::pair<std::function<void(void)>, int>>& attacks() { return m_attacks; }
 
 private:
     SDL_Rect m_rect;
@@ -37,7 +37,7 @@ private:
 
     std::string m_theme_path;
 
-    std::vector<std::function<void(void)>> m_attacks;
+    std::vector<std::pair<std::function<void(void)>, int>> m_attacks;
 
     bool m_alive{ true };
 };

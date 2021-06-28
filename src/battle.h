@@ -5,6 +5,7 @@
 #include <memory>
 #include <functional>
 #include <thread>
+#include <chrono>
 
 class Game;
 
@@ -64,6 +65,8 @@ private:
     SDL_Point m_player_vector{ 0, 0 };
 
     std::vector<Projectile> m_projectiles;
+
+    std::chrono::system_clock::time_point m_attack_start;
 
     bool m_player_dead{ false };
 };
