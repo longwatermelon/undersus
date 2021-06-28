@@ -10,7 +10,7 @@ namespace gui
     class Textbox
     {
     public:
-        Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize);
+        Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline);
         ~Textbox();
 
         void render();
@@ -34,6 +34,8 @@ namespace gui
         std::chrono::system_clock::time_point m_last_added_char_time;
 
         SDL_Point m_char_dim;
+
+        bool m_draw_outline{ false };
     };
 }
 

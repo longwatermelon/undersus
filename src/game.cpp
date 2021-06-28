@@ -135,7 +135,7 @@ void Game::mainloop()
                                 if (!m_dialogue_box)
                                 {
                                     m_player->set_moveable(false);
-                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16));
+                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16, true));
                                 }
                                 else
                                 {
@@ -149,7 +149,7 @@ void Game::mainloop()
                                     }
                                     else
                                     {
-                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
+                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16, true));
                                     }
                                 }
                             }

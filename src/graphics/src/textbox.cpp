@@ -2,11 +2,11 @@
 #include <iostream>
 
 
-gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize)
-    : m_rend(rend), m_text(text), m_background_rect(rect)
+gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline)
+    : m_rend(rend), m_text(text), m_background_rect(rect), m_draw_outline(draw_outline)
 {
     m_font = { TTF_OpenFont(font_path.c_str(), ptsize), ptsize };
-    m_rect = { 25, 20, 0, 0 };
+    m_rect = { rect.x + 5, rect.y, 0, 0 };
     m_last_added_char_time = std::chrono::system_clock::now();
     add_char();
 
@@ -40,8 +40,11 @@ void gui::Textbox::render()
         m_background_rect.h + 10
     };
 
-    SDL_SetRenderDrawColor(m_rend, 255, 255, 255, 255);
-    SDL_RenderFillRect(m_rend, &tmp);
+    if (m_draw_outline)
+    {
+        SDL_SetRenderDrawColor(m_rend, 255, 255, 255, 255);
+        SDL_RenderFillRect(m_rend, &tmp);
+    }
 
     SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
     SDL_RenderFillRect(m_rend, &m_background_rect);
