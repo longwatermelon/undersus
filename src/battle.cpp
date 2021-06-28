@@ -1,10 +1,11 @@
 #include "battle.h"
 #include "audio/src/audio.h"
+#include "game.h"
 #include <iostream>
 
 
-Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir)
-    : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir)
+Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir, Game* game)
+    : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir), m_game(game)
 {
     audio::play_music(m_entity->theme());
     m_player.src = { 0, 96, 32, 32 };
@@ -57,6 +58,39 @@ void Battle::render()
     SDL_RenderCopy(m_rend, m_atlas, &src, &dst);
 
     SDL_RenderCopy(m_rend, m_atlas, &m_player.src, &m_player.dst);
+
+    for (auto& p : m_projectiles)
+    {
+        SDL_RenderCopy(m_rend, m_atlas, &p.sprite.src, &p.sprite.dst);
+    }
+}
+
+
+void Battle::move_projectiles()
+{
+    for (auto& p : m_projectiles)
+    {
+        p.sprite.dst.x += p.vector.x;
+        p.sprite.dst.y += p.vector.y;
+    }
+}
+
+
+void Battle::check_collisions()
+{
+    SDL_Rect pr = m_player.dst;
+
+    for (auto& p : m_projectiles)
+    {
+        SDL_Rect br = p.sprite.dst;
+
+        if (pr.x <= br.x + br.w && pr.x + pr.w >= br.x &&
+            pr.y <= br.y + br.h && pr.y + pr.h >= br.y)
+        {
+            m_player_dead = true;
+            m_finished = true;
+        }
+    }
 }
 
 
@@ -81,6 +115,23 @@ void Battle::hit_selected_button()
             m_turn = Turn::ENEMY;
             break;
         }
+
+        if (!m_finished)
+        {
+            start_attacks();
+        }
     }
+}
+
+
+void Battle::add_projectile(Projectile p)
+{
+    m_projectiles.emplace_back(p);
+}
+
+
+void Battle::start_attacks()
+{
+    m_entity->attacks()[0]();
 }
 

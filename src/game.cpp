@@ -242,6 +242,8 @@ void Game::mainloop()
 
             if (m_current_battle)
             {
+                m_current_battle->move_projectiles();
+                m_current_battle->check_collisions();
                 m_current_battle->render();
                 
                 if (m_current_battle->finished())
@@ -299,14 +301,19 @@ void Game::start_game()
     delete_menu();
 
     std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
+    std::vector<std::function<void(void)>> default_attacks = {
+        [&]() {
+            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 360, 32, 32 } }, { 2, 0 } });
+        }
+    };
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "Holy sh*t I'm gonna piss myself" }, default_theme),
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "Ew get away from me" }, default_theme)
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Holy sh*t I'm gonna piss myself" }, default_attacks),
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Ew get away from me" }, default_attacks) 
     };
 
     m_room_entities["start_2"] = {
-        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, { "Your such a sussy baka :flushed:" }, default_theme)
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Your such a sussy baka :flushed:" }, default_attacks)
     };
     
     {
@@ -505,7 +512,7 @@ Entity* Game::nearest_entity_in_range()
 
 void Game::start_battle(Entity* ent)
 {
-    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas, m_resources_dir));
+    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas, m_resources_dir, this));
     m_player->set_moveable(false);
     
     if (m_dialogue_box)
@@ -517,6 +524,11 @@ void Game::start_battle(Entity* ent)
 
 void Game::end_battle()
 {
+    if (m_current_battle->player_dead())
+    {
+        std::cout << "player is dead.\n";
+    }
+
     m_current_battle.reset(0);
     m_player->set_moveable(true);
     audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
