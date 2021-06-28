@@ -19,6 +19,7 @@ class Game
 {
 public:
     Game(const std::string& resources_path);
+    Game(const std::string& resources_path, SDL_Window* window, SDL_Renderer* rend);
     ~Game();
 
     // Event handling and rendering
@@ -30,6 +31,8 @@ public:
     void setup_game();
 
     bool ready_to_restart() { return m_ready_to_restart; }
+    SDL_Window* window() { return m_window; }
+    SDL_Renderer* rend() { return m_rend; }
 
 private:
     // std::this_thread::sleep_for except it kills the thread when m_running is set to false

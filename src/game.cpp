@@ -32,13 +32,28 @@ Game::Game(const std::string& resources_path)
 }
 
 
+Game::Game(const std::string& resources_path, SDL_Window* window, SDL_Renderer* rend)
+    : m_resources_dir(resources_path + '/'), m_window(window), m_rend(rend)
+{
+    m_font_path = m_resources_dir + "gfx/font.ttf";
+    m_atlas = std::unique_ptr<SDL_Texture, TextureDeleter>(IMG_LoadTexture(m_rend, (m_resources_dir + "gfx/atlas.png").c_str()));
+
+    m_texture_map['#'] = { 32, 0 };
+    m_texture_map['.'] = { 64, 0 };
+    m_solid_characters = { '#' };
+}
+
+
 Game::~Game()
 {
-    std::cout << "destructor\n";
     m_atlas.reset(0); 
 
-    SDL_DestroyRenderer(m_rend);
-    SDL_DestroyWindow(m_window);
+    // if the game is being closed instead of restarted
+    if (!m_ready_to_restart)
+    {
+        SDL_DestroyRenderer(m_rend);
+        SDL_DestroyWindow(m_window);
+    }
 }
 
 
@@ -561,7 +576,14 @@ void Game::game_over_sequence()
         m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 300, 386, 300, 200 }, "Red was not an impostor.", m_font_path, 16, false, { 0, 0, 0 }, { 255, 255, 255 }));
     }
 
-    sleep(6000);
+    sleep(4000);
+
+    {
+        std::lock_guard lock(m_mtx);
+        m_dialogue_box.reset(0);
+    }
+
+    sleep(2000);
 
     {
         std::lock_guard lock(m_mtx);
@@ -569,19 +591,6 @@ void Game::game_over_sequence()
     }
 
     wait_for_z();
-
-#if 0
-    pop_rect();
-
-    {
-        std::lock_guard lock(m_mtx);
-        m_dialogue_box.reset(0);
-        m_player->set_moveable(true);
-        audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
-    }
-
-    m_mode = Mode::NORMAL;
-#endif
 
     m_running = false;
     m_ready_to_restart = true;

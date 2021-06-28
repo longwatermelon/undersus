@@ -21,8 +21,11 @@ int main(int argc, char** argv)
         
         if (g->ready_to_restart())
         {
+            SDL_Window* w = g->window();
+            SDL_Renderer* r = g->rend();
+
             delete g;
-            g = new Game("res");
+            g = new Game("res", w, r);
             g->setup_game();
         }
         else
