@@ -84,6 +84,7 @@ void Game::mainloop()
                         if (m_mode == Mode::BATTLE)
                         {
                             m_current_battle->move_selected(1);
+                            m_current_battle->set_player_vx(1);
                         }
 
                         break;
@@ -97,6 +98,7 @@ void Game::mainloop()
                         if (m_mode == Mode::BATTLE)
                         {
                             m_current_battle->move_selected(-1);
+                            m_current_battle->set_player_vx(-1);
                         }
 
                         break;
@@ -104,10 +106,21 @@ void Game::mainloop()
                         if (m_player)
                             m_player->set_y_vel(-m_player_speed);
 
+                        if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->set_player_vy(-1);
+                        }
+
+
                         break;
                     case SDLK_DOWN:
                         if (m_player)
                             m_player->set_y_vel(m_player_speed);
+
+                        if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->set_player_vy(1);
+                        }
 
                         break;
                     case SDLK_z:
@@ -176,11 +189,21 @@ void Game::mainloop()
                         if (m_player)
                             m_player->set_x_vel(0);
 
+                        if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->set_player_vx(0);
+                        }
+
                         break;
                     case SDLK_UP:
                     case SDLK_DOWN:
                         if (m_player)
                             m_player->set_y_vel(0);
+
+                        if (m_mode == Mode::BATTLE)
+                        {
+                            m_current_battle->set_player_vy(0);
+                        }
 
                         break;
                     case SDLK_z:
@@ -243,6 +266,7 @@ void Game::mainloop()
             if (m_current_battle)
             {
                 m_current_battle->move_projectiles();
+                m_current_battle->move_player();
                 m_current_battle->check_collisions();
                 m_current_battle->render();
                 
@@ -512,9 +536,9 @@ Entity* Game::nearest_entity_in_range()
 
 void Game::start_battle(Entity* ent)
 {
-    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas, m_resources_dir, this));
+    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas, m_resources_dir));
     m_player->set_moveable(false);
-    
+   
     if (m_dialogue_box)
         m_dialogue_box.reset(0);
 

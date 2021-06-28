@@ -14,12 +14,7 @@
 #include <SDL.h>
 
 
-enum class Mode
-{
-    CUTSCENE,
-    NORMAL,
-    BATTLE
-};
+
 
 
 class Game
@@ -98,7 +93,12 @@ private:
 
     std::map<std::string, std::vector<Entity*>> m_room_entities;
 
-    Mode m_mode{ Mode::CUTSCENE };
+    enum class Mode
+    {
+        CUTSCENE,
+        NORMAL,
+        BATTLE
+    } m_mode{ Mode::CUTSCENE };
 
     /* constants */
     const int m_player_speed{ 2 };

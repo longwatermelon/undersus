@@ -18,7 +18,7 @@ struct Projectile
 class Battle
 {
 public:
-    Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir, Game* game);
+    Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir);
     ~Battle();
 
     void render();
@@ -32,6 +32,10 @@ public:
     void add_projectile(Projectile p);
 
     void start_attacks();
+
+    void move_player();
+    void set_player_vx(int x) { m_player_vector.x = x; }
+    void set_player_vy(int y) { m_player_vector.y = y; }
 
     bool finished() { return m_finished; }
     bool player_dead() { return m_player_dead; }
@@ -57,10 +61,9 @@ private:
     SDL_Rect m_box{ 200, 200, 400, 400 };
 
     Sprite m_player;
-    std::vector<Projectile> m_projectiles;
+    SDL_Point m_player_vector{ 0, 0 };
 
-    std::thread m_thr_attack;
-    Game* m_game;
+    std::vector<Projectile> m_projectiles;
 
     bool m_player_dead{ false };
 };

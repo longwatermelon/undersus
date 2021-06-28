@@ -4,8 +4,8 @@
 #include <iostream>
 
 
-Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir, Game* game)
-    : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir), m_game(game)
+Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir)
+    : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir)
 {
     audio::play_music(m_entity->theme());
     m_player.src = { 0, 96, 32, 32 };
@@ -68,8 +68,10 @@ void Battle::render()
 
 void Battle::move_projectiles()
 {
-    for (auto& p : m_projectiles)
+    for (int i = 0; i < m_projectiles.size(); ++i)
     {
+        auto& p = m_projectiles[i];
+
         p.sprite.dst.x += p.vector.x;
         p.sprite.dst.y += p.vector.y;
     }
@@ -133,5 +135,15 @@ void Battle::add_projectile(Projectile p)
 void Battle::start_attacks()
 {
     m_entity->attacks()[0]();
+}
+
+
+void Battle::move_player()
+{
+    if (m_turn == Turn::ENEMY)
+    {
+        m_player.dst.x += m_player_vector.x;
+        m_player.dst.y += m_player_vector.y;
+    }
 }
 
