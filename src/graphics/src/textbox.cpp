@@ -2,8 +2,8 @@
 #include <iostream>
 
 
-gui::Textbox::Textbox(SDL_Renderer* rend, const std::string& text, const std::string& font_path, int ptsize)
-    : m_rend(rend), m_text(text)
+gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize)
+    : m_rend(rend), m_text(text), m_background_rect(rect)
 {
     m_font = { TTF_OpenFont(font_path.c_str(), ptsize), ptsize };
     m_rect = { 25, 20, 0, 0 };

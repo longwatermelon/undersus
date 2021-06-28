@@ -135,7 +135,7 @@ void Game::mainloop()
                                 if (!m_dialogue_box)
                                 {
                                     m_player->set_moveable(false);
-                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[0], m_font_path, 16));
+                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16));
                                 }
                                 else
                                 {
@@ -149,7 +149,7 @@ void Game::mainloop()
                                     }
                                     else
                                     {
-                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
+                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16));
                                     }
                                 }
                             }
@@ -335,12 +335,12 @@ void Game::start_game()
     };
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Holy sh*t I'm gonna piss myself" }, default_attacks),
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Ew get away from me" }, default_attacks) 
+        new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Holy sh*t I'm gonna piss myself" }, { "sample battle dialogue" }, default_attacks),
+        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Ew get away from me" }, { "sample battle dialogue" }, default_attacks) 
     };
 
     m_room_entities["start_2"] = {
-        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Your such a sussy baka :flushed:" }, default_attacks)
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas, { 0, 32 }, { 64, 64 }, default_theme, { "Your such a sussy baka :flushed:" }, { "sample battle dialogue" }, default_attacks)
     };
     
     {
