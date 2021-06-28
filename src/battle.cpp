@@ -61,7 +61,8 @@ void Battle::render()
 
     SDL_RenderCopy(m_rend, m_atlas, &src, &dst);
 
-    SDL_RenderCopy(m_rend, m_atlas, &m_player.src, &m_player.dst);
+    if (m_turn == Turn::ENEMY)
+        SDL_RenderCopy(m_rend, m_atlas, &m_player.src, &m_player.dst);
 
     if (m_current_textbox)
         m_current_textbox->render();
@@ -126,7 +127,8 @@ void Battle::check_collisions()
 
 void Battle::move_selected(int x)
 {
-    m_current_selected_button = std::min(std::max(m_current_selected_button + x, 0), 1);
+    if (m_turn == Turn::PLAYER)
+        m_current_selected_button = std::min(std::max(m_current_selected_button + x, 0), 1);
 }
 
 
@@ -175,10 +177,13 @@ void Battle::start_attacks()
 
 void Battle::move_player()
 {
-    if (m_turn == Turn::ENEMY)
+    if (m_turn == Turn::ENEMY && !m_current_textbox)
     {
-        m_player.dst.x += m_player_vector.x;
-        m_player.dst.y += m_player_vector.y;
+        if (m_player.dst.x + m_player_vector.x < m_box.x + m_box.w - m_player.dst.w && m_player.dst.x + m_player_vector.x > m_box.x)
+            m_player.dst.x += m_player_vector.x;
+
+        if (m_player.dst.y + m_player_vector.y < m_box.y + m_box.h - m_player.dst.h && m_player.dst.y + m_player_vector.y > m_box.y)
+            m_player.dst.y += m_player_vector.y;
     }
 }
 
