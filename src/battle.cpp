@@ -9,7 +9,7 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
 {
     audio::play_music(m_entity->theme());
     m_player.src = { 0, 96, 32, 32 };
-    m_player.dst = { 384, 384, 16, 16 };
+    m_player.dst = { 384, 384, 32, 32 };
 }
 
 

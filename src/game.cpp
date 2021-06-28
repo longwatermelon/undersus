@@ -84,7 +84,7 @@ void Game::mainloop()
                         if (m_mode == Mode::BATTLE)
                         {
                             m_current_battle->move_selected(1);
-                            m_current_battle->set_player_vx(1);
+                            m_current_battle->set_player_vx(2);
                         }
 
                         break;
@@ -98,7 +98,7 @@ void Game::mainloop()
                         if (m_mode == Mode::BATTLE)
                         {
                             m_current_battle->move_selected(-1);
-                            m_current_battle->set_player_vx(-1);
+                            m_current_battle->set_player_vx(-2);
                         }
 
                         break;
@@ -108,7 +108,7 @@ void Game::mainloop()
 
                         if (m_mode == Mode::BATTLE)
                         {
-                            m_current_battle->set_player_vy(-1);
+                            m_current_battle->set_player_vy(-2);
                         }
 
 
@@ -119,7 +119,7 @@ void Game::mainloop()
 
                         if (m_mode == Mode::BATTLE)
                         {
-                            m_current_battle->set_player_vy(1);
+                            m_current_battle->set_player_vy(2);
                         }
 
                         break;
