@@ -199,8 +199,7 @@ void Game::mainloop()
                     case SDLK_UP:
                     case SDLK_DOWN:
                         if (m_player)
-                            m_player->set_y_vel(0);
-
+                            m_player->set_y_vel(0); 
                         if (m_mode == Mode::BATTLE)
                         {
                             m_current_battle->set_player_vy(0);
@@ -264,9 +263,6 @@ void Game::mainloop()
                 m_player->animate();
             }
 
-            if (m_dialogue_box)
-                m_dialogue_box->render();
-
             if (m_menu)
                 m_menu->render();
 
@@ -282,6 +278,17 @@ void Game::mainloop()
                     end_battle();
                 }
             }
+
+            for (auto& r : m_rects)
+            {
+                SDL_SetRenderDrawColor(m_rend, r.second.r, r.second.g, r.second.b, 255);
+                SDL_RenderFillRect(m_rend, &r.first);
+            }
+
+            if (m_dialogue_box)
+                m_dialogue_box->render();
+
+            SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
 
             SDL_RenderPresent(m_rend);
         }
@@ -400,6 +407,20 @@ void Game::add_image(SDL_Renderer* rend, SDL_Point pos, const std::string& image
 
     std::lock_guard lock(m_mtx);
     m_images.emplace_back(new gui::Image(rend, pos, image_path, delete_after_ms));
+}
+
+
+void Game::add_rect(SDL_Rect rect, SDL_Color color)
+{
+    std::lock_guard lock(m_mtx);
+    m_rects.emplace_back(std::pair<SDL_Rect, SDL_Color>{ rect, color });
+}
+
+
+void Game::pop_rect()
+{
+    std::lock_guard lock(m_mtx);
+    m_rects.pop_back();
 }
 
 
@@ -561,12 +582,33 @@ void Game::end_battle()
 {
     if (m_current_battle->player_dead())
     {
-        std::cout << "player is dead\n";
+        audio::stop_music();
+        m_current_battle.reset(0);
+        m_mode = Mode::CUTSCENE;
+
+        std::thread thr_game_over(&Game::game_over_sequence, this);
+        thr_game_over.detach();
+    }
+    else
+    {
+        m_current_battle.reset(0);
+        m_player->set_moveable(true);
+        audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
+        m_mode = Mode::NORMAL;
+    }
+}
+
+
+void Game::game_over_sequence()
+{
+    add_rect({ 0, 0, 800, 800 }, { 0, 0, 0 });
+    sleep(2000);
+
+    {
+        std::lock_guard lock(m_mtx);
+        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 300, 386, 300, 200 }, "Red was not an impostor.", m_font_path, 16, false, { 0, 0, 0 }, { 255, 255, 255 }));
     }
 
-    m_current_battle.reset(0);
-    m_player->set_moveable(true);
-    audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
-    m_mode = Mode::NORMAL;
+    sleep(6000);
 }
 

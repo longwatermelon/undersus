@@ -37,6 +37,10 @@ private:
     void add_text(SDL_Renderer* rend, SDL_Point pos, const std::string& text, const std::string& font_path, int ptsize, SDL_Color color, int delete_after_ms);
     // Lock the mutex and then emplace_back image into m_images
     void add_image(SDL_Renderer* rend, SDL_Point pos, const std::string& image_path, int delete_after_ms);
+    // Lock the mutex and then emplace_back an std::pair<SDL_Rect, SDL_Color> into m_rects
+    void add_rect(SDL_Rect rect, SDL_Color color);
+    // Lock the mutex and then pop latest rect off
+    void pop_rect();
     
     // Lock the mutex and then set m_menu to menu
     void set_menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::string>& options, int space_between_options, const std::string& font_path, int ptsize);
@@ -60,6 +64,9 @@ private:
     void start_battle(Entity* ent);
     void end_battle();
 
+    // thread this function if you are going to call it
+    void game_over_sequence();
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
@@ -71,6 +78,7 @@ private:
 
     std::vector<std::unique_ptr<gui::Text>> m_text;
     std::vector<std::unique_ptr<gui::Image>> m_images;
+    std::vector<std::pair<SDL_Rect, SDL_Color>> m_rects;
     std::unique_ptr<gui::Menu> m_menu;
 
     std::unique_ptr<gui::Textbox> m_dialogue_box;
