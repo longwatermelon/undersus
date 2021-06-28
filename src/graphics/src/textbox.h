@@ -10,7 +10,7 @@ namespace gui
     class Textbox
     {
     public:
-        Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline);
+        Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline, SDL_Color m_bg_color);
         ~Textbox();
 
         void render();
@@ -36,6 +36,7 @@ namespace gui
         SDL_Point m_char_dim;
 
         bool m_draw_outline{ false };
+        SDL_Color m_bg_color;
     };
 }
 
