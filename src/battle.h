@@ -1,6 +1,7 @@
 #pragma once
 #include "graphics/src/image.h"
 #include "entity.h"
+#include "common.h"
 #include <memory>
 
 
@@ -37,7 +38,6 @@ private:
 
     SDL_Rect m_box{ 200, 200, 400, 400 };
 
-    SDL_Rect m_player_src;
-    SDL_Rect m_player_dst;
+    Sprite m_player;
 };
 

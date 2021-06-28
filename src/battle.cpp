@@ -7,8 +7,8 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
     : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir)
 {
     audio::play_music(m_entity->theme());
-    m_player_src = { 0, 96, 32, 32 };
-    m_player_dst = { 384, 384, 16, 16 };
+    m_player.src = { 0, 96, 32, 32 };
+    m_player.dst = { 384, 384, 16, 16 };
 }
 
 
@@ -56,7 +56,7 @@ void Battle::render()
 
     SDL_RenderCopy(m_rend, m_atlas, &src, &dst);
 
-    SDL_RenderCopy(m_rend, m_atlas, &m_player_src, &m_player_dst);
+    SDL_RenderCopy(m_rend, m_atlas, &m_player.src, &m_player.dst);
 }
 
 
