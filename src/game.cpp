@@ -328,7 +328,10 @@ void Game::start_game()
     std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
         { [&]() {
             m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 360, 32, 32 } }, { 2, 0 } });
-        }, 1000 }
+        }, 1000 },
+        { [&]() {
+            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 360, 32, 32 } }, { 4, 0 } });
+        }, 5000 }
     };
 
     m_room_entities["start_1"] = {

@@ -67,6 +67,7 @@ private:
     std::vector<Projectile> m_projectiles;
 
     std::chrono::system_clock::time_point m_attack_start;
+    int m_current_attack_index{ 0 };
 
     bool m_player_dead{ false };
 };

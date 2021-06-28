@@ -64,7 +64,7 @@ void Battle::render()
         SDL_RenderCopy(m_rend, m_atlas, &p.sprite.src, &p.sprite.dst);
     }
 
-    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() > m_entity->attacks()[0].second)
+    if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() > m_entity->attacks()[m_current_attack_index].second)
     {
         m_turn = Turn::PLAYER;
         m_projectiles.clear();
@@ -95,6 +95,7 @@ void Battle::check_collisions()
         if (pr.x <= br.x + br.w && pr.x + pr.w >= br.x &&
             pr.y <= br.y + br.h && pr.y + pr.h >= br.y)
         {
+            audio::play_sound(m_resources_dir + "sfx/kill.wav");
             m_player_dead = true;
             m_finished = true;
         }
@@ -140,7 +141,8 @@ void Battle::add_projectile(Projectile p)
 
 void Battle::start_attacks()
 {
-    m_entity->attacks()[0].first();
+    m_current_attack_index = randint(0, m_entity->attacks().size() - 1);
+    m_entity->attacks()[m_current_attack_index].first();
     m_attack_start = std::chrono::system_clock::now();
 }
 
