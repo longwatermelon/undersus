@@ -331,7 +331,7 @@ void Game::start_game()
         }, 1000 },
         { [&]() {
             m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 360, 32, 32 } }, { 4, 0 } });
-        }, 5000 }
+        }, 3000 }
     };
 
     m_room_entities["start_1"] = {
