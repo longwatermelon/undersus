@@ -450,9 +450,9 @@ void Game::open_map(const std::string& map_name)
         m_rooms.emplace_back(std::make_unique<Room>(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos));
         std::string room_filename = fs::path(map_name).stem().string();
 
-        if (m_room_entities.find(room_filename) != m_room_entities.end())
+        if (m_room_data.find(room_filename) != m_room_data.end())
         {
-            m_rooms[m_rooms.size() - 1]->add_data(std::move(m_room_entities[room_filename]));
+            m_rooms[m_rooms.size() - 1]->add_data(std::move(m_room_data[room_filename]));
         }
     } 
 }
@@ -609,7 +609,7 @@ void Game::setup_game()
     room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 18 * 32, 6 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Holy sh*t I'm gonna piss myself" }, std::vector<std::string>{ "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks));
     room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 50 * 32, 12 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Ew get away from me" }, std::vector<std::string>{ "sample battle dialogue", "I sh*t my pants last night" }, default_attacks));
     
-    m_room_entities["start_1"] = std::make_unique<RoomData>(std::move(room_1_entities));
+    m_room_data["start_1"] = std::make_unique<RoomData>(std::move(room_1_entities));
 
 #if 0
     m_room_entities["start_2"] = std::make_unique<RoomData>(std::vector<std::unique_ptr<Entity>>{
