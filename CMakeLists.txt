@@ -3,12 +3,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(undersus)
 
-if (MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    set_property(TARGET undersus PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-endif()
-
-
 add_subdirectory(src/graphics)
 add_subdirectory(src/audio)
 
@@ -28,4 +22,8 @@ add_executable(undersus
 )
 
 target_link_libraries(undersus PRIVATE graphics audio)
+
+if (MSVC)
+    set_property(TARGET undersus PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+endif()
 
