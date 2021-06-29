@@ -7,6 +7,15 @@
 #include <SDL.h>
 
 
+struct RoomData
+{
+    RoomData(std::vector<std::unique_ptr<Entity>>&& entities)
+        : entities(std::move(entities)) {}
+
+    std::vector<std::unique_ptr<Entity>> entities;
+};
+
+
 class Room
 {
 public:
@@ -17,7 +26,7 @@ public:
 
     bool moveable(int x, int y);
 
-    void add_entities(std::vector<Entity*>& entities);
+    void add_data(std::unique_ptr<RoomData> data);
 
     std::string layout() { return m_layout; }
     int characters_per_line() { return m_characters_per_row; }
@@ -27,7 +36,7 @@ public:
 
     SDL_Point render_pos() { return m_render_pos; }
 
-    std::vector<std::unique_ptr<Entity>>& entities() { return m_entities; }
+    std::vector<std::unique_ptr<Entity>>& entities() { return m_data->entities; }
 
 private:
     std::string m_layout;
@@ -43,6 +52,6 @@ private:
 
     SDL_Point m_render_pos{ 0, 0 };
 
-    std::vector<std::unique_ptr<Entity>> m_entities;
+    std::unique_ptr<RoomData> m_data;
 };
 

@@ -37,7 +37,7 @@ void Room::render()
         SDL_RenderCopy(m_rend, m_texture_atlas, &src, &dst);
     }
 
-    for (auto& entity : m_entities)
+    for (auto& entity : m_data->entities)
     {
         entity->render();
     }
@@ -49,7 +49,7 @@ void Room::move(int x, int y)
     m_render_pos.x += x;
     m_render_pos.y += y;
 
-    for (auto& entity : m_entities)
+    for (auto& entity : m_data->entities)
     {
         entity->move(x, y);
     }
@@ -76,11 +76,7 @@ bool Room::moveable(int x, int y)
 }
 
 
-void Room::add_entities(std::vector<Entity*>& entities)
+void Room::add_data(std::unique_ptr<RoomData> data)
 {
-    for (auto& entity : entities)
-    {
-        m_entities.emplace_back(std::move(entity));
-    }
+    m_data = std::move(data);
 }
-

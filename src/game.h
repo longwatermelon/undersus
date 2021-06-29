@@ -104,7 +104,7 @@ private:
     std::map<char, SDL_Point> m_texture_map;
     std::vector<char> m_solid_characters;
 
-    std::map<std::string, std::vector<Entity*>> m_room_entities;
+    std::map<std::string, std::unique_ptr<RoomData>> m_room_entities;
 
     enum class Mode
     {
