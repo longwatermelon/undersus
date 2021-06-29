@@ -139,7 +139,7 @@ void Game::mainloop()
                                 if (!m_dialogue_box)
                                 {
                                     m_player->set_moveable(false);
-                                    m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16, true, { 0, 0, 0 }, { 255, 255, 255 }));
+                                    m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
                                 }
                                 else
                                 {
@@ -155,7 +155,7 @@ void Game::mainloop()
                                     }
                                     else
                                     {
-                                        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16, true, { 0, 0, 0 }, { 255, 255, 255 }));
+                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
                                     }
                                 }
                             }
@@ -347,7 +347,7 @@ void Game::add_text(SDL_Renderer* rend, SDL_Point pos, const std::string& text, 
         return;
 
     std::lock_guard lock(m_mtx);
-    m_text.emplace_back(new gui::Text(rend, pos, text, font_path, ptsize, color, delete_after_ms));
+    m_text.emplace_back(std::make_unique<gui::Text>(rend, pos, text, font_path, ptsize, color, delete_after_ms));
 }
 
 
@@ -357,7 +357,7 @@ void Game::add_image(SDL_Renderer* rend, SDL_Point pos, const std::string& image
         return;
 
     std::lock_guard lock(m_mtx);
-    m_images.emplace_back(new gui::Image(rend, pos, image_path, delete_after_ms));
+    m_images.emplace_back(std::make_unique<gui::Image>(rend, pos, image_path, delete_after_ms));
 }
 
 
@@ -390,7 +390,7 @@ void Game::wait_for_z()
 void Game::set_menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::string>& options, int space_between_options, const std::string& font_path, int ptsize)
 {
     std::lock_guard lock(m_mtx);
-    m_menu = std::unique_ptr<gui::Menu>(new gui::Menu(rend, pos, options, space_between_options, font_path, ptsize));
+    m_menu = std::make_unique<gui::Menu>(rend, pos, options, space_between_options, font_path, ptsize);
 }
 
 
@@ -447,7 +447,7 @@ void Game::open_map(const std::string& map_name)
     
     {
         std::lock_guard lock(m_mtx);
-        m_rooms.emplace_back(new Room(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos));
+        m_rooms.emplace_back(std::make_unique<Room>(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos));
         std::string room_filename = fs::path(map_name).stem().string();
 
         if (m_room_entities.find(room_filename) != m_room_entities.end())
@@ -519,7 +519,7 @@ Entity* Game::nearest_entity_in_range()
 
 void Game::start_battle(Entity* ent)
 {
-    m_current_battle = std::unique_ptr<Battle>(new Battle(m_rend, ent, m_atlas.get(), m_resources_dir));
+    m_current_battle = std::make_unique<Battle>(m_rend, ent, m_atlas.get(), m_resources_dir);
     m_player->set_moveable(false);
    
     if (m_dialogue_box)
@@ -557,7 +557,7 @@ void Game::game_over_sequence()
 
     {
         std::lock_guard lock(m_mtx);
-        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 300, 386, 300, 200 }, "Red was not an impostor.", m_font_path, 16, false, { 0, 0, 0 }, { 255, 255, 255 }));
+        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 300, 386, 300, 200 }, "Red was not an impostor.", m_font_path, 16, false, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
     }
 
     sleep(2000);
@@ -571,7 +571,7 @@ void Game::game_over_sequence()
 
     {
         std::lock_guard lock(m_mtx);
-        m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 300, 386, 300, 200 }, "Press z to try again...", m_font_path, 16, false, { 0, 0, 0 }, { 255, 255, 255 }));
+        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 300, 386, 300, 200 }, "Press z to try again...", m_font_path, 16, false, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
     }
 
     wait_for_z();
@@ -633,7 +633,7 @@ void Game::setup_game()
     
     {
         std::lock_guard lock(m_mtx);
-        m_player = std::unique_ptr<Player>(new Player(m_rend, { 200, 200,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png"));
+        m_player = std::make_unique<Player>(m_rend, SDL_Rect{ 200, 200,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png");
     }
 
     load_maps("start");

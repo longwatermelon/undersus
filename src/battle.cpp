@@ -19,8 +19,8 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
     m_z_down = false;
     int index = randint(0, m_entity->battle_dialogue().size() - 1);
 
-    m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, { 255, 255, 255 }, { 0, 0, 0 }));
-    m_choice_text = std::unique_ptr<gui::Text>(new gui::Text(m_rend, { 360, 700 }, "FIGHT", m_resources_dir + "gfx/font.ttf", 16, { 255, 255, 255 }, -1));
+    m_current_textbox = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, SDL_Color{ 255, 255, 255 }, SDL_Color{ 0, 0, 0 });
+    m_choice_text = std::make_unique<gui::Text>(m_rend, SDL_Point{ 360, 700 }, "FIGHT", m_resources_dir + "gfx/font.ttf", 16, SDL_Color{ 255, 255, 255 }, -1);
 }
 
 
@@ -152,11 +152,11 @@ void Battle::move_selected(int x)
 
     if (m_current_selected_button == 0)
     {
-        m_choice_text = std::unique_ptr<gui::Text>(new gui::Text(m_rend, { 360, 700 }, "FIGHT", m_resources_dir + "gfx/font.ttf", 16, { 255, 255, 255 }, -1));
+        m_choice_text = std::make_unique<gui::Text>(m_rend, SDL_Point{ 360, 700 }, "FIGHT", m_resources_dir + "gfx/font.ttf", 16, SDL_Color{ 255, 255, 255 }, -1);
     }
     else
     {
-        m_choice_text = std::unique_ptr<gui::Text>(new gui::Text(m_rend, { 360, 700 }, "SPARE", m_resources_dir + "gfx/font.ttf", 16, { 255, 255, 255 }, -1));
+        m_choice_text = std::make_unique<gui::Text>(m_rend, SDL_Point{ 360, 700 }, "SPARE", m_resources_dir + "gfx/font.ttf", 16, SDL_Color{ 255, 255, 255 }, -1);
     }
 }
 
@@ -185,7 +185,7 @@ void Battle::hit_selected_button()
             m_z_down = false;
             int index = randint(0, m_entity->battle_dialogue().size() - 1);
 
-            m_current_textbox = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, { 255, 255, 255 }, { 0, 0, 0 }));
+            m_current_textbox = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, SDL_Color{ 255, 255, 255 }, SDL_Color{ 0, 0, 0 });
         }
     }
 }
