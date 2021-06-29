@@ -150,6 +150,8 @@ void Game::mainloop()
                                         m_player->set_moveable(true);
                                         m_dialogue_box.reset(0);
                                         m_dialogue_list_index = 0;
+
+                                        start_battle(ent);
                                     }
                                     else
                                     {
@@ -157,7 +159,6 @@ void Game::mainloop()
                                     }
                                 }
                             }
-                            
                         }
                         else if (m_mode == Mode::BATTLE)
                         {
@@ -165,23 +166,6 @@ void Game::mainloop()
                             m_current_battle->hit_selected_button();
                         }
 
-                        break;
-                    case SDLK_x:
-                        if (m_mode != Mode::CUTSCENE)
-                        {
-                            if (!m_current_battle)
-                            {
-                                Entity* ent = nearest_entity_in_range();
-
-                                if (ent)
-                                    start_battle(ent);
-                            }
-                            else
-                            {
-                                end_battle();
-                            }
-                        }
-                        
                         break;
                     }
                 } break;
@@ -576,14 +560,14 @@ void Game::game_over_sequence()
         m_dialogue_box = std::unique_ptr<gui::Textbox>(new gui::Textbox(m_rend, { 300, 386, 300, 200 }, "Red was not an impostor.", m_font_path, 16, false, { 0, 0, 0 }, { 255, 255, 255 }));
     }
 
-    sleep(4000);
+    sleep(2000);
 
     {
         std::lock_guard lock(m_mtx);
         m_dialogue_box.reset(0);
     }
 
-    sleep(2000);
+    sleep(1000);
 
     {
         std::lock_guard lock(m_mtx);
@@ -592,8 +576,10 @@ void Game::game_over_sequence()
 
     wait_for_z();
 
+    if (m_running)
+        m_ready_to_restart = true;
+
     m_running = false;
-    m_ready_to_restart = true;
 }
 
 
@@ -606,18 +592,44 @@ void Game::setup_game()
             m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 450, 32, 32 } }, { 3, 0 } });
         }, 3000 },
         { [&]() {
-            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 360, 32, 32 } }, { 4, 0 } });
-        }, 3000 }
+            for (int i = 0; i < 10; ++i)
+            {
+                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 200 + i * 64, 32, 32 } }, { 4, 0 } });
+            }
+
+            for (int i = 0; i < 10; ++i)
+            {
+                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 750, 232 + i * 64, 32, 32 } }, { -4, 0 } });
+            }
+        }, 4000 }
     };
 
     m_room_entities["start_1"] = {
-        new Entity(m_rend, { 40 * 32, 11 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Holy sh*t I'm gonna piss myself", "jajajjajajjaajajajajers get it because its pee so its funny lelelellers lawlers xD leggs dee" }, { "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks),
+        new Entity(m_rend, { 18 * 32, 6 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Holy sh*t I'm gonna piss myself" }, { "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks),
         new Entity(m_rend, { 50 * 32, 12 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Ew get away from me" }, { "sample battle dialogue", "I sh*t my pants last night" }, default_attacks) 
     };
 
     m_room_entities["start_2"] = {
-        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Your such a sussy baka :flushed:" }, { "sample battle dialogue" }, default_attacks)
-    };
+        new Entity(m_rend, { 18 * 32, 8 * 32 }, m_atlas.get(), { 0, 32 }, { 64, 64 }, { 32, 96 }, default_theme, { "Your such a sussy baka :flushed:" }, { "sample battle dialogue" }, { { [&]() {
+            for (int i = 0; i < 10; ++i)
+            {
+                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 200 + i * 64, 32, 32 } }, { 4, 0 } });
+            }
+
+            for (int i = 0; i < 10; ++i)
+            {
+                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 750, 232 + i * 64, 32, 32 } }, { -4, 0 } });
+            }
+
+            for (int i = 0; i < 10; ++i)
+            {
+                for (int j = 0; j < 7; ++j)
+                {
+                    m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 0, 200 + ((i % 2) * 32) + j * 64, 32, 32 } }, { 4, 0 }, 3000 + i * 400 });
+                }
+            }
+        }, 10000 } })
+     };
     
     {
         std::lock_guard lock(m_mtx);

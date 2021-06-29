@@ -15,6 +15,7 @@ struct Projectile
 {
     Sprite sprite;
     SDL_Point vector;
+    int wait_time{ 0 };
 };
 
 

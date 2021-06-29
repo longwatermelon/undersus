@@ -10,7 +10,7 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
 {
     audio::play_music(m_entity->theme());
     m_player.src = { 0, 96, 32, 32 };
-    m_player.dst = { 384, 384, 32, 32 };
+    m_player.dst = { 384, 384, 16, 16 };
 
     m_entity_spr.src = ent->battle_sprite();
     m_entity_spr.dst = { 368, 100, 64, 64 };
@@ -87,6 +87,9 @@ void Battle::render()
 
     for (auto& p : m_projectiles)
     {
+        if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() < p.wait_time)
+            continue;
+
         SDL_RenderCopy(m_rend, m_atlas, &p.sprite.src, &p.sprite.dst);
     }
 
@@ -110,6 +113,9 @@ void Battle::move_projectiles()
     {
         auto& p = m_projectiles[i];
 
+        if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() < p.wait_time)
+            continue;
+
         p.sprite.dst.x += p.vector.x;
         p.sprite.dst.y += p.vector.y;
     }
@@ -118,11 +124,15 @@ void Battle::move_projectiles()
 
 void Battle::check_collisions()
 {
-    SDL_Rect pr = m_player.dst;
+    SDL_Rect pr = { m_player.dst.x + 5, m_player.dst.y + 5, m_player.dst.w - 10, m_player.dst.h - 10 };
 
     for (auto& p : m_projectiles)
     {
         SDL_Rect br = p.sprite.dst;
+
+        if (std::chrono::duration<float, std::milli>(std::chrono::system_clock::now() - m_attack_start).count() < p.wait_time)
+            continue;
+
 
         if (pr.x <= br.x + br.w && pr.x + pr.w >= br.x &&
             pr.y <= br.y + br.h && pr.y + pr.h >= br.y)
