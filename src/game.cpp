@@ -445,13 +445,14 @@ void Game::open_map(const std::string& map_name)
 
     SDL_Point lpos = to_point(root["rooms"][fs::path(map_name).stem().string()]["start_pos"]);
     SDL_Point rpos = to_point(root["rooms"][fs::path(map_name).stem().string()]["end_pos"]);
+    SDL_Point render_pos = to_point(root["rooms"][fs::path(map_name).stem().string()]["render_pos"]);
 
     lpos = { lpos.x * 32, lpos.y * 32 };
     rpos = { rpos.x * 32, rpos.y * 32 };
 
     {
         std::lock_guard lock(m_mtx);
-        m_rooms.emplace_back(std::make_unique<Room>(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos));
+        m_rooms.emplace_back(std::make_unique<Room>(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos, render_pos));
         std::string room_filename = fs::path(map_name).stem().string();
 
         if (m_room_data.find(room_filename) != m_room_data.end())

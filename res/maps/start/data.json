@@ -36,13 +36,15 @@
                 }
             ],
             "start_pos": "13 6",
-            "end_pos": "52 3"
+            "end_pos": "52 3",
+            "render_pos": "0 0"
         },
         "start_2": {
             "entities": [
             ],
             "start_pos": "21 18",
-            "end_pos": "19 4"
+            "end_pos": "19 4",
+            "render_pos": "0 0"
         }
     }
 }
