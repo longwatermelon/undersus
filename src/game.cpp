@@ -10,6 +10,7 @@
 #include <set>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <json/json.h>
 
 namespace fs = std::filesystem;
 
@@ -416,7 +417,6 @@ void Game::open_map(const std::string& map_name)
     std::ifstream ifs(map_name);
     std::stringstream ss;
     std::string buf;
-
     
     int map_width = 0;
     
@@ -447,7 +447,11 @@ void Game::open_map(const std::string& map_name)
     rpos.y = std::stoi(buf) * BLOCK_SIZE;
 
     ifs.close();
-    
+
+    Json::Value root;
+    ifs.open(fs::path(map_name).parent_path().string() + "/data.json");
+    ifs >> root;
+
     {
         std::lock_guard lock(m_mtx);
         m_rooms.emplace_back(std::make_unique<Room>(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos));
@@ -457,7 +461,55 @@ void Game::open_map(const std::string& map_name)
         {
             m_rooms[m_rooms.size() - 1]->add_data(std::move(m_room_data[room_filename]));
         }
-    } 
+
+        std::vector<std::unique_ptr<Entity>> entities;
+
+        auto to_point = [](Json::Value value) {
+            std::vector<std::string> split = split_string(value.asString(), ' ');
+            return SDL_Point{ std::stoi(split[0]), std::stoi(split[1]) };
+        };
+
+        std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
+            { [&]() {
+                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 360, 32, 32 } }, { 2, 0 } });
+                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 450, 32, 32 } }, { 3, 0 } });
+            }, 3000 },
+            { [&]() {
+                for (int i = 0; i < 10; ++i)
+                {
+                    m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 200 + i * 64, 32, 32 } }, { 4, 0 } });
+                }
+
+                for (int i = 0; i < 10; ++i)
+                {
+                    m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 750, 232 + i * 64, 32, 32 } }, { -4, 0 } });
+                }
+            }, 4000 }
+        };
+
+
+        for (auto& e : root["rooms"][fs::path(map_name).stem().string()]["entities"])
+        {
+            std::vector<std::string> dialogue;
+            std::vector<std::string> battle_dialogue;
+
+            for (auto& str : e["dialogue"])
+                dialogue.emplace_back(str.asString());
+
+            for (auto& str : e["battle_dialogue"])
+                battle_dialogue.emplace_back(str.asString());
+
+            SDL_Point pos = to_point(e["pos"]);
+            pos.x *= 32;
+            pos.y *= 32;
+
+            std::unique_ptr<Entity> entity = std::make_unique<Entity>(m_rend, pos, m_atlas.get(), to_point(e["sprite_pos"]), to_point(e["dead_sprite"]), to_point(e["battle_sprite"]), m_resources_dir + e["theme"].asString(), dialogue, battle_dialogue, default_attacks);
+            entities.push_back(std::move(entity));
+        }
+
+        std::unique_ptr<RoomData> room_data = std::make_unique<RoomData>(entities);
+        m_rooms[m_rooms.size() - 1]->add_data(std::move(room_data));
+    }
 }
 
 
@@ -608,11 +660,11 @@ void Game::setup_game()
     };
 
     // Spent hours flipping off my code for not compiling, then it turns out initializer lists can only copy. I am not satisfied with this current solution. Definitely going to automate this with json files or something.
-    std::vector<std::unique_ptr<Entity>> room_1_entities;
-    room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 18 * 32, 6 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Holy sh*t I'm gonna piss myself" }, std::vector<std::string>{ "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks));
-    room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 50 * 32, 12 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Ew get away from me" }, std::vector<std::string>{ "sample battle dialogue", "I sh*t my pants last night" }, default_attacks));
+//    std::vector<std::unique_ptr<Entity>> room_1_entities;
+  //  room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 18 * 32, 6 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Holy sh*t I'm gonna piss myself" }, std::vector<std::string>{ "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks));
+   // room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 50 * 32, 12 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Ew get away from me" }, std::vector<std::string>{ "sample battle dialogue", "I sh*t my pants last night" }, default_attacks));
     
-    m_room_data["start_1"] = std::make_unique<RoomData>(std::move(room_1_entities));
+    //m_room_data["start_1"] = std::make_unique<RoomData>(room_1_entities);
 
 #if 0
     m_room_entities["start_2"] = std::make_unique<RoomData>(std::vector<std::unique_ptr<Entity>>{
@@ -638,12 +690,12 @@ void Game::setup_game()
      });
 #endif
     
+    load_maps("start");
+
     {
         std::lock_guard lock(m_mtx);
         m_player = std::make_unique<Player>(m_rend, SDL_Rect{ 200, 200,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png");
     }
-
-    load_maps("start");
 
     {
         std::lock_guard lock(m_mtx);

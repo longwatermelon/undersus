@@ -9,7 +9,7 @@
 
 struct RoomData
 {
-    RoomData(std::vector<std::unique_ptr<Entity>>&& entities)
+    RoomData(std::vector<std::unique_ptr<Entity>>& entities)
         : entities(std::move(entities)) {}
 
     std::vector<std::unique_ptr<Entity>> entities;

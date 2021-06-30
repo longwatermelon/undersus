@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(undersus)
 
+find_package(jsoncpp CONFIG REQUIRED)
+
 add_subdirectory(src/graphics)
 add_subdirectory(src/audio)
 
@@ -21,7 +23,7 @@ add_executable(undersus
     src/battle.cpp
 )
 
-target_link_libraries(undersus PRIVATE graphics audio)
+target_link_libraries(undersus PRIVATE graphics audio jsoncpp_object jsoncpp_static)
 
 if (MSVC)
     set_property(TARGET undersus PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

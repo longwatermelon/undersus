@@ -1,5 +1,6 @@
 #pragma once
 #include <random>
+#include <iostream>
 #include <SDL.h>
 
 inline constexpr int BLOCK_SIZE = 32;
@@ -29,3 +30,26 @@ struct TextureDeleter
         tex = 0;
     }
 };
+
+
+inline std::vector<std::string> split_string(std::string string, char delim)
+{
+    std::vector<std::string> ret;
+
+    for (int i = 0; i < string.size(); ++i)
+    {
+        if (string[i] == ' ')
+        {
+            ret.emplace_back(string.substr(0, i));
+            string.erase(0, i + 1);
+            i = 0;
+        }
+    }
+
+    if (!string.empty())
+    {
+        ret.emplace_back(string);
+    }
+    
+    return ret;
+}

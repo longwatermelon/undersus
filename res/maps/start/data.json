@@ -1,0 +1,25 @@
+{
+    "rooms": {
+        "start_1": {
+            "entities": [
+                {
+                    "pos": "18 6",
+                    "sprite_pos": "0 32",
+                    "battle_sprite": "32 96",
+                    "dead_sprite": "64 64",
+                    "theme": "sfx/among_us_drip.wav",
+                    "dialogue": [
+                        "I am going to piss myself",
+                        "Holy sh*t"
+                    ],
+                    "battle_dialogue": [
+                        "Lelaroos I am cringe",
+                        "Dat is a leltastic moment",
+                        "UwU Plz marry me"
+                    ]
+                }
+            ]
+        }
+    }
+}
+
