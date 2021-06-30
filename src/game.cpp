@@ -435,16 +435,11 @@ void Game::open_map(const std::string& map_name)
         ss << buf;
     }
 
-    auto to_point = [](Json::Value value) {
-        std::vector<std::string> split = split_string(value.asString(), ' ');
-        return SDL_Point{ std::stoi(split[0]), std::stoi(split[1]) };
-    };
-
     ifs.close();
 
-    SDL_Point lpos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["start_pos"]);
-    SDL_Point rpos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["end_pos"]);
-    SDL_Point render_pos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["render_pos"]);
+    SDL_Point lpos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["start_pos"].asString());
+    SDL_Point rpos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["end_pos"].asString());
+    SDL_Point render_pos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["render_pos"].asString());
 
     lpos = { lpos.x * 32, lpos.y * 32 };
     rpos = { rpos.x * 32, rpos.y * 32 };
@@ -491,11 +486,11 @@ void Game::open_map(const std::string& map_name)
             for (auto& str : e["battle_dialogue"])
                 battle_dialogue.emplace_back(str.asString());
 
-            SDL_Point pos = to_point(e["pos"]);
+            SDL_Point pos = to_point(e["pos"].asString());
             pos.x *= 32;
             pos.y *= 32;
 
-            std::unique_ptr<Entity> entity = std::make_unique<Entity>(m_rend, pos, m_atlas.get(), to_point(e["sprite_pos"]), to_point(e["dead_sprite"]), to_point(e["battle_sprite"]), m_resources_dir + e["theme"].asString(), dialogue, battle_dialogue, default_attacks);
+            std::unique_ptr<Entity> entity = std::make_unique<Entity>(m_rend, pos, m_atlas.get(), to_point(e["sprite_pos"].asString()), to_point(e["dead_sprite"].asString()), to_point(e["battle_sprite"].asString()), m_resources_dir + e["theme"].asString(), dialogue, battle_dialogue, default_attacks);
             entities.push_back(std::move(entity));
         }
 
@@ -655,7 +650,9 @@ void Game::setup_game()
 
     {
         std::lock_guard lock(m_mtx);
-        m_player = std::make_unique<Player>(m_rend, SDL_Rect{ 200, 200,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png");
+
+        SDL_Point pos = to_point(m_json["player"]["pos"].asString());
+        m_player = std::make_unique<Player>(m_rend, SDL_Rect{ pos.x, pos.y,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png");
     }
 
     {
@@ -666,5 +663,12 @@ void Game::setup_game()
     audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
 
     m_mode = Mode::NORMAL;
+}
+
+
+SDL_Point Game::to_point(const std::string& string)
+{
+    std::vector<std::string> split = split_string(string, ' ');
+    return SDL_Point{ std::stoi(split[0]), std::stoi(split[1]) };
 }
 
