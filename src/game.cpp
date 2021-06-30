@@ -418,11 +418,11 @@ void Game::open_map(const std::string& map_name)
     std::stringstream ss;
     std::string buf;
     
-    int map_width = 0;
+    int map_width = -1;
     
     while (std::getline(ifs, buf))
     {
-        if (map_width == 0)
+        if (map_width == -1)
             map_width = buf.size();
         else
             // each row in the map should have a constant width
@@ -432,25 +432,22 @@ void Game::open_map(const std::string& map_name)
         ss << buf;
     }
 
-    SDL_Point lpos, rpos;
-
-    // no std::getline here because buf is already set as the line after the bottom of the map
-    lpos.x = std::stoi(buf) * BLOCK_SIZE;
-
-    std::getline(ifs, buf);
-    lpos.y = std::stoi(buf) * BLOCK_SIZE;
-
-    std::getline(ifs, buf);
-    rpos.x = std::stoi(buf) * BLOCK_SIZE;
-
-    std::getline(ifs, buf);
-    rpos.y = std::stoi(buf) * BLOCK_SIZE;
+    auto to_point = [](Json::Value value) {
+        std::vector<std::string> split = split_string(value.asString(), ' ');
+        return SDL_Point{ std::stoi(split[0]), std::stoi(split[1]) };
+    };
 
     ifs.close();
 
     Json::Value root;
     ifs.open(fs::path(map_name).parent_path().string() + "/data.json");
     ifs >> root;
+
+    SDL_Point lpos = to_point(root["rooms"][fs::path(map_name).stem().string()]["start_pos"]);
+    SDL_Point rpos = to_point(root["rooms"][fs::path(map_name).stem().string()]["end_pos"]);
+
+    lpos = { lpos.x * 32, lpos.y * 32 };
+    rpos = { rpos.x * 32, rpos.y * 32 };
 
     {
         std::lock_guard lock(m_mtx);
@@ -464,10 +461,7 @@ void Game::open_map(const std::string& map_name)
 
         std::vector<std::unique_ptr<Entity>> entities;
 
-        auto to_point = [](Json::Value value) {
-            std::vector<std::string> split = split_string(value.asString(), ' ');
-            return SDL_Point{ std::stoi(split[0]), std::stoi(split[1]) };
-        };
+        
 
         std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
             { [&]() {
