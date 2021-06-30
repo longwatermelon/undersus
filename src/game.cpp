@@ -30,6 +30,9 @@ Game::Game(const std::string& resources_path)
     m_texture_map['#'] = { 32, 0 };
     m_texture_map['.'] = { 64, 0 };
     m_solid_characters = { '#' };
+
+    std::ifstream ifs(m_resources_dir + "maps/data.json");
+    ifs >> m_json;
 }
 
 
@@ -439,13 +442,9 @@ void Game::open_map(const std::string& map_name)
 
     ifs.close();
 
-    Json::Value root;
-    ifs.open(fs::path(map_name).parent_path().string() + "/data.json");
-    ifs >> root;
-
-    SDL_Point lpos = to_point(root["rooms"][fs::path(map_name).stem().string()]["start_pos"]);
-    SDL_Point rpos = to_point(root["rooms"][fs::path(map_name).stem().string()]["end_pos"]);
-    SDL_Point render_pos = to_point(root["rooms"][fs::path(map_name).stem().string()]["render_pos"]);
+    SDL_Point lpos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["start_pos"]);
+    SDL_Point rpos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["end_pos"]);
+    SDL_Point render_pos = to_point(m_json["rooms"][fs::path(map_name).stem().string()]["render_pos"]);
 
     lpos = { lpos.x * 32, lpos.y * 32 };
     rpos = { rpos.x * 32, rpos.y * 32 };
@@ -461,8 +460,6 @@ void Game::open_map(const std::string& map_name)
         }
 
         std::vector<std::unique_ptr<Entity>> entities;
-
-        
 
         std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
             { [&]() {
@@ -483,7 +480,7 @@ void Game::open_map(const std::string& map_name)
         };
 
 
-        for (auto& e : root["rooms"][fs::path(map_name).stem().string()]["entities"])
+        for (auto& e : m_json["rooms"][fs::path(map_name).stem().string()]["entities"])
         {
             std::vector<std::string> dialogue;
             std::vector<std::string> battle_dialogue;
@@ -654,37 +651,6 @@ void Game::setup_game()
         }, 4000 }
     };
 
-    // Spent hours flipping off my code for not compiling, then it turns out initializer lists can only copy. I am not satisfied with this current solution. Definitely going to automate this with json files or something.
-//    std::vector<std::unique_ptr<Entity>> room_1_entities;
-  //  room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 18 * 32, 6 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Holy sh*t I'm gonna piss myself" }, std::vector<std::string>{ "sample battle dialogue", "Lelaroos I am cringe", "UwU Plz marry me", "Dat is a leltastic moment", "Ur such a sussy baka :flushed:" }, default_attacks));
-   // room_1_entities.push_back(std::make_unique<Entity>(m_rend, SDL_Point{ 50 * 32, 12 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Ew get away from me" }, std::vector<std::string>{ "sample battle dialogue", "I sh*t my pants last night" }, default_attacks));
-    
-    //m_room_data["start_1"] = std::make_unique<RoomData>(room_1_entities);
-
-#if 0
-    m_room_entities["start_2"] = std::make_unique<RoomData>(std::vector<std::unique_ptr<Entity>>{
-        std::make_unique<Entity>(m_rend, SDL_Point{ 18 * 32, 8 * 32 }, m_atlas.get(), SDL_Point{ 0, 32 }, SDL_Point{ 64, 64 }, SDL_Point{ 32, 96 }, default_theme, std::vector<std::string>{ "Your such a sussy baka :flushed:" }, std::vector<std::string>{ "sample battle dialogue" }, std::vector<std::pair<std::function<void(void)>, int>>{ { [&]() {
-            for (int i = 0; i < 10; ++i)
-            {
-                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 200 + i * 64, 32, 32 } }, { 4, 0 } });
-            }
-
-            for (int i = 0; i < 10; ++i)
-            {
-                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 750, 232 + i * 64, 32, 32 } }, { -4, 0 } });
-            }
-
-            for (int i = 0; i < 10; ++i)
-            {
-                for (int j = 0; j < 7; ++j)
-                {
-                    m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 0, 200 + ((i % 2) * 32) + j * 64, 32, 32 } }, { 4, 0 }, 3000 + i * 400 });
-                }
-            }
-        }, 10000 } })
-     });
-#endif
-    
     load_maps("start");
 
     {

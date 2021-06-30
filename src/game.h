@@ -13,6 +13,7 @@
 #include <atomic>
 #include <mutex>
 #include <SDL.h>
+#include <json/json.h>
 
 
 class Game
@@ -114,6 +115,8 @@ private:
     } m_mode{ Mode::CUTSCENE };
 
     bool m_ready_to_restart{ false };
+
+    Json::Value m_json;
 
     /* constants */
     const int m_player_speed{ 2 };
