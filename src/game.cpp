@@ -410,6 +410,9 @@ std::string Game::get_menu_choice()
 
 void Game::open_map(const std::string& map_name)
 {
+    if (fs::path(map_name).extension().string() != ".txt")
+        return;
+
     std::ifstream ifs(map_name);
     std::stringstream ss;
     std::string buf;
