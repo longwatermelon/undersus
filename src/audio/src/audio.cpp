@@ -2,14 +2,20 @@
 #include <iostream>
 
 
-void audio::play_music(const std::string& path)
+void audio::init()
 {
-    audio::stop_music();
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) < 0)
     {
         std::cout << Mix_GetError() << "\n";
     }
+
+    Mix_ReserveChannels(8);
+}
+
+
+void audio::play_music(const std::string& path)
+{
+    audio::stop_music();
 
     music = Mix_LoadMUS(path.c_str());
 
@@ -34,34 +40,41 @@ void audio::stop_music()
 
 void audio::play_sound(const std::string& path)
 {
-    if (sound)
-    {
-        Mix_FreeChunk(sound);
-        sound = 0;
-    }
+    Mix_Chunk* chunk = Mix_LoadWAV(path.c_str());
 
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-    {
-        std::cout << Mix_GetError() << "\n";
-    }
-
-    sound = Mix_LoadWAV(path.c_str());
-    
-    if (!sound)
+    if (!chunk)
         std::cout << Mix_GetError() << "\n";
     else
     {
-        Mix_PlayChannel(-1, sound, 0);
+        if (Mix_PlayChannel(current_free_channel, chunk, 0) == -1)
+        {
+            std::cout << "error: " << Mix_GetError() << "\n";
+        }
+        else
+        {
+            sounds_playing.emplace_back(std::pair<Mix_Chunk*, int>{ chunk, current_free_channel });
+
+            ++current_free_channel;
+
+            if (current_free_channel >= 7)
+                current_free_channel = 0;
+        }
     }
 }
 
 
 void audio::cleanup_sound_when_done()
 {
-    if (sound && !Mix_Playing(-1))
+    for (int i = 0; i < sounds_playing.size(); ++i)
     {
-        Mix_FreeChunk(sound);
-        sound = 0;
+        auto& pair = sounds_playing[i];
+
+        if (!Mix_Playing(pair.second))
+        {
+            Mix_FreeChunk(pair.first);
+            sounds_playing.erase(sounds_playing.begin() + i);
+            --i;
+        }
     }
 }
 

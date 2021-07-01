@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     TTF_Init();
     IMG_Init(IMG_INIT_PNG);
-    Mix_Init(MIX_INIT_MP3);
+    Mix_Init(MIX_INIT_MOD);
 
     Game* g = new Game("res");
     std::thread thr_start(&Game::start_game, g);
@@ -41,6 +41,6 @@ int main(int argc, char** argv)
     TTF_Quit();
     IMG_Quit();
     Mix_Quit();
-        
+
     return 0;
 }

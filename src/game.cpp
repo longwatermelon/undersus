@@ -34,6 +34,8 @@ Game::Game(const std::string& resources_path)
 
     std::ifstream ifs(m_resources_dir + "maps/data.json");
     ifs >> m_json;
+
+    audio::init();
 }
 
 
@@ -199,9 +201,6 @@ void Game::mainloop()
                             m_current_battle->hit_selected_button();
                         }
 
-                        break;
-                    case SDLK_x:
-                        audio::play_sound(m_resources_dir + "sfx/kill.wav");
                         break;
                     }
                 } break;
