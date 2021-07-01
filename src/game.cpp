@@ -337,17 +337,58 @@ cleanup:
 
 void Game::start_game()
 {
-//    sleep(1000);
-    
-//    add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 4000);
+    while (true)
+    {
+        sleep(1000);
+        
+        add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 2000);
 
-  //  sleep(5000);
-    
-    set_menu(m_rend, { 200, 100 }, { "Start" }, 100, m_font_path, 16);
+        sleep(3000);
+        
+        add_text(m_rend, SDL_Point{ 180, 260 }, "Press Z to select, use arrow keys to navigate.", m_font_path, 16, SDL_Color{ 255, 255, 255 }, -1);
+        add_text(m_rend, SDL_Point{ 120, 300 }, "Z is the only key other than the arrow keys that you will use.", m_font_path, 16, SDL_Color{ 255, 255, 255 }, -1);
 
-    wait_for_z();
-    
-    delete_menu();
+        set_menu(m_rend, { 200, 360 }, { "Start", "Reset" }, 300, m_font_path, 16);
+
+        wait_for_z();
+        
+        std::string choice = get_menu_choice();
+
+        if (choice == "Start")
+        {
+            {
+                std::lock_guard lock(m_mtx);
+                m_text.clear();
+            }
+
+            delete_menu();
+            break;
+        }
+        else
+        {
+            std::ifstream ifs(m_resources_dir + "maps/default_data.json");
+            std::stringstream ss;
+            std::string buf;
+
+            while (std::getline(ifs, buf)) ss << buf << "\n";
+
+            ifs.close();
+
+            std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::trunc | std::ofstream::out);
+            ofs << ss.str();
+            ofs.close();
+
+            ifs.open(m_resources_dir + "maps/data.json");
+            ifs >> m_json;
+        }
+
+        {
+            std::lock_guard lock(m_mtx);
+            m_text.clear();
+        }
+
+        delete_menu();
+    }
 
     setup_game();
 }
@@ -356,7 +397,7 @@ void Game::start_game()
 void Game::sleep(int ms)
 {
     if (!m_running)
-        return; 
+        exit(0); 
 
     auto start = std::chrono::system_clock::now();
 
@@ -407,7 +448,7 @@ void Game::wait_for_z()
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     
     if (!m_running)
-        return;
+        exit(0);
 
     m_z_down = false;
 }

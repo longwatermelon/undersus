@@ -9,11 +9,11 @@
                     "dead_sprite": "64 64",
                     "theme": "sfx/among_us_drip.wav",
                     "dialogue": [
-                        "I am going to piss myself",
-                        "Holy sh*t"
+                        "Press Z to continue the dialogue.",
+                        "UmU I am quirky"
                     ],
                     "battle_dialogue": [
-                        "Lelaroos I am cringe",
+                        "Lelaroos I am cringe. Press Z to continue.",
                         "Dat is a leltastic moment",
                         "UwU Plz marry me"
                     ],
@@ -26,8 +26,7 @@
                     "dead_sprite": "64 64",
                     "theme": "sfx/among_us_drip.wav",
                     "dialogue": [
-                        "Lelaroos",
-                        "Wut is up mah dooders"
+                        "Hewwo UwU :flushed: :pleading_face: :point_right: :point_left:"
                     ],
                     "battle_dialogue": [
                         "Lelaroos I am cringe",
