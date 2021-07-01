@@ -11,6 +11,7 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <json/json.h>
+#include <json/writer.h>
 
 namespace fs = std::filesystem;
 
@@ -170,6 +171,9 @@ void Game::mainloop()
                             m_current_battle->hit_selected_button();
                         }
 
+                        break;
+                    case SDLK_x:
+                        save_data();
                         break;
                     }
                 } break;
@@ -446,7 +450,7 @@ void Game::open_map(const std::string& map_name)
 
     {
         std::lock_guard lock(m_mtx);
-        m_rooms.emplace_back(std::make_unique<Room>(m_rend, ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos, render_pos));
+        m_rooms.emplace_back(std::make_unique<Room>(m_rend, fs::path(map_name).stem().string(), ss.str(), map_width, m_texture_map, m_atlas.get(), lpos, rpos, render_pos));
         std::string room_filename = fs::path(map_name).stem().string();
 
         if (m_room_data.find(room_filename) != m_room_data.end())
@@ -490,7 +494,10 @@ void Game::open_map(const std::string& map_name)
             pos.x *= 32;
             pos.y *= 32;
 
-            std::unique_ptr<Entity> entity = std::make_unique<Entity>(m_rend, pos, m_atlas.get(), to_point(e["sprite_pos"].asString()), to_point(e["dead_sprite"].asString()), to_point(e["battle_sprite"].asString()), m_resources_dir + e["theme"].asString(), dialogue, battle_dialogue, default_attacks);
+            pos.x += m_rooms[m_rooms.size() - 1]->render_pos().x;
+            pos.y += m_rooms[m_rooms.size() - 1]->render_pos().y;
+
+            std::unique_ptr<Entity> entity = std::make_unique<Entity>(m_rend, pos, m_atlas.get(), to_point(e["sprite_pos"].asString()), to_point(e["dead_sprite"].asString()), to_point(e["battle_sprite"].asString()), m_resources_dir + e["theme"].asString(), dialogue, battle_dialogue, default_attacks, e["alive"].asBool());
             entities.push_back(std::move(entity));
         }
 
@@ -655,10 +662,7 @@ void Game::setup_game()
         m_player = std::make_unique<Player>(m_rend, SDL_Rect{ pos.x, pos.y,  BLOCK_SIZE, BLOCK_SIZE }, m_resources_dir + "gfx/sprites/player.png");
     }
 
-    {
-        std::lock_guard lock(m_mtx);
-        next_room();
-    }
+    m_current_room_index = m_json["room_index"].asInt();
 
     audio::play_music(m_resources_dir + "sfx/among_us_lofi.wav");
 
@@ -670,5 +674,32 @@ SDL_Point Game::to_point(const std::string& string)
 {
     std::vector<std::string> split = split_string(string, ' ');
     return SDL_Point{ std::stoi(split[0]), std::stoi(split[1]) };
+}
+
+
+void Game::save_data()
+{
+    for (auto& room : m_rooms)
+    {
+        auto& json = m_json["rooms"][room->name()];
+
+        json["start_pos"] = std::to_string(room->left_start_pos().x / 32) + ' ' + std::to_string(room->left_start_pos().y / 32);
+        json["end_pos"] = std::to_string(room->right_start_pos().x / 32) + ' ' + std::to_string(room->right_start_pos().y / 32);
+        json["render_pos"] = std::to_string(room->render_pos().x) + ' ' + std::to_string(room->render_pos().y);
+
+        for (int i = 0; i < room->entities().size(); ++i)
+        {
+            auto& e = room->entities()[i];
+            json["entities"][i]["alive"] = e->alive();
+        }
+    }
+
+    m_json["player"]["pos"] = std::to_string(m_player->rect().x) + ' ' + std::to_string(m_player->rect().y);
+
+    std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::out | std::ofstream::trunc);
+    ofs << m_json << "\n";
+    ofs.close();
+
+    std::cout << "saved\n";
 }
 

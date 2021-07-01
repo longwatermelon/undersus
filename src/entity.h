@@ -9,7 +9,7 @@
 class Entity
 {
 public:
-    Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point alive_spr, SDL_Point dead_spr, SDL_Point battle_spr, const std::string& theme_path, const std::vector<std::string>& dialogue, const std::vector<std::string>& battle_dialogue, const std::vector<std::pair<std::function<void(void)>, int>>& attacks);
+    Entity(SDL_Renderer* rend, SDL_Point pos, SDL_Texture* atlas, SDL_Point alive_spr, SDL_Point dead_spr, SDL_Point battle_spr, const std::string& theme_path, const std::vector<std::string>& dialogue, const std::vector<std::string>& battle_dialogue, const std::vector<std::pair<std::function<void(void)>, int>>& attacks, bool alive);
 
     void render();
 

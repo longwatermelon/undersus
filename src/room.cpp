@@ -3,8 +3,8 @@
 #include <iostream>
 
 
-Room::Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas, SDL_Point left_start_pos, SDL_Point right_start_pos, SDL_Point render_pos)
-    : m_layout(layout), m_characters_per_row(characters_per_row), m_textures(textures), m_texture_atlas(atlas), m_rend(rend), m_left_start_pos(left_start_pos), m_right_start_pos(right_start_pos), m_render_pos(render_pos) {}
+Room::Room(SDL_Renderer* rend, const std::string& name, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas, SDL_Point left_start_pos, SDL_Point right_start_pos, SDL_Point render_pos)
+    : m_layout(layout), m_name(name), m_characters_per_row(characters_per_row), m_textures(textures), m_texture_atlas(atlas), m_rend(rend), m_left_start_pos(left_start_pos), m_right_start_pos(right_start_pos), m_render_pos(render_pos) {}
 
 
 void Room::render()

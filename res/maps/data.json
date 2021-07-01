@@ -1,54 +1,64 @@
 {
-    "rooms": {
-        "start_1": {
-            "entities": [
-                {
-                    "pos": "18 6",
-                    "sprite_pos": "0 32",
-                    "battle_sprite": "32 96",
-                    "dead_sprite": "64 64",
-                    "theme": "sfx/among_us_drip.wav",
-                    "dialogue": [
-                        "I am going to piss myself",
-                        "Holy sh*t"
-                    ],
-                    "battle_dialogue": [
-                        "Lelaroos I am cringe",
-                        "Dat is a leltastic moment",
-                        "UwU Plz marry me"
-                    ]
-                },
-                {
-                    "pos": "46 12",
-                    "sprite_pos": "0 32",
-                    "battle_sprite": "32 96",
-                    "dead_sprite": "64 64",
-                    "theme": "sfx/among_us_drip.wav",
-                    "dialogue": [
-                        "Lelaroos",
-                        "Wut is up mah dooders"
-                    ],
-                    "battle_dialogue": [
-                        "Lelaroos I am cringe",
-                        "How are you this fine evening m'lady",
-                        "UwU Lelaroos Lelaroos Lelapootastic UwU"
-                    ]
-                }
-            ],
-            "start_pos": "13 6",
-            "end_pos": "52 3",
-            "render_pos": "0 0"
-        },
-        "start_2": {
-            "entities": [
-            ],
-            "start_pos": "21 18",
-            "end_pos": "19 4",
-            "render_pos": "0 0"
-        }
-    },
-    "player": {
-        "pos": "200 200"
-    }
+	"player" : 
+	{
+		"pos" : "550 188"
+	},
+	"room_index" : 0,
+	"rooms" : 
+	{
+		"start_1" : 
+		{
+			"end_pos" : "52 3",
+			"entities" : 
+			[
+				{
+					"alive" : false,
+					"battle_dialogue" : 
+					[
+						"Lelaroos I am cringe",
+						"Dat is a leltastic moment",
+						"UwU Plz marry me"
+					],
+					"battle_sprite" : "32 96",
+					"dead_sprite" : "64 64",
+					"dialogue" : 
+					[
+						"I am going to piss myself",
+						"Holy sh*t"
+					],
+					"pos" : "18 6",
+					"sprite_pos" : "0 32",
+					"theme" : "sfx/among_us_drip.wav"
+				},
+				{
+					"alive" : true,
+					"battle_dialogue" : 
+					[
+						"Lelaroos I am cringe",
+						"How are you this fine evening m'lady",
+						"UwU Lelaroos Lelaroos Lelapootastic UwU"
+					],
+					"battle_sprite" : "32 96",
+					"dead_sprite" : "64 64",
+					"dialogue" : 
+					[
+						"Lelaroos",
+						"Wut is up mah dooders"
+					],
+					"pos" : "46 12",
+					"sprite_pos" : "0 32",
+					"theme" : "sfx/among_us_drip.wav"
+				}
+			],
+			"render_pos" : "0 0",
+			"start_pos" : "13 6"
+		},
+		"start_2" : 
+		{
+			"end_pos" : "19 4",
+			"entities" : [],
+			"render_pos" : "0 0",
+			"start_pos" : "21 18"
+		}
+	}
 }
-

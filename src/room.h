@@ -19,7 +19,7 @@ struct RoomData
 class Room
 {
 public:
-    Room(SDL_Renderer* rend, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas, SDL_Point left_start_pos, SDL_Point right_start_pos, SDL_Point render_pos);
+    Room(SDL_Renderer* rend, const std::string& name, const std::string& layout, int characters_per_row, const std::map<char, SDL_Point>& textures, SDL_Texture* atlas, SDL_Point left_start_pos, SDL_Point right_start_pos, SDL_Point render_pos);
 
     void render();
     void move(int x, int y);
@@ -37,6 +37,7 @@ public:
     SDL_Point render_pos() { return m_render_pos; }
 
     std::vector<std::unique_ptr<Entity>>& entities() { return m_data->entities; }
+    std::string name() { return m_name; }
 
 private:
     std::string m_layout;
@@ -53,5 +54,7 @@ private:
     SDL_Point m_render_pos{ 0, 0 };
 
     std::unique_ptr<RoomData> m_data;
+
+    std::string m_name;
 };
 

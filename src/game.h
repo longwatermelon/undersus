@@ -76,6 +76,8 @@ private:
     // convert strings like "10 20" to something like SDL_Point{ 10, 20 };
     SDL_Point to_point(const std::string& string);
 
+    void save_data();
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
