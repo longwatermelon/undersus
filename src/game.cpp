@@ -88,7 +88,10 @@ void Game::mainloop()
                     {
                     case SDLK_RIGHT:
                         if (m_menu)
+                        {
+                            audio::play_sound(m_resources_dir + "sfx/menu_move.wav");
                             m_menu->move_selected(1);
+                        }
 
                         if (m_player)
                             m_player->set_x_vel(m_player_speed);
@@ -102,7 +105,10 @@ void Game::mainloop()
                         break;
                     case SDLK_LEFT:
                         if (m_menu)
+                        {
                             m_menu->move_selected(-1);
+                            audio::play_sound(m_resources_dir + "sfx/menu_move.wav");
+                        }
 
                         if (m_player)
                             m_player->set_x_vel(-m_player_speed);
@@ -193,6 +199,9 @@ void Game::mainloop()
                             m_current_battle->hit_selected_button();
                         }
 
+                        break;
+                    case SDLK_x:
+                        audio::play_sound(m_resources_dir + "sfx/kill.wav");
                         break;
                     }
                 } break;
@@ -357,6 +366,7 @@ void Game::start_game()
         set_menu(m_rend, { 200, 360 }, { "Start", "Reset" }, 300, m_font_path, 16);
 
         wait_for_z();
+        audio::play_sound(m_resources_dir + "sfx/menu_select.wav");
         
         std::string choice = get_menu_choice();
 
@@ -381,6 +391,7 @@ void Game::start_game()
             set_menu(m_rend, SDL_Point{ 300, 420 }, { "Yes", "No" }, 140, m_font_path, 16);
 
             wait_for_z();
+            audio::play_sound(m_resources_dir + "sfx/menu_select.wav");
 
             std::string choice = get_menu_choice();
 
