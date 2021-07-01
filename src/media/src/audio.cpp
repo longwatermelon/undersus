@@ -40,6 +40,12 @@ void audio::stop_music()
 
 void audio::play_sound(const std::string& path)
 {
+    if (Mix_Playing(current_free_channel))
+    {
+        ++current_free_channel;
+        return;
+    }
+
     Mix_Chunk* chunk = Mix_LoadWAV(path.c_str());
 
     if (!chunk)

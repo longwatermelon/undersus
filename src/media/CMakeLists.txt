@@ -1,10 +1,13 @@
-project(graphics)
+project(media)
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(sdl2-ttf CONFIG REQUIRED)
+find_package(sdl2-mixer CONFIG REQUIRED)
 
-add_library(graphics
+add_library(media
+    src/audio.h
+    src/audio.cpp
     src/common.h
     src/common.cpp
     src/image.h
@@ -17,9 +20,10 @@ add_library(graphics
     src/textbox.cpp
 )
 
-target_link_libraries(graphics PUBLIC
+target_link_libraries(media PUBLIC
     SDL2::SDL2 SDL2::SDL2main
-    SDL2::SDL2_image
     SDL2::SDL2_ttf
+    SDL2::SDL2_image
+    SDL2::SDL2_mixer
 )
 

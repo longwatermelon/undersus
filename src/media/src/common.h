@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <SDL.h>
 #include <SDL_ttf.h>
 
 

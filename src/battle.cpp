@@ -1,7 +1,7 @@
 #include "battle.h"
-#include "audio/src/audio.h"
+#include "media/src/audio.h"
 #include "game.h"
-#include "graphics/src/textbox.h"
+#include "media/src/textbox.h"
 #include <iostream>
 
 
@@ -19,7 +19,7 @@ Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::s
     m_z_down = false;
     int index = randint(0, m_entity->battle_dialogue().size() - 1);
 
-    m_current_textbox = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, SDL_Color{ 255, 255, 255 }, SDL_Color{ 0, 0, 0 });
+    m_current_textbox = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, m_resources_dir + "sfx/talk.wav", false, SDL_Color{ 255, 255, 255 }, SDL_Color{ 0, 0, 0 });
     m_choice_text = std::make_unique<gui::Text>(m_rend, SDL_Point{ 360, 700 }, "FIGHT", m_resources_dir + "gfx/font.ttf", 16, SDL_Color{ 255, 255, 255 }, -1);
 }
 
@@ -148,7 +148,10 @@ void Battle::check_collisions()
 void Battle::move_selected(int x)
 {
     if (m_turn == Turn::PLAYER)
+    {
         m_current_selected_button = std::min(std::max(m_current_selected_button + x, 0), 1);
+        audio::play_sound(m_resources_dir + "sfx/menu_move.wav");
+    }
 
     if (m_current_selected_button == 0)
     {
@@ -177,6 +180,8 @@ void Battle::hit_selected_button()
             break;
         }
 
+        audio::play_sound(m_resources_dir + "sfx/menu_select.wav");
+
         if (!m_finished)
         {
             m_player.dst.x = 384;
@@ -185,7 +190,7 @@ void Battle::hit_selected_button()
             m_z_down = false;
             int index = randint(0, m_entity->battle_dialogue().size() - 1);
 
-            m_current_textbox = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, false, SDL_Color{ 255, 255, 255 }, SDL_Color{ 0, 0, 0 });
+            m_current_textbox = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 500, 40, 200, 120 }, m_entity->battle_dialogue()[index], m_resources_dir + "gfx/font.ttf", 12, m_resources_dir + "sfx/talk.wav", false, SDL_Color{ 255, 255, 255 }, SDL_Color{ 0, 0, 0 });
         }
     }
 }

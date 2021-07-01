@@ -1,9 +1,10 @@
 #include "textbox.h"
+#include "audio.h"
 #include <iostream>
 
 
-gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, bool draw_outline, SDL_Color bg_color, SDL_Color font_color)
-    : m_rend(rend), m_text(text), m_background_rect(rect), m_draw_outline(draw_outline), m_bg_color(bg_color), m_font_color(font_color)
+gui::Textbox::Textbox(SDL_Renderer* rend, SDL_Rect rect, const std::string& text, const std::string& font_path, int ptsize, const std::string& sound, bool draw_outline, SDL_Color bg_color, SDL_Color font_color)
+    : m_rend(rend), m_text(text), m_background_rect(rect), m_draw_outline(draw_outline), m_bg_color(bg_color), m_font_color(font_color), m_talk_sound(sound)
 {
     m_font = { TTF_OpenFont(font_path.c_str(), ptsize), ptsize };
     m_rect = { rect.x + 5, rect.y, 0, 0 };
@@ -96,6 +97,8 @@ void gui::Textbox::add_char()
 
     tex = common::render_text(m_rend, m_font, m_displayed_text[m_displayed_text.size() - 1], m_font_color);
     TTF_SizeText(m_font.font, m_displayed_text[m_displayed_text.size() - 1].c_str(), &m_rect.w, &m_rect.h);
+
+    audio::play_sound(m_talk_sound);
 }
 
 

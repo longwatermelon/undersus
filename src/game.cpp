@@ -1,6 +1,6 @@
-#include "audio/src/audio.h"
+#include "media/src/audio.h"
 #include "game.h"
-#include "graphics/src/menu.h"
+#include "media/src/menu.h"
 #include "common.h"
 #include <thread>
 #include <iostream>
@@ -155,7 +155,7 @@ void Game::mainloop()
                                 if (!m_dialogue_box)
                                 {
                                     m_player->set_moveable(false);
-                                    m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
+                                    m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, ent->dialogue()[0], m_font_path, 16, m_resources_dir + "sfx/talk.wav", true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
                                 }
                                 else
                                 {
@@ -171,7 +171,7 @@ void Game::mainloop()
                                     }
                                     else
                                     {
-                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
+                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, ent->dialogue()[m_dialogue_list_index], m_font_path, 16, m_resources_dir + "sfx/talk.wav", true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
                                     }
                                 }
                             }
@@ -185,7 +185,7 @@ void Game::mainloop()
                                         m_player->set_moveable(false);
                                         save_data();
                                         audio::play_sound(m_resources_dir + "sfx/savepoint.wav");
-                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, "Progress saved.", m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
+                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, "Progress saved.", m_font_path, 16, m_resources_dir + "sfx/talk.wav", true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
                                     }
                                     else
                                     {
@@ -726,7 +726,7 @@ void Game::game_over_sequence()
 
     {
         std::lock_guard lock(m_mtx);
-        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 300, 386, 300, 200 }, "Red was not an impostor.", m_font_path, 16, false, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
+        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 300, 386, 300, 200 }, "Red was not an impostor.", m_font_path, 16, m_resources_dir + "sfx/talk.wav", false, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
     }
 
     sleep(2000);
@@ -740,7 +740,7 @@ void Game::game_over_sequence()
 
     {
         std::lock_guard lock(m_mtx);
-        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 300, 386, 300, 200 }, "Press z to try again...", m_font_path, 16, false, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
+        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 300, 386, 300, 200 }, "Press z to try again...", m_font_path, 16, m_resources_dir + "sfx/talk.wav", false, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
     }
 
     wait_for_z();

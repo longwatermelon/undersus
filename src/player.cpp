@@ -1,6 +1,6 @@
 #include "player.h"
 #include "common.h"
-#include "graphics/src/common.h"
+#include "media/src/common.h"
 #include <iostream>
 #include <algorithm>
 #include <SDL_image.h>

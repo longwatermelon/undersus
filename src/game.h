@@ -1,8 +1,8 @@
 #pragma once
-#include "graphics/src/text.h"
-#include "graphics/src/image.h"
-#include "graphics/src/menu.h"
-#include "graphics/src/textbox.h"
+#include "media/src/text.h"
+#include "media/src/image.h"
+#include "media/src/menu.h"
+#include "media/src/textbox.h"
 #include "player.h"
 #include "room.h"
 #include "battle.h"
