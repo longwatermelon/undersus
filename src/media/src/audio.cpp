@@ -9,7 +9,7 @@ void audio::init()
         std::cout << Mix_GetError() << "\n";
     }
 
-    Mix_ReserveChannels(8);
+    Mix_AllocateChannels(32);
 }
 
 
@@ -62,7 +62,7 @@ void audio::play_sound(const std::string& path)
 
             ++current_free_channel;
 
-            if (current_free_channel >= 7)
+            if (current_free_channel >= 32)
                 current_free_channel = 0;
         }
     }
