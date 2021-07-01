@@ -46,6 +46,9 @@ Game::Game(const std::string& resources_path, SDL_Window* window, SDL_Renderer* 
     m_texture_map['#'] = { 32, 0 };
     m_texture_map['.'] = { 64, 0 };
     m_solid_characters = { '#' };
+
+    std::ifstream ifs(m_resources_dir + "maps/data.json");
+    ifs >> m_json;
 }
 
 
@@ -634,25 +637,6 @@ void Game::game_over_sequence()
 
 void Game::setup_game()
 {
-    std::string default_theme = m_resources_dir + "sfx/among_us_drip.wav";
-    std::vector<std::pair<std::function<void(void)>, int>> default_attacks = {
-        { [&]() {
-            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 360, 32, 32 } }, { 2, 0 } });
-            m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 0, 32, 32 }, { 100, 450, 32, 32 } }, { 3, 0 } });
-        }, 3000 },
-        { [&]() {
-            for (int i = 0; i < 10; ++i)
-            {
-                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 100, 200 + i * 64, 32, 32 } }, { 4, 0 } });
-            }
-
-            for (int i = 0; i < 10; ++i)
-            {
-                m_current_battle->add_projectile(Projectile{ Sprite{ { 0, 32, 32, 32 }, { 750, 232 + i * 64, 32, 32 } }, { -4, 0 } });
-            }
-        }, 4000 }
-    };
-
     load_maps("start");
 
     {

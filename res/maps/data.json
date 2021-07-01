@@ -1,7 +1,7 @@
 {
 	"player" : 
 	{
-		"pos" : "550 188"
+		"pos" : "542 200"
 	},
 	"room_index" : 0,
 	"rooms" : 
@@ -12,7 +12,7 @@
 			"entities" : 
 			[
 				{
-					"alive" : false,
+					"alive" : true,
 					"battle_dialogue" : 
 					[
 						"Lelaroos I am cringe",
