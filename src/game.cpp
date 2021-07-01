@@ -167,6 +167,24 @@ void Game::mainloop()
                                     }
                                 }
                             }
+
+                            for (auto& save : m_rooms[m_current_room_index]->saves())
+                            {
+                                if (within_range({ m_player->rect().x + m_player->rect().w / 2, m_player->rect().y + m_player->rect().h / 2 }, { save->rect().x + save->rect().w / 2, save->rect().y + save->rect().h / 2 }))
+                                {
+                                    if (!m_dialogue_box)
+                                    {
+                                        m_player->set_moveable(false);
+                                        save_data();
+                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, "Saved progress.", m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
+                                    }
+                                    else
+                                    {
+                                        m_player->set_moveable(true);
+                                        m_dialogue_box.reset(0);
+                                    }
+                                }
+                            }
                         }
                         else if (m_mode == Mode::BATTLE)
                         {
@@ -504,7 +522,22 @@ void Game::open_map(const std::string& map_name)
             entities.push_back(std::move(entity));
         }
 
-        std::unique_ptr<RoomData> room_data = std::make_unique<RoomData>(entities);
+        std::vector<std::unique_ptr<Save>> saves;
+
+        for (auto& s : m_json["rooms"][fs::path(map_name).stem().string()]["saves"])
+        {
+            SDL_Point pos = to_point(s["pos"].asString());
+            pos.x *= 32;
+            pos.y *= 32;
+
+            pos.x += m_rooms[m_rooms.size() - 1]->render_pos().x;
+            pos.y += m_rooms[m_rooms.size() - 1]->render_pos().y;
+
+            std::unique_ptr<Save> save = std::make_unique<Save>(m_rend, m_atlas.get(), Sprite{ SDL_Rect{ 32, 32, 32, 32 }, SDL_Rect{ pos.x, pos.y, 32, 32 } });
+            saves.push_back(std::move(save));
+        }
+
+        std::unique_ptr<RoomData> room_data = std::make_unique<RoomData>(entities, saves);
         m_rooms[m_rooms.size() - 1]->add_data(std::move(room_data));
     }
 }
@@ -683,7 +716,5 @@ void Game::save_data()
     std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::out | std::ofstream::trunc);
     ofs << m_json << "\n";
     ofs.close();
-
-    std::cout << "saved\n";
 }
 

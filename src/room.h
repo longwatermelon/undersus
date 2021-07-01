@@ -1,5 +1,6 @@
 #pragma once
 #include "entity.h"
+#include "save.h"
 #include <string>
 #include <map>
 #include <memory>
@@ -9,10 +10,11 @@
 
 struct RoomData
 {
-    RoomData(std::vector<std::unique_ptr<Entity>>& entities)
-        : entities(std::move(entities)) {}
+    RoomData(std::vector<std::unique_ptr<Entity>>& entities, std::vector<std::unique_ptr<Save>>& saves)
+        : entities(std::move(entities)), saves(std::move(saves)) {}
 
     std::vector<std::unique_ptr<Entity>> entities;
+    std::vector<std::unique_ptr<Save>> saves;
 };
 
 
@@ -37,6 +39,8 @@ public:
     SDL_Point render_pos() { return m_render_pos; }
 
     std::vector<std::unique_ptr<Entity>>& entities() { return m_data->entities; }
+    std::vector<std::unique_ptr<Save>>& saves() { return m_data->saves; }
+
     std::string name() { return m_name; }
 
 private:

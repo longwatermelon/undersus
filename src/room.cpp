@@ -41,6 +41,11 @@ void Room::render()
     {
         entity->render();
     }
+
+    for (auto& save : m_data->saves)
+    {
+        save->render();
+    }
 }
 
 
@@ -52,6 +57,11 @@ void Room::move(int x, int y)
     for (auto& entity : m_data->entities)
     {
         entity->move(x, y);
+    }
+
+    for (auto& save : m_data->saves)
+    {
+        save->move(x, y);
     }
 }
 

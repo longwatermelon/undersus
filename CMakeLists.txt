@@ -21,6 +21,8 @@ add_executable(undersus
     src/entity.cpp
     src/battle.h
     src/battle.cpp
+    src/save.h
+    src/save.cpp
 )
 
 target_link_libraries(undersus PRIVATE graphics audio jsoncpp_object jsoncpp_static)

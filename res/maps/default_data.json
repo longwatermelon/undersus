@@ -37,12 +37,19 @@
                     "alive": true
                 }
             ],
+            "saves": [
+                {
+                    "pos": "32 12"
+                }
+            ],
             "start_pos": "13 6",
             "end_pos": "52 3",
             "render_pos": "0 0"
         },
         "start_2": {
             "entities": [
+            ],
+            "saves": [
             ],
             "start_pos": "21 18",
             "end_pos": "19 4",
