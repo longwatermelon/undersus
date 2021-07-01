@@ -1,7 +1,7 @@
 {
 	"player" : 
 	{
-		"pos" : "200 382"
+		"pos" : "600 382"
 	},
 	"room_index" : 0,
 	"rooms" : 
@@ -12,7 +12,7 @@
 			"entities" : 
 			[
 				{
-					"alive" : true,
+					"alive" : false,
 					"battle_dialogue" : 
 					[
 						"Lelaroos I am cringe",
@@ -50,7 +50,7 @@
 					"theme" : "sfx/among_us_drip.wav"
 				}
 			],
-			"render_pos" : "-848 0",
+			"render_pos" : "-404 0",
 			"saves" : 
 			[
 				{
@@ -63,8 +63,13 @@
 		{
 			"end_pos" : "19 4",
 			"entities" : [],
-			"render_pos" : "0 0",
-			"saves" : [],
+			"render_pos" : "-48 0",
+			"saves" : 
+			[
+				{
+					"pos" : "17 7"
+				}
+			],
 			"start_pos" : "21 18"
 		}
 	}

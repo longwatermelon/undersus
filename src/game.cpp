@@ -176,7 +176,7 @@ void Game::mainloop()
                                     {
                                         m_player->set_moveable(false);
                                         save_data();
-                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, "Saved progress.", m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
+                                        m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, "Progress saved.", m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
                                     }
                                     else
                                     {
@@ -192,9 +192,6 @@ void Game::mainloop()
                             m_current_battle->hit_selected_button();
                         }
 
-                        break;
-                    case SDLK_x:
-                        save_data();
                         break;
                     }
                 } break;
@@ -712,6 +709,7 @@ void Game::save_data()
     }
 
     m_json["player"]["pos"] = std::to_string(m_player->rect().x) + ' ' + std::to_string(m_player->rect().y);
+    m_json["room_index"] = m_current_room_index;
 
     std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::out | std::ofstream::trunc);
     ofs << m_json << "\n";
