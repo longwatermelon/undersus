@@ -1,7 +1,7 @@
 {
 	"player" : 
 	{
-		"pos" : "600 382"
+		"pos" : "200 382"
 	},
 	"room_index" : 0,
 	"rooms" : 
@@ -15,7 +15,7 @@
 					"alive" : false,
 					"battle_dialogue" : 
 					[
-						"Lelaroos I am cringe. Press Z to continue.",
+						"Lelaroos I am cringe",
 						"Dat is a leltastic moment",
 						"UwU Plz marry me"
 					],
@@ -49,7 +49,7 @@
 					"theme" : "sfx/among_us_drip.wav"
 				}
 			],
-			"render_pos" : "-398 0",
+			"render_pos" : "-848 0",
 			"saves" : 
 			[
 				{

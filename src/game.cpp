@@ -337,14 +337,19 @@ cleanup:
 
 void Game::start_game()
 {
+    bool show_image = true;
+
     while (true)
     {
-        sleep(1000);
-        
-        add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 2000);
+        if (show_image)
+        {
+            sleep(1000);
+            
+            add_image(m_rend, { 0, 0 }, m_resources_dir + "gfx/logo.png", 2000);
 
-        sleep(3000);
-        
+            sleep(3000);
+        }
+                
         add_text(m_rend, SDL_Point{ 180, 260 }, "Press Z to select, use arrow keys to navigate.", m_font_path, 16, SDL_Color{ 255, 255, 255 }, -1);
         add_text(m_rend, SDL_Point{ 120, 300 }, "Z is the only key other than the arrow keys that you will use.", m_font_path, 16, SDL_Color{ 255, 255, 255 }, -1);
 
@@ -366,29 +371,57 @@ void Game::start_game()
         }
         else
         {
-            std::ifstream ifs(m_resources_dir + "maps/default_data.json");
-            std::stringstream ss;
-            std::string buf;
+            {
+                std::lock_guard lock(m_mtx);
+                m_text.clear();
+            }
 
-            while (std::getline(ifs, buf)) ss << buf << "\n";
+            add_text(m_rend, SDL_Point{ 250, 340 }, "Are you sure you want to reset?", m_font_path, 16, SDL_Color{ 255, 255, 255 }, -1);
+            set_menu(m_rend, SDL_Point{ 300, 420 }, { "Yes", "No" }, 140, m_font_path, 16);
 
-            ifs.close();
+            wait_for_z();
 
-            std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::trunc | std::ofstream::out);
-            ofs << ss.str();
-            ofs.close();
+            std::string choice = get_menu_choice();
 
-            ifs.open(m_resources_dir + "maps/data.json");
-            ifs >> m_json;
+            if (choice == "Yes")
+            {
+                std::ifstream ifs(m_resources_dir + "maps/default_data.json");
+                std::stringstream ss;
+                std::string buf;
+
+                while (std::getline(ifs, buf)) ss << buf << "\n";
+
+                ifs.close();
+
+                std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::trunc | std::ofstream::out);
+                ofs << ss.str();
+                ofs.close();
+
+                ifs.open(m_resources_dir + "maps/data.json");
+                ifs >> m_json;
+
+                show_image = true;
+            }
+            else
+            {
+                show_image = false;
+            }
+
+            {
+                std::lock_guard lock(m_mtx);
+                m_text.clear();
+            }
+
+            delete_menu();
         }
-
-        {
-            std::lock_guard lock(m_mtx);
-            m_text.clear();
-        }
-
-        delete_menu();
     }
+
+    {
+        std::lock_guard lock(m_mtx);
+        m_text.clear();
+    }
+
+    delete_menu();
 
     setup_game();
 }
@@ -464,7 +497,9 @@ void Game::set_menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::st
 void Game::delete_menu()
 {
     std::lock_guard lock(m_mtx);
-    m_menu.reset(0);
+
+    if (m_menu)
+        m_menu.reset(0);
 }
 
 
