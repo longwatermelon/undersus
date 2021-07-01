@@ -176,6 +176,7 @@ void Game::mainloop()
                                     {
                                         m_player->set_moveable(false);
                                         save_data();
+                                        audio::play_sound(m_resources_dir + "sfx/savepoint.wav");
                                         m_dialogue_box = std::make_unique<gui::Textbox>(m_rend, SDL_Rect{ 20, 20, 800 - 40, 60 }, "Progress saved.", m_font_path, 16, true, SDL_Color{ 0, 0, 0 }, SDL_Color{ 255, 255, 255 });
                                     }
                                     else
