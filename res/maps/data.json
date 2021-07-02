@@ -1,7 +1,7 @@
 {
 	"player" : 
 	{
-		"pos" : "600 382"
+		"pos" : "450 382"
 	},
 	"room_index" : 0,
 	"rooms" : 
@@ -49,7 +49,7 @@
 					"theme" : "sfx/among_us_drip.wav"
 				}
 			],
-			"render_pos" : "-418 0",
+			"render_pos" : "-556 0",
 			"saves" : 
 			[
 				{

@@ -617,7 +617,7 @@ void Game::open_map(const std::string& map_name)
             pos.x += m_rooms[m_rooms.size() - 1]->render_pos().x;
             pos.y += m_rooms[m_rooms.size() - 1]->render_pos().y;
 
-            std::unique_ptr<Save> save = std::make_unique<Save>(m_rend, m_atlas.get(), Sprite{ SDL_Rect{ 32, 32, 32, 32 }, SDL_Rect{ pos.x, pos.y, 32, 32 } });
+            std::unique_ptr<Save> save = std::make_unique<Save>(m_rend, m_atlas.get(), Sprite{ SDL_Rect{ 64, 96, 32, 32 }, SDL_Rect{ pos.x, pos.y, 32, 32 } });
             saves.push_back(std::move(save));
         }
 
