@@ -87,5 +87,7 @@ private:
     std::unique_ptr<gui::Text> m_choice_text;
 
     Route& m_route;
+
+    int m_spare_count{ 0 };
 };
 

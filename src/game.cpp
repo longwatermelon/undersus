@@ -36,6 +36,8 @@ Game::Game(const std::string& resources_path)
     ifs >> m_json;
 
     audio::init();
+
+    m_route = (Route)m_json["route"].asInt();
 }
 
 
@@ -51,6 +53,8 @@ Game::Game(const std::string& resources_path, SDL_Window* window, SDL_Renderer* 
 
     std::ifstream ifs(m_resources_dir + "maps/data.json");
     ifs >> m_json;
+
+    m_route = (Route)m_json["route"].asInt();
 }
 
 
@@ -167,7 +171,8 @@ void Game::mainloop()
                                         m_dialogue_box.reset(0);
                                         m_dialogue_list_index = 0;
 
-                                        start_battle(ent);
+                                        if (!ent->fought())
+                                            start_battle(ent);
                                     }
                                     else
                                     {
@@ -588,12 +593,16 @@ void Game::open_map(const std::string& map_name)
         {
             std::vector<std::string> dialogue;
             std::vector<std::string> battle_dialogue;
+            std::vector<std::string> post_battle_dialogue;
 
             for (auto& str : e["dialogue"])
                 dialogue.emplace_back(str.asString());
 
             for (auto& str : e["battle_dialogue"])
                 battle_dialogue.emplace_back(str.asString());
+
+            for (auto& str : e["post_battle_dialogue"])
+                post_battle_dialogue.emplace_back(str.asString());
 
             SDL_Point pos = to_point(e["pos"].asString());
             pos.x *= 32;
@@ -602,7 +611,9 @@ void Game::open_map(const std::string& map_name)
             pos.x += m_rooms[m_rooms.size() - 1]->render_pos().x;
             pos.y += m_rooms[m_rooms.size() - 1]->render_pos().y;
 
-            std::unique_ptr<Entity> entity = std::make_unique<Entity>(m_rend, pos, m_atlas.get(), to_point(e["sprite_pos"].asString()), to_point(e["dead_sprite"].asString()), to_point(e["battle_sprite"].asString()), m_resources_dir + e["theme"].asString(), dialogue, battle_dialogue, default_attacks, e["alive"].asBool());
+            std::unique_ptr<Entity> entity = std::make_unique<Entity>(m_rend, pos, m_atlas.get(), to_point(e["sprite_pos"].asString()), to_point(e["dead_sprite"].asString()), to_point(e["battle_sprite"].asString()), m_resources_dir + e["theme"].asString(), dialogue, battle_dialogue, post_battle_dialogue, default_attacks, e["alive"].asBool());
+            entity->set_fought(e["fought"].asBool());
+
             entities.push_back(std::move(entity));
         }
 
@@ -792,11 +803,13 @@ void Game::save_data()
         {
             auto& e = room->entities()[i];
             json["entities"][i]["alive"] = e->alive();
+            json["entities"][i]["fought"] = e->fought();
         }
     }
 
     m_json["player"]["pos"] = std::to_string(m_player->rect().x) + ' ' + std::to_string(m_player->rect().y);
     m_json["room_index"] = m_current_room_index;
+    m_json["route"] = (int)m_route;
 
     std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::out | std::ofstream::trunc);
     ofs << m_json << "\n";

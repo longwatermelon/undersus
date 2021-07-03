@@ -184,9 +184,20 @@ void Battle::hit_selected_button()
             m_entity->die();
             m_finished = true;
             m_route = Route::GENOCIDE;
+            m_entity->set_fought(true);
             break;
         case 1: // spare
-            m_turn = Turn::ENEMY;
+            if (m_spare_count >= 3)
+            {
+                m_finished = true;
+                m_entity->set_fought(true);
+            }
+            else
+            {
+                ++m_spare_count;
+                m_turn = Turn::ENEMY;
+            }
+
             break;
         }
 

@@ -17,7 +17,11 @@
                         "Dat is a leltastic moment",
                         "UwU Plz marry me"
                     ],
-                    "alive": true
+                    "post_battle_dialogue": [
+                        "UmU Thank you for teaching me the power of friendship"
+                    ],
+                    "alive": true,
+                    "fought": false
                 },
                 {
                     "pos": "46 12",
@@ -33,7 +37,11 @@
                         "How are you this fine evening m'lady",
                         "UwU Lelaroos Lelaroos Lelapootastic UwU"
                     ],
-                    "alive": true
+                    "post_battle_dialogue": [
+                        "Lel xD I dont wanna fight"
+                    ],
+                    "alive": true,
+                    "fought": false
                 }
             ],
             "saves": [
@@ -61,6 +69,7 @@
     "player": {
         "pos": "400 200"
     },
-    "room_index": 0
+    "room_index": 0,
+    "route": 0
 }
 
