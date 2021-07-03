@@ -2,11 +2,12 @@
 #include "media/src/audio.h"
 #include "game.h"
 #include "media/src/textbox.h"
+#include "common.h"
 #include <iostream>
 
 
-Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir)
-    : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir)
+Battle::Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir, Route& route)
+    : m_rend(rend), m_entity(ent), m_atlas(atlas), m_resources_dir(resources_dir), m_route(route)
 {
     audio::play_music(m_entity->theme());
     m_player.src = { 0, 96, 32, 32 };
@@ -46,6 +47,7 @@ void Battle::render()
 
     SDL_RenderCopy(m_rend, m_atlas, &m_entity_spr.src, &m_entity_spr.dst);
 
+    // render fight button
     SDL_Rect src = { 32, 32, 32, 32 };
     SDL_Rect dst = { 180, 700, 64, 64 };
 
@@ -57,7 +59,8 @@ void Battle::render()
 
     SDL_RenderCopy(m_rend, m_atlas, &src, &dst);
 
-    src = { 64, 32, 32, 32 };
+    // render spare button
+    src = { m_route == Route::GENOCIDE ? 96 : 64, 32, 32, 32 };
     dst = { 560, 700, 64, 64 };
 
     if (m_current_selected_button == 1 && m_turn == Turn::PLAYER)
@@ -149,8 +152,14 @@ void Battle::move_selected(int x)
 {
     if (m_turn == Turn::PLAYER)
     {
+        int prev = m_current_selected_button;
         m_current_selected_button = std::min(std::max(m_current_selected_button + x, 0), 1);
-        audio::play_sound(m_resources_dir + "sfx/menu_move.wav");
+
+        if (m_route == Route::GENOCIDE)
+            m_current_selected_button = 0;
+
+        if (prev != m_current_selected_button)
+            audio::play_sound(m_resources_dir + "sfx/menu_move.wav");
     }
 
     if (m_current_selected_button == 0)
@@ -174,6 +183,7 @@ void Battle::hit_selected_button()
             audio::play_sound(m_resources_dir + "sfx/kill.wav");
             m_entity->die();
             m_finished = true;
+            m_route = Route::GENOCIDE;
             break;
         case 1: // spare
             m_turn = Turn::ENEMY;

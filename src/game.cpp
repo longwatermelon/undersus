@@ -688,7 +688,7 @@ Entity* Game::nearest_entity_in_range()
 
 void Game::start_battle(Entity* ent)
 {
-    m_current_battle = std::make_unique<Battle>(m_rend, ent, m_atlas.get(), m_resources_dir);
+    m_current_battle = std::make_unique<Battle>(m_rend, ent, m_atlas.get(), m_resources_dir, m_route);
     m_player->set_moveable(false);
    
     if (m_dialogue_box)

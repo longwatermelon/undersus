@@ -11,6 +11,12 @@ struct Sprite
     SDL_Rect dst;
 };
 
+enum class Route
+{
+    PACIFIST,
+    GENOCIDE
+};
+
 inline int randint(int min, int max)
 {
     std::random_device rd;
@@ -53,3 +59,4 @@ inline std::vector<std::string> split_string(std::string string, char delim)
     
     return ret;
 }
+

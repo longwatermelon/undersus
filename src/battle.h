@@ -10,6 +10,7 @@
 #include <chrono>
 
 class Game;
+enum class Route;
 
 struct Projectile
 {
@@ -22,7 +23,7 @@ struct Projectile
 class Battle
 {
 public:
-    Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir);
+    Battle(SDL_Renderer* rend, Entity* ent, SDL_Texture* atlas, const std::string& resources_dir, Route& route);
     ~Battle();
 
     void render();
@@ -84,5 +85,7 @@ private:
     Sprite m_entity_spr;
 
     std::unique_ptr<gui::Text> m_choice_text;
+
+    Route& m_route;
 };
 

@@ -119,6 +119,8 @@ private:
         BATTLE
     } m_mode{ Mode::CUTSCENE };
 
+    Route m_route{ Route::PACIFIST };
+
     bool m_ready_to_restart{ false };
 
     Json::Value m_json;
