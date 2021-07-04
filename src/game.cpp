@@ -37,7 +37,7 @@ Game::Game(const std::string& resources_path)
 
     audio::init();
 
-    m_route = (Route)m_json["route"].asInt();
+    update_data_from_json();
 }
 
 
@@ -54,7 +54,7 @@ Game::Game(const std::string& resources_path, SDL_Window* window, SDL_Renderer* 
     std::ifstream ifs(m_resources_dir + "maps/data.json");
     ifs >> m_json;
 
-    m_route = (Route)m_json["route"].asInt();
+    update_data_from_json();
 }
 
 
@@ -417,6 +417,7 @@ void Game::start_game()
                 ifs >> m_json;
 
                 show_image = true;
+                update_data_from_json();
             }
             else
             {
@@ -814,5 +815,11 @@ void Game::save_data()
     std::ofstream ofs(m_resources_dir + "maps/data.json", std::ofstream::out | std::ofstream::trunc);
     ofs << m_json << "\n";
     ofs.close();
+}
+
+
+void Game::update_data_from_json()
+{
+    m_route = (Route)m_json["route"].asInt();
 }
 

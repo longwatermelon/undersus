@@ -78,6 +78,8 @@ private:
 
     void save_data();
 
+    void update_data_from_json();
+
 private:
     SDL_Window* m_window;
     SDL_Renderer* m_rend;
