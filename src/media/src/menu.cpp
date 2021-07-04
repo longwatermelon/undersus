@@ -8,7 +8,7 @@ gui::Menu::Menu(SDL_Renderer* rend, SDL_Point pos, const std::vector<std::string
 
     for (auto& opt : options)
     {
-        m_options.emplace_back(new gui::Text(rend, { x, m_pos.y }, opt, font_path, ptsize, { 255, 255, 255 }, -1));
+        m_options.emplace_back(std::make_unique<gui::Text>(rend, SDL_Point{ x, m_pos.y }, opt, font_path, ptsize, SDL_Color{ 255, 255, 255 }, -1));
         x += space_between_options;
     }
 
