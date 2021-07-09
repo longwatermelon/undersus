@@ -1,75 +1,86 @@
 {
-    "rooms": {
-        "start_1": {
-            "entities": [
-                {
-                    "pos": "18 6",
-                    "sprite_pos": "0 32",
-                    "battle_sprite": "32 96",
-                    "dead_sprite": "64 64",
-                    "theme": "sfx/among_us_drip.wav",
-                    "dialogue": [
-                        "Press Z to continue the dialogue.",
-                        "UmU I am quirky"
-                    ],
-                    "battle_dialogue": [
-                        "Lelaroos I am cringe",
-                        "Dat is a leltastic moment",
-                        "UwU Plz marry me"
-                    ],
-                    "post_battle_dialogue": [
-                        "UmU Thank you for teaching me the power of friendship"
-                    ],
-                    "alive": true,
-                    "fought": false
-                },
-                {
-                    "pos": "46 12",
-                    "sprite_pos": "0 32",
-                    "battle_sprite": "32 96",
-                    "dead_sprite": "64 64",
-                    "theme": "sfx/among_us_drip.wav",
-                    "dialogue": [
-                        "Hewwo UwU :flushed: :pleading_face: :point_right: :point_left:"
-                    ],
-                    "battle_dialogue": [
-                        "Lelaroos I am cringe",
-                        "How are you this fine evening m'lady",
-                        "UwU Lelaroos Lelaroos Lelapootastic UwU"
-                    ],
-                    "post_battle_dialogue": [
-                        "Lel xD I dont wanna fight"
-                    ],
-                    "alive": true,
-                    "fought": false
-                }
-            ],
-            "saves": [
-                {
-                    "pos": "32 12"
-                }
-            ],
-            "start_pos": "13 6",
-            "end_pos": "52 3",
-            "render_pos": "0 0"
-        },
-        "start_2": {
-            "entities": [
-            ],
-            "saves": [
-                {
-                    "pos": "17 7"
-                }
-            ],
-            "start_pos": "21 18",
-            "end_pos": "19 4",
-            "render_pos": "0 0"
-        }
-    },
-    "player": {
-        "pos": "400 200"
-    },
-    "room_index": 0,
-    "route": 0
+	"player" : 
+	{
+		"pos" : "566 248"
+	},
+	"room_index" : 1,
+	"rooms" : 
+	{
+		"start_1" : 
+		{
+			"end_pos" : "52 3",
+			"entities" : 
+			[
+				{
+					"alive" : false,
+					"battle_dialogue" : 
+					[
+						"Lelaroos I am cringe",
+						"Dat is a leltastic moment",
+						"UwU Plz marry me"
+					],
+					"battle_sprite" : "32 96",
+					"dead_sprite" : "64 64",
+					"dialogue" : 
+					[
+						"Press Z to continue the dialogue.",
+						"UmU I am quirky"
+					],
+					"fought" : true,
+					"pos" : "18 6",
+					"post_battle_dialogue" : 
+					[
+						"UmU Thank you for teaching me the power of friendship"
+					],
+					"sprite_pos" : "0 32",
+					"theme" : "sfx/among_us_drip.wav"
+				},
+				{
+					"alive" : false,
+					"battle_dialogue" : 
+					[
+						"Lelaroos I am cringe",
+						"How are you this fine evening m'lady",
+						"UwU Lelaroos Lelaroos Lelapootastic UwU"
+					],
+					"battle_sprite" : "32 96",
+					"dead_sprite" : "64 64",
+					"dialogue" : 
+					[
+						"Hewwo UwU :flushed: :pleading_face: :point_right: :point_left:"
+					],
+					"fought" : true,
+					"pos" : "46 12",
+					"post_battle_dialogue" : 
+					[
+						"Lel xD I dont wanna fight"
+					],
+					"sprite_pos" : "0 32",
+					"theme" : "sfx/among_us_drip.wav"
+				}
+			],
+			"render_pos" : "-1024 0",
+			"saves" : 
+			[
+				{
+					"pos" : "32 12"
+				}
+			],
+			"start_pos" : "13 6"
+		},
+		"start_2" : 
+		{
+			"end_pos" : "19 4",
+			"entities" : [],
+			"render_pos" : "0 0",
+			"saves" : 
+			[
+				{
+					"pos" : "17 7"
+				}
+			],
+			"start_pos" : "21 18"
+		}
+	},
+	"route" : 1
 }
-
