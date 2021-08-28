@@ -1,6 +1,6 @@
-#include "media/src/audio.h"
+#include "media/audio.h"
 #include "game.h"
-#include "media/src/menu.h"
+#include "media/menu.h"
 #include "common.h"
 #include <thread>
 #include <iostream>

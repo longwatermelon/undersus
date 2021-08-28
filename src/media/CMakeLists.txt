@@ -6,18 +6,18 @@ find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(sdl2-mixer CONFIG REQUIRED)
 
 add_library(media
-    src/audio.h
-    src/audio.cpp
-    src/common.h
-    src/common.cpp
-    src/image.h
-    src/image.cpp
-    src/menu.h
-    src/menu.cpp
-    src/text.h
-    src/text.cpp
-    src/textbox.h
-    src/textbox.cpp
+    audio.h
+    audio.cpp
+    common.h
+    common.cpp
+    image.h
+    image.cpp
+    menu.h
+    menu.cpp
+    text.h
+    text.cpp
+    textbox.h
+    textbox.cpp
 )
 
 target_link_libraries(media PUBLIC

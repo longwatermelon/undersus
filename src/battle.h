@@ -1,7 +1,7 @@
 #pragma once
-#include "media/src/image.h"
-#include "media/src/textbox.h"
-#include "media/src/text.h"
+#include "media/image.h"
+#include "media/textbox.h"
+#include "media/text.h"
 #include "entity.h"
 #include "common.h"
 #include <memory>

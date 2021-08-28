@@ -1,7 +1,7 @@
 #include "battle.h"
-#include "media/src/audio.h"
+#include "media/audio.h"
 #include "game.h"
-#include "media/src/textbox.h"
+#include "media/textbox.h"
 #include "common.h"
 #include <iostream>
 

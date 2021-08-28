@@ -1,7 +1,7 @@
 {
 	"player" : 
 	{
-		"pos" : "566 248"
+		"pos" : "482 252"
 	},
 	"room_index" : 1,
 	"rooms" : 
@@ -72,7 +72,7 @@
 		{
 			"end_pos" : "19 4",
 			"entities" : [],
-			"render_pos" : "0 0",
+			"render_pos" : "-62 0",
 			"saves" : 
 			[
 				{
